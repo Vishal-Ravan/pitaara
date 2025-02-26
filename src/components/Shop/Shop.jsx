@@ -15,7 +15,26 @@ const options = [
   { value: 'minToHigh', label: 'From cheap to expensive' },
 ];
 export const Shop = () => {
-  const allProducts = [...productData];
+  const [productsItem, setProductsItem] = useState([]);
+
+  useEffect(() => {
+    const fetchTrendingProducts = async () => {
+      try {
+        const response = await fetch('http://localhost:5000/api/product');
+        if (!response.ok) {
+          throw new Error('Failed to fetch products');
+        }
+        const data = await response.json();
+        setProductsItem(data);
+      } catch (error) {
+        console.error('Error fetching trending products:', error);
+      }
+    };
+
+    fetchTrendingProducts();
+  }, []);
+  const allProducts = [...productsItem];
+  console.log(allProducts,'llll')
 
   const [productOrder, setProductOrder] = useState(
     allProducts.sort((a, b) => (a.price < b.price ? 1 : -1))
@@ -176,7 +195,7 @@ export const Shop = () => {
                 </div>
               </div>
               <div className='shop-main__items'>
-                <Products products={paginate?.currentData()} />
+                <Products products={productsItem} />
               </div>
 
               {/* <!-- PAGINATE LIST --> */}

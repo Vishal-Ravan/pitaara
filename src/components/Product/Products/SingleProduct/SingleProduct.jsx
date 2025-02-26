@@ -17,14 +17,14 @@ export const SingleProduct = ({
           {isNew && <span className="products-item__new">new</span>}
         </div>
         <div className="products-item__img">
-        {images && images.length > 0 ? (
-    <img
-      src={`http://localhost:5000${images[1]}`} 
-      alt="Product"
-    />
-  ) : (
-    <div className="placeholder">No Image Available</div>
-  )}
+          {images && images.length > 0 ? (
+            <img
+              src={`http://localhost:5000${images[1]}`}
+              alt="Product"
+            />
+          ) : (
+            <div className="placeholder">No Image Available</div>
+          )}
           <div className="products-item__hover">
             <Link href={`/product/${_id}`}>
               <a>
@@ -32,13 +32,13 @@ export const SingleProduct = ({
               </a>
             </Link>
             <div className="products-item__hover-options">
-              <button className="addList" onClick={() => onAddToWish(id)}>
+              <button className="addList" onClick={() => onAddToWish(_id)}>
                 <i className="icon-heart"></i>
               </button>
               <button
                 disabled={addedInCart}
                 className={`addList ${addedInCart ? "added" : ""}`}
-                onClick={() => onAddToCart(id)}
+                onClick={() => onAddToCart(_id)}
               >
                 <i className="icon-cart"></i>
               </button>

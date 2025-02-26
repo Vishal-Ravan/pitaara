@@ -1,7 +1,74 @@
+import { useState } from 'react';
+import { useFormik } from 'formik';
+import * as Yup from 'yup';
 import { SocialLogin } from 'components/shared/SocialLogin/SocialLogin';
-import router from 'next/router';
+import { useRouter } from 'next/router';
 
 export const Registration = () => {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [errorMessage, setErrorMessage] = useState('');
+  const [successMessage, setSuccessMessage] = useState('');
+
+  // Validation Schema
+  const validationSchema = Yup.object({
+    firstName: Yup.string().required('First name is required'),
+    lastName: Yup.string().required('Last name is required'),
+    phone: Yup.string()
+      .matches(/^[0-9]+$/, 'Phone number must be numeric')
+      .min(10, 'Phone must be at least 10 digits')
+      .required('Phone is required'),
+    email: Yup.string()
+      .email('Invalid email format')
+      .required('Email is required'),
+    password: Yup.string()
+      .min(6, 'Password must be at least 6 characters')
+      .required('Password is required'),
+    confirmPassword: Yup.string()
+      .oneOf([Yup.ref('password'), null], 'Passwords must match')
+      .required('Confirm Password is required'),
+  });
+
+  // Formik for Form Handling
+  const formik = useFormik({
+    initialValues: {
+      firstName: '',
+      lastName: '',
+      phone: '',
+      email: '',
+      role:'user',
+      password: '',
+      confirmPassword: '',
+    },
+    validationSchema,
+    onSubmit: async (values) => {
+      setLoading(true);
+      setErrorMessage('');
+      setSuccessMessage('');
+
+      try {
+        const response = await fetch('http://localhost:5000/api/register', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(values),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          setSuccessMessage('Registration successful! Redirecting to login...');
+          setTimeout(() => router.push('/login'), 2000);
+        } else {
+          setErrorMessage(data.message || 'Registration failed');
+        }
+      } catch (error) {
+        setErrorMessage('Something went wrong. Please try again.');
+      }
+
+      setLoading(false);
+    },
+  });
+
   return (
     <>
       {/* <!-- BEGIN REGISTRATION --> */}
@@ -13,67 +80,124 @@ export const Registration = () => {
               backgroundImage: `url('/assets/img/registration-form__bg.png')`,
             }}
           >
-            <form>
-              <h3>register now</h3>
+            <form onSubmit={formik.handleSubmit}>
+              <h3>Register Now</h3>
               <SocialLogin />
 
+              {/* Success & Error Messages */}
+              {successMessage && <p className='success-message'>{successMessage}</p>}
+              {errorMessage && <p className='error-message'>{errorMessage}</p>}
+
+              {/* Name Fields */}
               <div className='box-field__row'>
                 <div className='box-field'>
                   <input
                     type='text'
+                    name='firstName'
                     className='form-control'
                     placeholder='Enter your name'
+                    value={formik.values.firstName}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                   />
+                  {formik.touched.firstName && formik.errors.firstName && (
+                    <p className='error-text'>{formik.errors.firstName}</p>
+                  )}
                 </div>
                 <div className='box-field'>
                   <input
                     type='text'
+                    name='lastName'
                     className='form-control'
                     placeholder='Enter your last name'
+                    value={formik.values.lastName}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                   />
+                  {formik.touched.lastName && formik.errors.lastName && (
+                    <p className='error-text'>{formik.errors.lastName}</p>
+                  )}
                 </div>
               </div>
+
+              {/* Contact Fields */}
               <div className='box-field__row'>
                 <div className='box-field'>
                   <input
                     type='tel'
+                    name='phone'
                     className='form-control'
                     placeholder='Enter your phone'
+                    value={formik.values.phone}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                   />
+                  {formik.touched.phone && formik.errors.phone && (
+                    <p className='error-text'>{formik.errors.phone}</p>
+                  )}
                 </div>
                 <div className='box-field'>
                   <input
                     type='email'
+                    name='email'
                     className='form-control'
                     placeholder='Enter your email'
+                    value={formik.values.email}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                   />
+                  {formik.touched.email && formik.errors.email && (
+                    <p className='error-text'>{formik.errors.email}</p>
+                  )}
                 </div>
               </div>
+
+              {/* Password Fields */}
               <div className='box-field__row'>
-                <span>password</span>
+                <span>Password</span>
                 <div className='box-field'>
                   <input
                     type='password'
+                    name='password'
                     className='form-control'
                     placeholder='Enter your password'
+                    value={formik.values.password}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                   />
+                  {formik.touched.password && formik.errors.password && (
+                    <p className='error-text'>{formik.errors.password}</p>
+                  )}
                 </div>
                 <div className='box-field'>
                   <input
                     type='password'
+                    name='confirmPassword'
                     className='form-control'
                     placeholder='Confirm password'
+                    value={formik.values.confirmPassword}
+                    onChange={formik.handleChange}
+                    onBlur={formik.handleBlur}
                   />
+                  {formik.touched.confirmPassword && formik.errors.confirmPassword && (
+                    <p className='error-text'>{formik.errors.confirmPassword}</p>
+                  )}
                 </div>
               </div>
+
+              {/* Remember Me Checkbox */}
               <label className='checkbox-box checkbox-box__sm'>
                 <input type='checkbox' />
                 <span className='checkmark'></span>
                 Remember me
               </label>
-              <button className='btn' type='submit'>
-                registration
+
+              {/* Submit Button */}
+              <button className='btn' type='submit' disabled={loading}>
+                {loading ? 'Registering...' : 'Register'}
               </button>
+
+              {/* Redirect to Login */}
               <div className='login-form__bottom'>
                 <span>
                   Already have an account?{' '}
@@ -89,7 +213,7 @@ export const Registration = () => {
           alt=''
         />
       </div>
-      {/* <!-- REGISTRATION EOF   -->  */}
+      {/* <!-- REGISTRATION EOF   --> */}
     </>
   );
 };
