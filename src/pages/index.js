@@ -15,13 +15,13 @@ export default function Home() {
     <Layout>
       <Banner />
       <Trending />
-      <BrandLogo />
+      {/* <BrandLogo /> */}
       <Discount />
       <Advantage />
-      <TopCategories />
+      {/* <TopCategories /> */}
       <Info />
       <NewArrivals />
-      <LatestNews />
+      {/* <LatestNews /> */}
       <Subscribe />
     </Layout>
   );

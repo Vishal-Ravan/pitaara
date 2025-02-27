@@ -40,9 +40,25 @@ export const Header = () => {
     localStorage.removeItem('token');
     localStorage.removeItem('user');
     setUser(null);
-    alert('Logged out successfully');
+    alert('Session expired. Please log in again.');
     router.push('/login'); // Redirect to login page
   };
+
+  // Auto logout if token is missing or expired
+  useEffect(() => {
+    const checkToken = () => {
+      const userData = JSON.parse(localStorage.getItem('user'));
+      const token = userData?.token;
+
+      if (!token) {
+        handleLogout();
+      }
+    };
+
+    const interval = setInterval(checkToken, 5 * 60 * 1000); // Check every 5 minutes
+
+    return () => clearInterval(interval); // Cleanup interval on component unmount
+  }, []);
 
   return (
     <>
@@ -89,14 +105,11 @@ export const Header = () => {
               {/* User Authentication */}
               <li>
                 {user ? (
-                 
-                 <>
-                 <Link href='/profile'>
+                  <Link href='/profile'>
                     <a>
                       <i className='icon-user'>{user.email}</i>
                     </a>
                   </Link>
-                 </>
                 ) : (
                   <Link href='/login'>
                     <a>

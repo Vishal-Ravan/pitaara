@@ -9,7 +9,7 @@ export const Card = ({ wish }) => {
         <div className='cart-table__col'>
           <Link href={`/product/${id}`}>
             <a className='cart-table__img'>
-              <img src={image} className='js-img' alt='' />
+              <img src={`http://localhost:5000${image}`} className='js-img' alt='' />
             </a>
           </Link>
           <div className='cart-table__info'>

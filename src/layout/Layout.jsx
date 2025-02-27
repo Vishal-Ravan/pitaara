@@ -10,7 +10,7 @@ export const Layout = ({ children }) => {
       </header>
       <main className='content'>
         {children}
-        <Insta />
+        {/* <Insta /> */}
       </main>
       <footer className='footer'>
         <Footer />

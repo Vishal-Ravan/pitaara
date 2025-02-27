@@ -2,8 +2,9 @@ import Link from "next/link";
 
 export const SingleProduct = ({
   product,
-  onAddToWish,
   onAddToCart,
+  onAddToWishlist,
+  addedInWishlist,
   addedInCart,
 }) => {
   const { name, oldPrice, price, images, isSale, isNew, _id } = product;
@@ -18,10 +19,7 @@ export const SingleProduct = ({
         </div>
         <div className="products-item__img">
           {images && images.length > 0 ? (
-            <img
-              src={`http://localhost:5000${images[1]}`}
-              alt="Product"
-            />
+            <img src={`http://localhost:5000${images[1]}`} alt="Product" />
           ) : (
             <div className="placeholder">No Image Available</div>
           )}
@@ -32,9 +30,14 @@ export const SingleProduct = ({
               </a>
             </Link>
             <div className="products-item__hover-options">
-              <button className="addList" onClick={() => onAddToWish(_id)}>
+              <button
+                disabled={addedInWishlist}
+                className={`addList ${addedInWishlist ? "added" : ""}`}
+                onClick={() => onAddToWishlist(_id)}
+              >
                 <i className="icon-heart"></i>
               </button>
+
               <button
                 disabled={addedInCart}
                 className={`addList ${addedInCart ? "added" : ""}`}
