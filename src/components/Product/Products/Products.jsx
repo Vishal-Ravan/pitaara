@@ -17,18 +17,7 @@ export const Products = ({ products }) => {
 
       try {
         // Fetch Cart
-        const cartResponse = await fetch('http://localhost:5000/api/cart', {
-          method: 'GET',
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (cartResponse.ok) {
-          const cartData = await cartResponse.json();
-          setCart(Array.isArray(cartData) ? cartData : []);
-        }
+   
 
         // Fetch Wishlist
         const wishlistResponse = await fetch('http://localhost:5000/api/wishlist', {

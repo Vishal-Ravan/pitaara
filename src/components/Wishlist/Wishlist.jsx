@@ -1,7 +1,6 @@
-import productData from "data/product/product";
+import { useEffect, useState } from "react";
 import { Card } from "./Card/Card";
 import Link from "next/link";
-import { useEffect, useState } from "react";
 
 export const Wishlist = () => {
   const [wishlistData, setWishlistData] = useState([]);
@@ -15,12 +14,13 @@ export const Wishlist = () => {
     const fetchWishlist = async () => {
       const token = getUserToken();
       if (!token) {
+        console.log("No token found, setting empty wishlist.");
         setWishlistData([]);
         return;
       }
 
       try {
-        const response = await fetch("http://localhost:5000/api/cart", {
+        const response = await fetch("http://localhost:5000/api/wishlist", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
@@ -28,22 +28,18 @@ export const Wishlist = () => {
           },
         });
 
-        if (!response.ok) {
-          throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-
         const data = await response.json();
-        console.log("Wishlist API Response:", data);
+        console.log("Wishlist API Raw Response:", data);
 
-        if (Array.isArray(data)) {
-          setWishlistData(data);
-        } else if (data?.items && Array.isArray(data.items)) {
-          setWishlistData(data.items);
+        if (data && Array.isArray(data.products)) {
+          console.log("Wishlist Data Set:", data.products);
+          setWishlistData(data.products);
         } else {
-          setWishlistData([]);
+          console.error("Unexpected API Response Format:", data);
+          setWishlistData([]); // Fallback to empty
         }
       } catch (error) {
-        console.error("Error fetching wishlist data:", error);
+        console.error("Error fetching wishlist:", error);
         setWishlistData([]);
       }
     };
@@ -51,9 +47,10 @@ export const Wishlist = () => {
     fetchWishlist();
   }, []);
 
+  console.log("Wishlist Data in State:", wishlistData);
+
   return (
     <>
-      {/* <!-- BEGIN WISHLIST --> */}
       <div className="wishlist">
         <div className="wrapper">
           <div className="cart-table">
@@ -65,19 +62,23 @@ export const Wishlist = () => {
                 <div className="cart-table__col">Add to Cart</div>
               </div>
 
-              {wishlistData?.map((wish) => (
-                <Card
-                  key={wish.productId._id}
-                  wish={{
-                    id: wish.productId._id,
-                    name: wish.productId.name,
-                    image: wish.productId.images?.length > 0 ? wish.productId.images[0] : "/default-image.jpg",
-                    isStocked: wish.productId.isStocked || false,
-                    productNumber: wish.productId.productNumber || "N/A",
-                    price: wish.productId.price,
-                  }}
-                />
-              ))}
+              {wishlistData.length > 0 ? (
+                wishlistData.map((product) => (
+                  <Card
+                    key={product._id}
+                    wish={{
+                      id: product._id,
+                      name: product.name,
+                      image: product.image || "/default-image.jpg",
+                      isStocked: product.isStocked || false,
+                      productNumber: product.productNumber || "N/A",
+                      price: product.price,
+                    }}
+                  />
+                ))
+              ) : (
+                <p>No items in wishlist</p>
+              )}
             </div>
           </div>
           <div className="wishlist-buttons">
@@ -89,9 +90,7 @@ export const Wishlist = () => {
             </Link>
           </div>
         </div>
-        <img className="promo-video__decor js-img" data-src="/assets/img/promo-video__decor.jpg" alt="" />
       </div>
-      {/* <!-- WISHLIST EOF --> */}
     </>
   );
 };

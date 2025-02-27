@@ -7,18 +7,18 @@ import Link from "next/link";
 export const Cart = () => {
   const { cart, setCart } = useContext(CartContext);
   const [cartData, setCartData] = useState([]);
-  const [count, setCount] = useState(0);
   const socialLinks = [...socialData];
+
   const getUserToken = () => {
-    const userData = JSON.parse(localStorage.getItem("user")); // Parse stored user data
-    return userData?.token || null; // Extract token safely
+    const userData = JSON.parse(localStorage.getItem("user"));
+    return userData?.token || null;
   };
 
   useEffect(() => {
     const fetchCart = async () => {
       const token = getUserToken();
       if (!token) {
-        setCart([]); // Ensure cart is an empty array when user is logged out
+        setCart([]);
         return;
       }
 
@@ -36,46 +36,51 @@ export const Cart = () => {
         }
 
         const data = await response.json();
-        console.log("Cart API Response:", data); // Check the data format
+        console.log("Cart API Response:", data);
 
         if (Array.isArray(data)) {
           setCartData(data);
         } else if (data?.items && Array.isArray(data.items)) {
-          setCartData(data.items); // Adjust if the array is inside an object
+          setCartData(data.items);
         } else {
-          setCartData([]); // Fallback to empty array if format is incorrect
+          setCartData([]);
         }
       } catch (error) {
         console.error("Error fetching cart data:", error);
-        setCartData([]); // Ensure cartData is always an array
+        setCartData([]);
       }
     };
 
     fetchCart();
   }, []);
-  // const total = cart.reduce(
-  //   (total, item) => total + Number(item.price) * Number(item.quantity),
-  //   0
-  // );
 
-  // const handleProductQuantity = (change, quantity, id) => {
-  //   console.log(change, quantity, id);
-  //   if (change === "increment") {
-  //     cart.find((item) => item.id === id).quantity = quantity + 1;
-  //     setCount(count + 1);
-  //   }
-  //   if (change === "decrement" && quantity > 1) {
-  //     cart.find((item) => item.id === id).quantity = quantity - 1;
-  //     setCount(count + 1);
-  //   }
-  // };
+  // Calculate total price dynamically
+  const calculateTotal = (cartItems) => {
+    return cartItems.reduce(
+      (total, item) =>
+        total + Number(item.productId.price) * Number(item.quantity),
+      0
+    );
+  };
+
+  const [total, setTotal] = useState(0);
 
   useEffect(() => {
-    setCart(cart);
-  }, [cart, count]);
+    setTotal(calculateTotal(cartData));
+  }, [cartData]);
+
+  const handleQuantityChange = (id, newQuantity) => {
+    setCartData((prevCartData) =>
+      prevCartData.map((item) =>
+        item.productId._id === id
+          ? { ...item, quantity: newQuantity }
+          : item
+      )
+    );
+  };
+
   return (
     <>
-      {/* <!-- BEGIN CART --> */}
       <div className="cart">
         <div className="wrapper">
           <div className="cart-table">
@@ -87,36 +92,30 @@ export const Cart = () => {
                 <div className="cart-table__col">Total</div>
               </div>
 
-              {/* {cartData.map((cart) => (
-                <Card
-                  onChangeQuantity={(change, quantity) =>
-                    handleProductQuantity(change, quantity, cart.id)
-                  }
-                  key={cart.id}
-                  cart={cartData}
-                />
-              ))} */}
               {cartData?.map((cartItem) => (
                 <Card
                   key={cartItem._id}
                   cart={{
                     id: cartItem.productId._id,
                     name: cartItem.productId.name,
-                    image: cartItem.productId.images?.length > 0 ? cartItem.productId.images[0] : "/default-image.jpg",
-                    isStocked: cartItem.productId.isStocked || false, // Ensure boolean
-                    productNumber: cartItem.productId.productNumber || "N/A", // Default SKU
+                    image:
+                      cartItem.productId.images?.length > 0
+                        ? cartItem.productId.images[0]
+                        : "/default-image.jpg",
+                    isStocked: cartItem.productId.isStocked || false,
+                    productNumber: cartItem.productId.productNumber || "N/A",
                     oldPrice: cartItem.productId.oldPrice || null,
                     price: cartItem.productId.price,
-                    quantity: cartItem.quantity, // Quantity from cart, not product
+                    quantity: cartItem.quantity,
                   }}
-                  // onChangeQuantity={handleProductQuantity}
+                  onChangeQuantity={handleQuantityChange}
                 />
               ))}
             </div>
           </div>
           <div className="cart-bottom">
             <div className="cart-bottom__promo">
-              <form className="cart-bottom__promo-form">
+              {/* <form className="cart-bottom__promo-form">
                 <div className="box-field__row">
                   <div className="box-field">
                     <input
@@ -136,7 +135,7 @@ export const Cart = () => {
                 social networks. So you will not only be able to receive
                 up-to-date codes, but also learn about new products and
                 promotional items.
-              </p>
+              </p> */}
               <div className="contacts-info__social">
                 <span>Find us here:</span>
                 <ul>
@@ -153,15 +152,15 @@ export const Cart = () => {
             <div className="cart-bottom__total">
               <div className="cart-bottom__total-goods">
                 Goods on
-                {/* <span>${total.toFixed(2)}</span> */}
+                <span>${total.toFixed(2)}</span>
               </div>
               <div className="cart-bottom__total-promo">
                 Discount on promo code
                 <span>No</span>
               </div>
               <div className="cart-bottom__total-num">
-                total:
-                {/* <span>${total.toFixed(2)}</span> */}
+                Total:
+                <span>${total.toFixed(2)}</span>
               </div>
               <Link href="/checkout">
                 <a className="btn">Checkout</a>
@@ -175,7 +174,6 @@ export const Cart = () => {
           alt=""
         />
       </div>
-      {/* <!-- CART EOF   --> */}
     </>
   );
 };
