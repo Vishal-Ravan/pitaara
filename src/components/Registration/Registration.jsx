@@ -12,8 +12,7 @@ export const Registration = () => {
 
   // Validation Schema
   const validationSchema = Yup.object({
-    firstName: Yup.string().required('First name is required'),
-    lastName: Yup.string().required('Last name is required'),
+    name: Yup.string().required('First name is required'),
     phone: Yup.string()
       .matches(/^[0-9]+$/, 'Phone number must be numeric')
       .min(10, 'Phone must be at least 10 digits')
@@ -32,8 +31,7 @@ export const Registration = () => {
   // Formik for Form Handling
   const formik = useFormik({
     initialValues: {
-      firstName: '',
-      lastName: '',
+      name: '',
       phone: '',
       email: '',
       role:'user',
@@ -82,43 +80,28 @@ export const Registration = () => {
           >
             <form onSubmit={formik.handleSubmit}>
               <h3>Register Now</h3>
-              <SocialLogin />
+              {/* <SocialLogin />   */}
 
               {/* Success & Error Messages */}
               {successMessage && <p className='success-message'>{successMessage}</p>}
               {errorMessage && <p className='error-message'>{errorMessage}</p>}
 
               {/* Name Fields */}
-              <div className='box-field__row'>
                 <div className='box-field'>
                   <input
                     type='text'
-                    name='firstName'
+                    name='name'
                     className='form-control'
                     placeholder='Enter your name'
-                    value={formik.values.firstName}
+                    value={formik.values.name}
                     onChange={formik.handleChange}
                     onBlur={formik.handleBlur}
                   />
-                  {formik.touched.firstName && formik.errors.firstName && (
-                    <p className='error-text'>{formik.errors.firstName}</p>
+                  {formik.touched.name && formik.errors.name && (
+                    <p className='error-text'>{formik.errors.name}</p>
                   )}
                 </div>
-                <div className='box-field'>
-                  <input
-                    type='text'
-                    name='lastName'
-                    className='form-control'
-                    placeholder='Enter your last name'
-                    value={formik.values.lastName}
-                    onChange={formik.handleChange}
-                    onBlur={formik.handleBlur}
-                  />
-                  {formik.touched.lastName && formik.errors.lastName && (
-                    <p className='error-text'>{formik.errors.lastName}</p>
-                  )}
-                </div>
-              </div>
+                
 
               {/* Contact Fields */}
               <div className='box-field__row'>

@@ -34,9 +34,10 @@ export const Login = () => {
       }
 
       // Store user data in localStorage
-      const userData = { email, token: data.token };
+      const userData = { email,name:data.name, token: data.token };
       localStorage.setItem('user', JSON.stringify(userData));
       setUser(userData);
+      console.log(userData,'kkkk')
 
       alert('Login successful!');
       router.push('/');

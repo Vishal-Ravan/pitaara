@@ -99,12 +99,12 @@ export const Shop = () => {
                 <ul>
                   <li>
                     <a href='#'>
-                      Make up <span>(37)</span>
+                      Ring <span>(37)</span>
                     </a>
                   </li>
                   <li>
                     <a href='#'>
-                      SPA <span>(162)</span>
+                      Ear Ring <span>(162)</span>
                     </a>
                   </li>
                   <li>
@@ -129,7 +129,7 @@ export const Shop = () => {
                   </li>
                 </ul>
               </div>
-              <div className='shop-aside__item'>
+              {/* <div className='shop-aside__item'>
                 <span className='shop-aside__item-title'>Price</span>
                 <div className='range-slider'>
                   <Range
@@ -156,11 +156,11 @@ export const Shop = () => {
                 {todaysTop.map((data) => (
                   <AsideItem key={data.id} aside={data} />
                 ))}
-              </div>
+              </div> */}
             </div>
             {/* <!-- Shop Main --> */}
             <div className='shop-main'>
-              <div className='shop-main__filter'>
+              {/* <div className='shop-main__filter'>
                 <div className='shop-main__checkboxes'>
                   <label className='checkbox-box'>
                     <input
@@ -193,7 +193,7 @@ export const Shop = () => {
                     value={options[0]}
                   />
                 </div>
-              </div>
+              </div> */}
               <div className='shop-main__items'>
                 <Products products={productsItem} />
               </div>

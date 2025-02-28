@@ -41,12 +41,13 @@ export const Products = ({ products }) => {
   }, []);
 
   // Handle Adding to Cart
+
   const handleAddToCart = async (id) => {
     const userData = JSON.parse(localStorage.getItem('user'));
     const token = userData?.token;
 
     if (!token) {
-      alert('You need to be logged in to add items to the cart');
+      alert('You need to be logged in to add items to the wishlist');
       router.push('/login');
       return;
     }
@@ -58,19 +59,20 @@ export const Products = ({ products }) => {
           'Content-Type': 'application/json',
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ productId: id, quantity: 1 }),
+        body: JSON.stringify({ productId: id ,quantity: 1}),
       });
 
       const data = await response.json();
       if (!response.ok) throw new Error(data.message || 'Failed to add to cart');
 
-      setCart(data.cart);
+      setCart(data.wishlist);
       alert('Item added to cart successfully!');
     } catch (error) {
       console.error('Error adding to cart:', error);
       alert(error.message || 'Something went wrong. Please try again.');
     }
   };
+
 
   // Handle Adding to Wishlist
   const handleAddToWishlist = async (id) => {

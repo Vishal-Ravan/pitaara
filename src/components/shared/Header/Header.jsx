@@ -1,11 +1,11 @@
-import { disableBodyScroll, enableBodyScroll } from 'body-scroll-lock';
-import useWindowSize from 'components/utils/windowSize/windowSize';
-import { header, navItem } from 'data/data.header';
-import Link from 'next/link';
-import { CartContext, AuthContext } from 'pages/_app';
-import { useContext, useEffect, useState } from 'react';
-import { Nav } from './Nav/Nav';
-import { useRouter } from 'next/router';
+import { disableBodyScroll, enableBodyScroll } from "body-scroll-lock";
+import useWindowSize from "components/utils/windowSize/windowSize";
+import { header, navItem } from "data/data.header";
+import Link from "next/link";
+import { CartContext, AuthContext } from "pages/_app";
+import { useContext, useEffect, useState } from "react";
+import { Nav } from "./Nav/Nav";
+import { useRouter } from "next/router";
 
 export const Header = () => {
   const { cart } = useContext(CartContext);
@@ -14,12 +14,14 @@ export const Header = () => {
   const [fixedNav, setFixedNav] = useState(false);
   const [openMenu, setOpenMenu] = useState(false);
   const [height, width] = useWindowSize();
+  const [cartCount, setCartCount] = useState(0);
   const router = useRouter();
 
+  console.log(user, "koooooo");
   // Handle navbar scroll effect
   useEffect(() => {
-    window.addEventListener('scroll', isSticky);
-    return () => window.removeEventListener('scroll', isSticky);
+    window.addEventListener("scroll", isSticky);
+    return () => window.removeEventListener("scroll", isSticky);
   }, []);
 
   const isSticky = () => {
@@ -37,17 +39,17 @@ export const Header = () => {
 
   // Logout function
   const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
     setUser(null);
-    alert('Session expired. Please log in again.');
-    router.push('/login'); // Redirect to login page
+    alert("Session expired. Please log in again.");
+    router.push("/login"); // Redirect to login page
   };
 
   // Auto logout if token is missing or expired
   useEffect(() => {
     const checkToken = () => {
-      const userData = JSON.parse(localStorage.getItem('user'));
+      const userData = JSON.parse(localStorage.getItem("user"));
       const token = userData?.token;
 
       if (!token) {
@@ -60,60 +62,111 @@ export const Header = () => {
     return () => clearInterval(interval); // Cleanup interval on component unmount
   }, []);
 
+  const getUserToken = () => {
+    const userData = JSON.parse(localStorage.getItem("user"));
+    return userData?.token || null;
+  };
+
+  const fetchCart = async () => {
+    const token = getUserToken();
+    if (!token) {
+      setCartCount(0);
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:5000/api/cart", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      console.log("Cart API Response:", data);
+
+      let count = 0;
+      if (Array.isArray(data)) {
+        count = data.length;
+      } else if (data?.items && Array.isArray(data.items)) {
+        count = data.items.length;
+      }
+
+      setCartCount(count);
+    } catch (error) {
+      console.error("Error fetching cart data:", error);
+      setCartCount(0);
+    }
+  };
+
+  useEffect(() => {
+    fetchCart(); // Initial fetch
+
+    // Polling mechanism - fetch cart data every 5 seconds
+    const interval = setInterval(fetchCart, 100);
+
+    return () => clearInterval(interval); // Cleanup interval on component unmount
+  }, []);
+
   return (
     <>
       {/* <!-- BEGIN HEADER --> */}
-      <header className='header'>
+      <header className="header">
         {/* Promo Banner */}
         {promo && (
-          <div className='header-top'>
+          <div className="header-top">
             <span>🔥 30% OFF ON ALL PRODUCTS - USE CODE: BEShop2020</span>
             <i
               onClick={() => setPromo(false)}
-              className='header-top-close js-header-top-close icon-close'
+              className="header-top-close js-header-top-close icon-close"
             ></i>
           </div>
         )}
 
         {/* Main Navbar */}
-        <div className={`header-content ${fixedNav ? 'fixed' : ''}`}>
+        <div className={`header-content ${fixedNav ? "fixed" : ""}`}>
           {/* Logo */}
-          <div className='header-logo'>
-            <Link href='/'>
+          <div className="header-logo">
+            <Link href="/">
               <a>
-                <img src={header.logo} alt='Logo' />
+                <img src={header.logo} alt="Logo" />
               </a>
             </Link>
           </div>
 
           {/* Navigation and User Options */}
-          <div style={{ right: openMenu ? 0 : -360 }} className='header-box'>
+          <div style={{ right: openMenu ? 0 : -360 }} className="header-box">
             {/* Navigation Menu */}
             <Nav navItem={navItem} />
 
             {/* User & Cart Options */}
-            <ul className='header-options'>
+            <ul className="header-options">
               {/* Search */}
-              <li>
+              {/* <li>
                 <Link href='/search'>
                   <a>
                     <i className='icon-search'></i>
                   </a>
                 </Link>
-              </li>
+              </li> */}
 
               {/* User Authentication */}
               <li>
                 {user ? (
-                  <Link href='/profile'>
+                  <Link href="/profile">
                     <a>
-                      <i className='icon-user'>{user.email}</i>
+                      <i className="icon-user">{user.name}</i>
                     </a>
                   </Link>
                 ) : (
-                  <Link href='/login'>
+                  <Link href="/login">
                     <a>
-                      <i className='icon-user'></i>
+                      <i className="icon-user"></i>
                     </a>
                   </Link>
                 )}
@@ -121,19 +174,19 @@ export const Header = () => {
 
               {/* Wishlist */}
               <li>
-                <Link href='/wishlist'>
+                <Link href="/wishlist">
                   <a>
-                    <i className='icon-heart'></i>
+                    <i className="icon-heart"></i>
                   </a>
                 </Link>
               </li>
 
               {/* Cart */}
               <li>
-                <Link href='/cart'>
+                <Link href="/cart">
                   <a>
-                    <i className='icon-cart'></i>
-                    <span>{cart.length ?? '0'}</span>
+                    <i className="icon-cart"></i>
+                    <span>{cartCount}</span>
                   </a>
                 </Link>
               </li>
@@ -141,7 +194,7 @@ export const Header = () => {
               {/* Logout Button (Only for Logged-in Users) */}
               {user && (
                 <li>
-                  <button className='logout-btn' onClick={handleLogout}>
+                  <button className="logout-btn" onClick={handleLogout}>
                     Logout
                   </button>
                 </li>
@@ -152,7 +205,7 @@ export const Header = () => {
           {/* Mobile Menu Toggle */}
           <div
             onClick={() => setOpenMenu(!openMenu)}
-            className={`btn-menu js-btn-menu ${openMenu ? 'active' : ''}`}
+            className={`btn-menu js-btn-menu ${openMenu ? "active" : ""}`}
           >
             {[1, 2, 3].map((i) => (
               <span key={i}>&nbsp;</span>
