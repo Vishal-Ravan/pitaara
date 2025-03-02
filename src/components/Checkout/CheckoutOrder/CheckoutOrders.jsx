@@ -1,32 +1,47 @@
 import productData from 'data/product/product';
 import { CartContext } from 'pages/_app';
-import { useContext } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Card } from './Card/Card';
+import { useRouter } from 'next/router';
 
 export const CheckoutOrders = () => {
-  const { cart } = useContext(CartContext);
-  const total = cart.reduce(
-    (total, item) => total + Number(item.price) * Number(item.quantity),
-    0
-  );
+  
+  const router = useRouter();
+  const { cart, total } = router.query;
+  const [cartData, setCartData] = useState([]);
+  const [cartTotal, setCartTotal] = useState(0);
+  console.log(cartData,'ll')
 
+  useEffect(() => {
+    if (cart) {
+      try {
+        setCartData(JSON.parse(decodeURIComponent(cart)));
+      } catch (error) {
+        console.error("Error parsing cart data:", error);
+        setCartData([]);
+      }
+    }
+    if (total) {
+      setCartTotal(parseFloat(total));
+    }
+  }, [cart, total]);
   return (
     <>
       <div className='checkout-order'>
         <h5>Your Order</h5>
-        {cart.map((order) => (
+        {cartData.map((order) => (
           <Card key={order.id} order={order} />
         ))}
       </div>
       <div className='cart-bottom__total'>
         <div className='cart-bottom__total-goods'>
           Goods on
-          <span>${total.toFixed(2)}</span>
+          <span>${cartTotal.toFixed(2)}</span>
         </div>
-        <div className='cart-bottom__total-promo'>
+        {/* <div className='cart-bottom__total-promo'>
           Discount on promo code
           <span>No</span>
-        </div>
+        </div> */}
         <div className='cart-bottom__total-delivery'>
           Delivery{' '}
           <span className='cart-bottom__total-delivery-date'>
@@ -36,7 +51,7 @@ export const CheckoutOrders = () => {
         </div>
         <div className='cart-bottom__total-num'>
           total:
-          <span>${(total + 30).toFixed(2)}</span>
+          <span>${(cartTotal + 30).toFixed(2)}</span>
         </div>
       </div>
     </>

@@ -10,7 +10,16 @@ import { CartContext } from 'pages/_app';
 export const ProductDetails = () => {
   const router = useRouter();
   const { id } = router.query;
-  console.log(id, "kk");
+  const [productId, setProductId] = useState(null);
+
+
+  
+  useEffect(() => {
+    if (id) {
+      setProductId(id);  // Store the id in productId
+    }
+  }, [id]);
+  console.log(productId, 'lll')
   const { cart, setCart } = useContext(CartContext);
 
   const socialLinks = [...socialData];
@@ -36,6 +45,11 @@ export const ProductDetails = () => {
   const [activeColor, setActiveColor] = useState(2);
   const [nav1, setNav1] = useState();
   const [nav2, setNav2] = useState();
+  const [alertMessage, setAlertMessage] = useState(null); // State for alert messages
+  const showAlert = (message) => {
+    setAlertMessage(message);
+    setTimeout(() => setAlertMessage(null), 3000); // Hide alert after 3 seconds
+  };
   useEffect(() => {
     if (id) {
       const fetchProduct = async () => {
@@ -52,17 +66,100 @@ export const ProductDetails = () => {
       fetchProduct();
     }
   }, [id]);
-  const handleAddToCart = () => {
-    const newProduct = { ...product, quantity: quantity };
-    setCart([...cart, newProduct]);
+  const addToCart = async () => {
+    try {
+      const userData = JSON.parse(localStorage.getItem('user'));
+      const token = userData?.token;
+      if (!token) {
+        showAlert("You must be logged in to add items to the cart");
+        return;
+      }
+
+      if (!productId) {
+        console.error("Product ID is missing");
+        return;
+      }
+
+      const response = await fetch("http://localhost:5000/api/cart/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ productId, quantity }), // Ensure productId is used correctly
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      showAlert("Added to cart successfully");
+    } catch (error) {
+      console.error("Error adding to cart:", error.message);
+    }
   };
+
+
+
+  const addToWishlist = async () => {
+    try {
+      const userData = JSON.parse(localStorage.getItem('user'));
+      const token = userData?.token;
+      if (!token) {
+        showAlert("You must be logged in to add items to the wishlist");
+        return;
+      }
+
+      if (!productId) {
+        console.error("Product ID is missing");
+        return;
+      }
+
+      const response = await fetch("http://localhost:5000/api/wishlist/add", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ productId, quantity }), // Ensure productId is used correctly
+      });
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      showAlert("Added to wishlist successfully");
+    } catch (error) {
+      console.error("Error adding to cart:", error.message);
+    }
+  };
+
+
+
 
   if (!product) return <></>;
   return (
     <>
       {/* <!-- BEGIN PRODUCT --> */}
       <div className='product'>
-        <div className='wrapper'>
+      {alertMessage && (
+        <div style={{
+          background: '#000', 
+          color: '#fff', 
+          padding: '15px', 
+          textAlign: 'center', 
+          position:'fixed',
+          right:'0px',
+          zIndex:999,
+          top:"70px",
+          borderRadius: '5px'
+        }}>
+          {alertMessage}
+        </div>
+      )}
+        <div className='wrapper' style={{marginBottom:'70px'}}>
           <div className='product-content'>
             {/* <!-- Product Main Slider --> */}
             <div className='product-slider'>
@@ -74,7 +171,7 @@ export const ProductDetails = () => {
                   lazyLoad={true}
                   ref={(slider1) => setNav1(slider1)}
                 >
-                    {/* {product.imageGallery.map((img, index) => (
+                  {/* {product.imageGallery.map((img, index) => (
                     <div key={index} className='product-slider__main-item'>
                       <div className='products-item__type'>
                         {product.isSale && (
@@ -98,10 +195,10 @@ export const ProductDetails = () => {
                         )} */}
                       </div>
                       <img
-                          key={index}
-                          src={`http://localhost:5000${img}`} 
-                          alt="Product"
-                        />
+                        key={index}
+                        src={`http://localhost:5000${img}`}
+                        alt="Product"
+                      />
                     </div>
                   ))}
                 </Slider>
@@ -119,14 +216,14 @@ export const ProductDetails = () => {
                 >
                   {product.images.map((image, index) => (
                     <div key={index} className='product-slider__nav-item'>
-                    <img
-                          src={`http://localhost:5000${image}`} 
-                          alt="Productss"
-                          height={80}
-                        />
-                  </div>
-                       
-                      ))}
+                      <img
+                        src={`http://localhost:5000${image}`}
+                        alt="Productss"
+                        height={80}
+                      />
+                    </div>
+
+                  ))}
                   {/* {product.imageGallery.map((img, index) => (
                     <div key={index} className='product-slider__nav-item'>
                       <img src={img} alt='product' />
@@ -142,7 +239,7 @@ export const ProductDetails = () => {
               ) : (
                 ''
               )} */}
-                <span className='product-stock'>in stock</span>
+              <span className='product-stock'>in stock</span>
 
               {/* <span className='product-num'>SKU: {product.productNumber}</span> */}
               <span className='product-num'>SKU: IN1203</span>
@@ -153,7 +250,7 @@ export const ProductDetails = () => {
               ) : (
                 <span className='product-price'>${product.price}</span>
               )} */}
-                <span className='product-price'>${product.price}</span>
+              <span className='product-price'>${product.price}</span>
 
               <p>{product.description}</p>
 
@@ -220,14 +317,13 @@ export const ProductDetails = () => {
                 </div>
               </div>
               <div className='product-buttons'>
-                <button
-                  disabled={addedInCart}
-                  onClick={() => handleAddToCart()}
+
+                <button onClick={() => addToCart(product._id)}
                   className='btn btn-icon'
-                >
-                  <i className='icon-cart'></i> cart
+                >                  <i className='icon-cart'></i> cart
                 </button>
-                <button className='btn btn-grey btn-icon'>
+
+                <button className='btn btn-grey btn-icon' onClick={() => addToWishlist(product._id)}>
                   <i className='icon-heart'></i> wish
                 </button>
               </div>

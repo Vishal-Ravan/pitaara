@@ -21,7 +21,7 @@ const ProductPage = () => {
   return (
     <PublicLayout breadcrumb={breadcrumbsData} breadcrumbTitle='Shop'>
       <ProductDetails />
-      <MostViewed />
+      {/* <MostViewed /> */}
     </PublicLayout>
   );
 };

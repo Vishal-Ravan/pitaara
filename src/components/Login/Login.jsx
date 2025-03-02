@@ -7,7 +7,11 @@ export const Login = () => {
   const { setUser } = useContext(AuthContext); // Access AuthContext
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-
+  const [alertMessage, setAlertMessage] = useState(null); // State for alert messages
+  const showAlert = (message) => {
+    setAlertMessage(message);
+    setTimeout(() => setAlertMessage(null), 3000); // Hide alert after 3 seconds
+  };
   const handleLogin = async (e) => {
     e.preventDefault();
 
@@ -25,10 +29,10 @@ export const Login = () => {
 
       if (!response.ok) {
         if (data.message === 'User not found') {
-          alert('User not found. Please register first.');
-          router.push('/registration');
+          showAlert('User not found. Please register first.');
+          // router.push('/registration');
         } else {
-          alert(data.message || 'Login failed. Please try again.');
+          showAlert(data.message || 'Login failed. Please try again.');
         }
         return;
       }
@@ -37,13 +41,13 @@ export const Login = () => {
       const userData = { email,name:data.name, token: data.token };
       localStorage.setItem('user', JSON.stringify(userData));
       setUser(userData);
-      console.log(userData,'kkkk')
+      // console.log(userData,'kkkk')
 
-      alert('Login successful!');
+      showAlert('Login successful!');
       router.push('/');
     } catch (error) {
       console.error('Login Error:', error);
-      alert('Something went wrong. Please try again.');
+      showAlert('Something went wrong. Please try again.');
     }
   };
 
@@ -56,7 +60,7 @@ export const Login = () => {
         >
           <form onSubmit={handleLogin}>
             <h3>log in with</h3>
-            <SocialLogin />
+            {/* <SocialLogin /> */}
             <div className='box-field'>
               <input
                 type='text'
@@ -97,6 +101,21 @@ export const Login = () => {
         src='/assets/img/promo-video__decor.jpg'
         alt=''
       />
+        {alertMessage && (
+        <div style={{
+          background: '#000', 
+          color: '#fff', 
+          padding: '15px', 
+          textAlign: 'center', 
+          position:'fixed',
+          right:'0px',
+          zIndex:999,
+          top:"70px",
+          borderRadius: '5px'
+        }}>
+          {alertMessage}
+        </div>
+      )}
     </div>
   );
 };

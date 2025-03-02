@@ -1,11 +1,10 @@
 import { Card } from "./Card/Card";
 import socialData from "data/social";
-import { CartContext } from "pages/_app";
 import { useContext, useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/router";
 
 export const Cart = () => {
-  const { cart, setCart } = useContext(CartContext);
   const [cartData, setCartData] = useState([]);
   const socialLinks = [...socialData];
 
@@ -13,12 +12,12 @@ export const Cart = () => {
     const userData = JSON.parse(localStorage.getItem("user"));
     return userData?.token || null;
   };
-
+  const router = useRouter();
   useEffect(() => {
     const fetchCart = async () => {
       const token = getUserToken();
       if (!token) {
-        setCart([]);
+        setCartData([]);
         return;
       }
 
@@ -53,7 +52,15 @@ export const Cart = () => {
 
     fetchCart();
   }, []);
-
+  const handleCheckout = () => {
+    router.push({
+      pathname: "/checkout",
+      query: {
+        cart: encodeURIComponent(JSON.stringify(cartData)),
+        total: total.toFixed(2),
+      },
+    });
+  };
   // Calculate total price dynamically
   const calculateTotal = (cartItems) => {
     return cartItems.reduce(
@@ -163,7 +170,7 @@ export const Cart = () => {
                 <span>${total.toFixed(2)}</span>
               </div>
               <Link href="/checkout">
-                <a className="btn">Checkout</a>
+              <button className="btn" onClick={handleCheckout}>Checkout</button>
               </Link>
             </div>
           </div>

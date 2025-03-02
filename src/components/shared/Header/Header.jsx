@@ -8,7 +8,6 @@ import { Nav } from "./Nav/Nav";
 import { useRouter } from "next/router";
 
 export const Header = () => {
-  const { cart } = useContext(CartContext);
   const { user, setUser } = useContext(AuthContext);
   const [promo, setPromo] = useState(true);
   const [fixedNav, setFixedNav] = useState(false);
@@ -16,9 +15,11 @@ export const Header = () => {
   const [height, width] = useWindowSize();
   const [cartCount, setCartCount] = useState(0);
   const router = useRouter();
-
-  console.log(user, "koooooo");
-  // Handle navbar scroll effect
+  const [alertMessage, setAlertMessage] = useState(null); // State for alert messages
+  const showAlert = (message) => {
+    setAlertMessage(message);
+    setTimeout(() => setAlertMessage(null), 3000); // Hide alert after 3 seconds
+  };
   useEffect(() => {
     window.addEventListener("scroll", isSticky);
     return () => window.removeEventListener("scroll", isSticky);
@@ -37,29 +38,31 @@ export const Header = () => {
     }
   }, [openMenu, height]);
 
-  // Logout function
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     setUser(null);
-    alert("Session expired. Please log in again.");
-    router.push("/login"); // Redirect to login page
+    showAlert("Logout Sucessfully.");
+    router.push("/"); 
   };
 
   // Auto logout if token is missing or expired
   useEffect(() => {
     const checkToken = () => {
-      const userData = JSON.parse(localStorage.getItem("user"));
-      const token = userData?.token;
-
-      if (!token) {
+      const userData = localStorage.getItem("user");
+      if (!userData) {
+        handleLogout();
+        return;
+      }
+  
+      const parsedUser = JSON.parse(userData);
+      if (!parsedUser?.token) {
         handleLogout();
       }
     };
-
+  
     const interval = setInterval(checkToken, 5 * 60 * 1000); // Check every 5 minutes
-
-    return () => clearInterval(interval); // Cleanup interval on component unmount
+    return () => clearInterval(interval);
   }, []);
 
   const getUserToken = () => {
@@ -88,7 +91,7 @@ export const Header = () => {
       }
 
       const data = await response.json();
-      console.log("Cart API Response:", data);
+      // console.log("Cart API Response:", data);
 
       let count = 0;
       if (Array.isArray(data)) {
@@ -115,6 +118,21 @@ export const Header = () => {
 
   return (
     <>
+    {alertMessage && (
+        <div style={{
+          background: '#000', 
+          color: '#fff', 
+          padding: '15px', 
+          textAlign: 'center', 
+          position:'fixed',
+          right:'0px',
+          zIndex:999,
+          top:"70px",
+          borderRadius: '5px'
+        }}>
+          {alertMessage}
+        </div>
+      )}
       {/* <!-- BEGIN HEADER --> */}
       <header className="header">
         {/* Promo Banner */}
@@ -194,9 +212,14 @@ export const Header = () => {
               {/* Logout Button (Only for Logged-in Users) */}
               {user && (
                 <li>
-                  <button className="logout-btn" onClick={handleLogout}>
-                    Logout
-                  </button>
+                  <img
+                  src='/assets/img/icons/logout.png'
+                  className='js-img'
+                  alt=''
+                  width={23}
+                  style={{cursor:'pointer'}}
+                  onClick={handleLogout}
+                />
                 </li>
               )}
             </ul>

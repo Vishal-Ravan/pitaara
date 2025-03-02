@@ -82,10 +82,38 @@ export const Registration = () => {
               <h3>Register Now</h3>
               {/* <SocialLogin />   */}
 
-              {/* Success & Error Messages */}
-              {successMessage && <p className='success-message'>{successMessage}</p>}
-              {errorMessage && <p className='error-message'>{errorMessage}</p>}
-
+              {successMessage && (
+        <div style={{
+          background: '#000', 
+          color: '#fff', 
+          padding: '15px', 
+          textAlign: 'center', 
+          position:'fixed',
+          right:'0px',
+          zIndex:999,
+          top:"70px",
+          borderRadius: '5px'
+        }}>
+          {successMessage}
+        </div>
+      )}
+      
+      {errorMessage && (
+        <div style={{
+          background: '#000', 
+          color: '#fff', 
+          padding: '15px', 
+          textAlign: 'center', 
+          position:'fixed',
+          right:'0px',
+          zIndex:999,
+          top:"70px",
+          borderRadius: '5px'
+        }}>
+          {errorMessage}
+        </div>
+      )}
+      
               {/* Name Fields */}
                 <div className='box-field'>
                   <input
