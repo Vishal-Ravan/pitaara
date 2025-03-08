@@ -69,7 +69,7 @@ export const Wishlist = () => {
                     wish={{
                       id: product._id,
                       name: product.name,
-                      image: product.image || "/default-image.jpg",
+                      image: product.images || "/default-image.jpg",
                       isStocked: product.isStocked || false,
                       productNumber: product.productNumber || "N/A",
                       price: product.price,
@@ -82,9 +82,9 @@ export const Wishlist = () => {
             </div>
           </div>
           <div className="wishlist-buttons">
-            <a href="#" className="btn btn-grey">
+            {/* <a href="#" className="btn btn-grey">
               Clear Wishlist
-            </a>
+            </a> */}
             <Link href="/shop">
               <a className="btn">Go Shopping</a>
             </Link>

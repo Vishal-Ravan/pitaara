@@ -24,7 +24,7 @@ export const ProfileAside = () => {
             alt=''
           />
         </div>
-        <div className='profile-aside__viewed'>
+        {/* <div className='profile-aside__viewed'>
           <h5>You have viewed</h5>
           {recentlyViewed.map((product) => (
             <div key={product.id} className='profile-aside__viewed-item'>
@@ -60,7 +60,7 @@ export const ProfileAside = () => {
               get now!
             </a>
           </Link>
-        </div>
+        </div> */}
       </div>
     </>
   );

@@ -2,7 +2,6 @@ import Link from 'next/link';
 
 export const Card = ({ order }) => {
   const { images, name, price, productNumber, _id, quantity } = order.productId;
-console.log(order.productId,'uuuuuu')
   return (
     <>
       {/* <!-- BEING ORDER ITEM CARD --> */}

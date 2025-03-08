@@ -16,7 +16,10 @@ const WishlistPage = () => {
   return (
     <PublicLayout breadcrumb={breadcrumbsData} breadcrumbTitle='Wishlist'>
       <Wishlist />
-      <MostViewed />
+      {/* <MostViewed /> */}
+      <br/>
+      <br/>
+      <br/>
     </PublicLayout>
   );
 };

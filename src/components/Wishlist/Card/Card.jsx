@@ -3,14 +3,13 @@ import Link from "next/link";
 export const Card = ({ wish }) => {
   const { name, image, id, isStocked, productNumber, price } = wish;
 
-  console.log("Rendering Card Component with:", wish);
 
   return (
     <div className="cart-table__row">
       <div className="cart-table__col">
         <Link href={`/product/${id}`}>
           <a className="cart-table__img">
-            <img src={`http://localhost:5000${image}`} className="js-img" alt={name || "Product"} />
+            <img src={`http://localhost:5000${image[0]}`} className="js-img" alt={name || "Product"} />
           </a>
         </Link>
         <div className="cart-table__info">
