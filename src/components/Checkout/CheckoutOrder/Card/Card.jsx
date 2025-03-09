@@ -18,7 +18,7 @@ export const Card = ({ order }) => {
             </a>
           </Link>
           <span className='checkout-order__item-price'>
-            ${(price * quantity).toFixed(2)}
+          ₹{(price * quantity).toFixed(2)}
           </span>
           <span className='checkout-order__item-num'>SKU: {productNumber}</span>
         </div>

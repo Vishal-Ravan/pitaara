@@ -15,11 +15,13 @@ export const Header = () => {
   const [height, width] = useWindowSize();
   const [cartCount, setCartCount] = useState(0);
   const router = useRouter();
-  const [alertMessage, setAlertMessage] = useState(null); // State for alert messages
+  const [alertMessage, setAlertMessage] = useState(null); // Alert message state
+
   const showAlert = (message) => {
     setAlertMessage(message);
     setTimeout(() => setAlertMessage(null), 3000); // Hide alert after 3 seconds
   };
+
   useEffect(() => {
     window.addEventListener("scroll", isSticky);
     return () => window.removeEventListener("scroll", isSticky);
@@ -29,7 +31,6 @@ export const Header = () => {
     setFixedNav(window.scrollY > 10);
   };
 
-  // Handle body scroll when menu is open
   useEffect(() => {
     if (openMenu && height < 767) {
       disableBodyScroll(document);
@@ -42,27 +43,36 @@ export const Header = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     setUser(null);
-    showAlert("Logout Sucessfully.");
-    router.push("/"); 
+    showAlert("Session expired. Redirecting to home...");
+
+    // Redirect to home page after logout
+    router.push("/");
   };
 
-  // Auto logout if token is missing or expired
   useEffect(() => {
-    const checkToken = () => {
+    const checkUserStatus = async () => {
       const userData = localStorage.getItem("user");
+
       if (!userData) {
-        handleLogout();
+        setUser(null); // User stays logged out but can access all pages
         return;
       }
-  
-      const parsedUser = JSON.parse(userData);
-      if (!parsedUser?.token) {
+
+      try {
+        const parsedUser = JSON.parse(userData);
+        if (!parsedUser?.token) {
+          handleLogout();
+          return;
+        }
+
+        setUser(parsedUser);
+      } catch (error) {
+        console.error("Error parsing user data:", error);
         handleLogout();
       }
     };
-  
-    const interval = setInterval(checkToken, 5 * 60 * 1000); // Check every 5 minutes
-    return () => clearInterval(interval);
+
+    checkUserStatus();
   }, []);
 
   const getUserToken = () => {
@@ -86,13 +96,16 @@ export const Header = () => {
         },
       });
 
+      if (response.status === 401 || response.status === 403) {
+        handleLogout(); // Auto logout if token is invalid or expired
+        return;
+      }
+
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
       }
 
       const data = await response.json();
-      // console.log("Cart API Response:", data);
-
       let count = 0;
       if (Array.isArray(data)) {
         count = data.length;
@@ -111,31 +124,31 @@ export const Header = () => {
     fetchCart(); // Initial fetch
 
     // Polling mechanism - fetch cart data every 5 seconds
-    const interval = setInterval(fetchCart, 100);
+    const interval = setInterval(fetchCart, 5000);
 
     return () => clearInterval(interval); // Cleanup interval on component unmount
   }, []);
 
   return (
     <>
-    {alertMessage && (
-        <div style={{
-          background: '#000', 
-          color: '#fff', 
-          padding: '15px', 
-          textAlign: 'center', 
-          position:'fixed',
-          right:'0px',
-          zIndex:999,
-          top:"70px",
-          borderRadius: '5px'
-        }}>
+      {alertMessage && (
+        <div
+          style={{
+            background: "#000",
+            color: "#fff",
+            padding: "15px",
+            textAlign: "center",
+            position: "fixed",
+            right: "0px",
+            zIndex: 999,
+            top: "70px",
+            borderRadius: "5px",
+          }}
+        >
           {alertMessage}
         </div>
       )}
-      {/* <!-- BEGIN HEADER --> */}
       <header className="header">
-        {/* Promo Banner */}
         {promo && (
           <div className="header-top">
             <span>🔥 30% OFF ON ALL PRODUCTS - USE CODE: BEShop2020</span>
@@ -146,9 +159,7 @@ export const Header = () => {
           </div>
         )}
 
-        {/* Main Navbar */}
         <div className={`header-content ${fixedNav ? "fixed" : ""}`}>
-          {/* Logo */}
           <div className="header-logo">
             <Link href="/">
               <a>
@@ -157,23 +168,10 @@ export const Header = () => {
             </Link>
           </div>
 
-          {/* Navigation and User Options */}
           <div style={{ right: openMenu ? 0 : -360 }} className="header-box">
-            {/* Navigation Menu */}
             <Nav navItem={navItem} />
 
-            {/* User & Cart Options */}
             <ul className="header-options">
-              {/* Search */}
-              {/* <li>
-                <Link href='/search'>
-                  <a>
-                    <i className='icon-search'></i>
-                  </a>
-                </Link>
-              </li> */}
-
-              {/* User Authentication */}
               <li>
                 {user ? (
                   <Link href="/profile">
@@ -190,7 +188,6 @@ export const Header = () => {
                 )}
               </li>
 
-              {/* Wishlist */}
               <li>
                 <Link href="/wishlist">
                   <a>
@@ -199,7 +196,6 @@ export const Header = () => {
                 </Link>
               </li>
 
-              {/* Cart */}
               <li>
                 <Link href="/cart">
                   <a>
@@ -209,23 +205,21 @@ export const Header = () => {
                 </Link>
               </li>
 
-              {/* Logout Button (Only for Logged-in Users) */}
               {user && (
                 <li>
                   <img
-                  src='/assets/img/icons/logout.png'
-                  className='js-img'
-                  alt=''
-                  width={23}
-                  style={{cursor:'pointer'}}
-                  onClick={handleLogout}
-                />
+                    src="/assets/img/icons/logout.png"
+                    className="js-img"
+                    alt=""
+                    width={23}
+                    style={{ cursor: "pointer" }}
+                    onClick={handleLogout}
+                  />
                 </li>
               )}
             </ul>
           </div>
 
-          {/* Mobile Menu Toggle */}
           <div
             onClick={() => setOpenMenu(!openMenu)}
             className={`btn-menu js-btn-menu ${openMenu ? "active" : ""}`}
@@ -236,7 +230,6 @@ export const Header = () => {
           </div>
         </div>
       </header>
-      {/* <!-- HEADER EOF   --> */}
     </>
   );
 };

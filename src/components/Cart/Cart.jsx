@@ -159,7 +159,7 @@ export const Cart = () => {
             <div className="cart-bottom__total">
               <div className="cart-bottom__total-goods">
                 Goods on
-                <span>${total.toFixed(2)}</span>
+                <span>₹{total.toFixed(2)}</span>
               </div>
               <div className="cart-bottom__total-promo">
                 Discount on promo code
@@ -167,7 +167,7 @@ export const Cart = () => {
               </div>
               <div className="cart-bottom__total-num">
                 Total:
-                <span>${total.toFixed(2)}</span>
+                <span>₹{total.toFixed(2)}</span>
               </div>
               <Link href="/checkout">
               <button className="btn" onClick={handleCheckout}>Checkout</button>

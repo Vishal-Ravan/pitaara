@@ -42,7 +42,7 @@ export const Card = ({ cart, onChangeQuantity }) => {
       <div className="cart-table__col">
         {oldPrice ? (
           <span className="cart-table__price">
-            <span>${oldPrice}</span> ${price}
+            <span>₹{oldPrice}</span> ₹{price}
           </span>
         ) : (
           <span className="cart-table__price">${price}</span>

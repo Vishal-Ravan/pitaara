@@ -250,7 +250,7 @@ export const ProductDetails = () => {
               ) : (
                 <span className='product-price'>${product.price}</span>
               )} */}
-              <span className='product-price'>${product.price}</span>
+              <span className='product-price'>₹{product.price}</span>
 
               <p>{product.description}</p>
 

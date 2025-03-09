@@ -36,22 +36,22 @@ export const CheckoutOrders = () => {
       <div className='cart-bottom__total'>
         <div className='cart-bottom__total-goods'>
           Goods on
-          <span>${cartTotal.toFixed(2)}</span>
+          <span>₹{cartTotal.toFixed(2)}</span>
         </div>
         {/* <div className='cart-bottom__total-promo'>
           Discount on promo code
           <span>No</span>
         </div> */}
-        <div className='cart-bottom__total-delivery'>
+        {/* <div className='cart-bottom__total-delivery'>
           Delivery{' '}
           <span className='cart-bottom__total-delivery-date'>
             (Aug 28,2020 at 11:30)
           </span>
-          <span>$30</span>
-        </div>
+          <span>₹30</span>
+        </div> */}
         <div className='cart-bottom__total-num'>
           total:
-          <span>${(cartTotal + 30).toFixed(2)}</span>
+          <span>₹{(cartTotal + 30).toFixed(2)}</span>
         </div>
       </div>
     </>
