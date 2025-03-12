@@ -1,6 +1,6 @@
 import { useContext, useState } from 'react';
 import { AuthContext } from 'pages/_app'; // Import AuthContext
-import { SocialLogin } from 'components/shared/SocialLogin/SocialLogin';
+// import { SocialLogin } from 'components/shared/SocialLogin/SocialLogin';
 import router from 'next/router';
 
 export const Login = () => {
@@ -16,7 +16,7 @@ export const Login = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch('http://localhost:5000/api/login', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/login`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

@@ -21,7 +21,7 @@ export const Profile = () => {
       }
 
       try {
-        const response = await fetch('http://localhost:5000/api/users/profile', {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/users/profile`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -57,7 +57,7 @@ export const Profile = () => {
       return;
     }
     try {
-      const response = await fetch('http://localhost:5000/api/wishlist', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/wishlist`, {
         method: 'GET',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
       });
@@ -81,7 +81,7 @@ export const Profile = () => {
       return;
     }
     try {
-      const response = await fetch(`http://localhost:5000/api/wishlist/remove/${productId}`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/wishlist/remove/${productId}`, {
         method: 'DELETE',
         headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${token}` },
       });
@@ -149,7 +149,7 @@ export const Profile = () => {
                         <ul className="wishlist-list product-price">
                           {wishlist.map(item => (<>
                             <li key={item._id} className="wishlist-item">
-                              <img src={`http://localhost:5000${item.images[0]}`} alt={item.name} className="wishlist-image" height={100} />
+                              <img src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${item.images[0]}`} alt={item.name} className="wishlist-image" height={100} />
                               <div className="wishlist-details d-flex">
                                 <h5>Product Name : {item.name}</h5>
                                 <p>Price :{item.price} INR</p>

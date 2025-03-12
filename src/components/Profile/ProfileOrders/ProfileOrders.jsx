@@ -21,7 +21,7 @@ export const ProfileOrders = () => {
         return;
       }
       try {
-        const response = await fetch("http://localhost:5000/api/orders/user/all", {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/orders/user/all`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

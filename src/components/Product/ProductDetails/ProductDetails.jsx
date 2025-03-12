@@ -55,7 +55,7 @@ export const ProductDetails = () => {
       const fetchProduct = async () => {
         try {
           const response = await fetch(
-            `http://localhost:5000/api/product/${id}`
+            `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/product/${id}`
           );
           const data = await response.json();
           setProduct(data);
@@ -80,7 +80,7 @@ export const ProductDetails = () => {
         return;
       }
 
-      const response = await fetch("http://localhost:5000/api/cart/add", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/cart/add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -116,7 +116,7 @@ export const ProductDetails = () => {
         return;
       }
 
-      const response = await fetch("http://localhost:5000/api/wishlist/add", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/wishlist/add`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -196,7 +196,7 @@ export const ProductDetails = () => {
                       </div>
                       <img
                         key={index}
-                        src={`http://localhost:5000${img}`}
+                        src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${img}`}
                         alt="Product"
                       />
                     </div>
@@ -217,7 +217,7 @@ export const ProductDetails = () => {
                   {product.images.map((image, index) => (
                     <div key={index} className='product-slider__nav-item'>
                       <img
-                        src={`http://localhost:5000${image}`}
+                        src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${image}`}
                         alt="Productss"
                         height={80}
                       />

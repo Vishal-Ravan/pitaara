@@ -22,7 +22,7 @@ export const Cart = () => {
       }
 
       try {
-        const response = await fetch("http://localhost:5000/api/cart", {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/cart`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

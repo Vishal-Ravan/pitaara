@@ -21,7 +21,7 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
       }
 
       // Step 1: Create Order in Razorpay
-      const response = await fetch("http://localhost:5000/api/payment/create-order", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/payment/create-order`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -54,7 +54,7 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
             console.log("Payment Response:", paymentResponse);
 
             // Step 3: Verify Payment on Backend
-            const verifyResponse = await fetch("http://localhost:5000/api/payment/verify-payment", {
+            const verifyResponse = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/payment/verify-payment`, {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
@@ -70,7 +70,7 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
               alert("Payment successful! Placing your order...");
 
               // Step 4: Auto Place Order After Payment
-              const orderResponse = await fetch("http://localhost:5000/api/checkout", {
+              const orderResponse = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/checkout`, {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",
@@ -119,7 +119,7 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
     }
 
     try {
-      const response = await fetch("http://localhost:5000/api/checkout", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/checkout`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

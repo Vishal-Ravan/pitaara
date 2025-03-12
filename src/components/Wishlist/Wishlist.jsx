@@ -20,7 +20,7 @@ export const Wishlist = () => {
       }
 
       try {
-        const response = await fetch("http://localhost:5000/api/wishlist", {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/wishlist`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

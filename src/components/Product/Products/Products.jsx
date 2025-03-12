@@ -24,7 +24,7 @@ export const Products = ({ products }) => {
    
 
         // Fetch Wishlist
-        const wishlistResponse = await fetch('http://localhost:5000/api/wishlist', {
+        const wishlistResponse = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/wishlist`, {
           method: 'GET',
           headers: {
             'Content-Type': 'application/json',
@@ -57,7 +57,7 @@ export const Products = ({ products }) => {
     }
 
     try {
-      const response = await fetch('http://localhost:5000/api/cart/add', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/cart/add`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -90,7 +90,7 @@ export const Products = ({ products }) => {
     }
 
     try {
-      const response = await fetch('http://localhost:5000/api/wishlist/add', {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/wishlist/add`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
