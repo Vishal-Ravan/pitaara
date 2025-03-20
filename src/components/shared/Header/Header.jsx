@@ -79,16 +79,16 @@ export const Header = () => {
     const userData = JSON.parse(localStorage.getItem("user"));
     return userData?.token || null;
   };
-
   const fetchCart = async () => {
     const token = getUserToken();
     if (!token) {
       setCartCount(0);
       return;
     }
+    console.log(token,'kkko')
 
     try {
-      const response = await fetch("http://localhost:5000/api/cart", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/cart`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -123,8 +123,7 @@ export const Header = () => {
   useEffect(() => {
     fetchCart(); // Initial fetch
 
-    // Polling mechanism - fetch cart data every 5 seconds
-    const interval = setInterval(fetchCart, 5000);
+    const interval = setInterval(fetchCart, 500);
 
     return () => clearInterval(interval); // Cleanup interval on component unmount
   }, []);
