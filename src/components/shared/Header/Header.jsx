@@ -85,7 +85,6 @@ export const Header = () => {
       setCartCount(0);
       return;
     }
-    console.log(token,'kkko')
 
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/cart`, {

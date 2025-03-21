@@ -1,7 +1,9 @@
 import Link from 'next/link';
 
 export const Card = ({ order }) => {
-  const { images, name, price, productNumber, _id, quantity } = order.productId;
+  const { images, name, price, productNumber, _id } = order.productId;
+  const quantity =order.quantity
+  console.log(quantity,'kkk')
   return (
     <>
       {/* <!-- BEING ORDER ITEM CARD --> */}
