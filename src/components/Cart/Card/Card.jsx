@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 
-export const Card = ({ cart, onChangeQuantity }) => {
+export const Card = ({ cart, onChangeQuantity, onRemove, userId }) => {
   const { name, image, id, isStocked, productNumber, oldPrice, price, quantity } = cart;
   const [currentQuantity, setCurrentQuantity] = useState(quantity);
   const [totalPrice, setTotalPrice] = useState(price * quantity);
@@ -21,6 +21,39 @@ export const Card = ({ cart, onChangeQuantity }) => {
 
     setCurrentQuantity(newQuantity);
     onChangeQuantity(id, newQuantity);
+  };
+
+  const getUserToken = () => {
+    const userData = JSON.parse(localStorage.getItem("user"));
+    return userData?.token || null;
+  };
+
+  const removeFromCart = async (productId) => {
+    const token = getUserToken();
+    if (!token) {
+      return;
+    }
+
+    try {
+      const response = await fetch("http://localhost:5000/api/cart/remove", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ productId }),
+      });
+
+      const data = await response.json();
+      if (response.ok) {
+        console.log("Item removed successfully", data);
+        onRemove(productId); // Update UI without refresh
+      } else {
+        console.error("Error removing item:", data.message);
+      }
+    } catch (error) {
+      console.error("Network error:", error);
+    }
   };
 
   return (
@@ -69,6 +102,11 @@ export const Card = ({ cart, onChangeQuantity }) => {
       </div>
       <div className="cart-table__col">
         <span className="cart-table__total">${totalPrice.toFixed(2)}</span>
+      </div>
+      <div className="cart-table__col">
+        <button onClick={() => removeFromCart(id)} className="remove-btn">
+          Remove
+        </button>
       </div>
     </div>
   );

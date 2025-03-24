@@ -22,13 +22,16 @@ export const Cart = () => {
       }
 
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/cart`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/cart`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
 
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
@@ -79,13 +82,14 @@ export const Cart = () => {
   const handleQuantityChange = (id, newQuantity) => {
     setCartData((prevCartData) =>
       prevCartData.map((item) =>
-        item.productId._id === id
-          ? { ...item, quantity: newQuantity }
-          : item
+        item.productId._id === id ? { ...item, quantity: newQuantity } : item
       )
     );
   };
-
+  const handleRemoveItem = (productId) => {
+    setCartData((prevCart) => prevCart.filter((item) => item.id !== productId));
+  };
+  console.log(cartData,'ppppppppp')
   return (
     <>
       <div className="cart">
@@ -102,6 +106,7 @@ export const Cart = () => {
               {cartData?.map((cartItem) => (
                 <Card
                   key={cartItem._id}
+                  onRemove={handleRemoveItem}
                   cart={{
                     id: cartItem.productId._id,
                     name: cartItem.productId.name,
@@ -114,6 +119,7 @@ export const Cart = () => {
                     oldPrice: cartItem.productId.oldPrice || null,
                     price: cartItem.productId.price,
                     quantity: cartItem.quantity,
+                    
                   }}
                   onChangeQuantity={handleQuantityChange}
                 />
@@ -170,9 +176,13 @@ export const Cart = () => {
                 <span>₹{total.toFixed(2)}</span>
               </div>
               <Link href="/checkout">
-              <button className="btn" onClick={handleCheckout} disabled={cartData.length === 0}>
-  Checkout
-</button>
+                <button
+                  className="btn"
+                  onClick={handleCheckout}
+                  disabled={cartData.length === 0}
+                >
+                  Checkout
+                </button>
               </Link>
             </div>
           </div>
