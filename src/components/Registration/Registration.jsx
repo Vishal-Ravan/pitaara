@@ -79,7 +79,7 @@ export const Registration = () => {
             }}
           >
             <form onSubmit={formik.handleSubmit}>
-              <h3>Register Now</h3>
+              <h3>Sign Up</h3>
               {/* <SocialLogin />   */}
 
               {successMessage && (

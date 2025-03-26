@@ -19,7 +19,7 @@ export const SingleProduct = ({
         </div>
         <div className="products-item__img">
           {images && images.length > 0 ? (
-            <img src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${images[1]}`} alt="Product" />
+            <img src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${images[0]}`} alt="Product" />
           ) : (
             <div className="placeholder">No Image Available</div>
           )}

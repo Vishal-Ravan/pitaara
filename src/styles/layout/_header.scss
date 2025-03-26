@@ -16,6 +16,7 @@ header {
   left: 0;
   top: 0;
   width: 100%;
+  background-color: #fff;
   z-index: 101;
   &-top {
     background-color: #222222;
@@ -50,7 +51,7 @@ header {
   &-content {
     // padding: 72px 80px 0;
     // padding-right: 63px;
-    padding: 72px 70px 0;
+    padding: 50px 70px 0;
     padding-right: 72px;
     display: flex;
     justify-content: space-between;
@@ -61,7 +62,7 @@ header {
       width: 100%;
       padding-top: 20px;
       padding-bottom: 20px;
-      background-color: rgba($color: #fcedea, $alpha: 0.9);
+      background-color: #fff;
     }
   }
   &-box {
@@ -100,7 +101,7 @@ header {
         }
         &:hover,
         &.active {
-          color: #d05278;
+          color: #42203f;
           &:after {
             opacity: 1;
           }
@@ -128,7 +129,7 @@ header {
             padding: 7.6px 40px;
             display: block;
             &:hover {
-              background-color: #d05278;
+              background-color: #42203f;
               color: #ffffff;
               &:after {
                 display: none;
@@ -168,7 +169,7 @@ header {
         transition: $transition;
         font-size: 19px;
         &:hover {
-          color: #d05278;
+          color: #42203f;
         }
       }
       span {
@@ -178,7 +179,7 @@ header {
         display: flex;
         justify-content: center;
         align-items: center;
-        background: #d05278;
+        background: #42203f;
         font-family: 'Montserrat';
         font-weight: 700;
         font-size: 12px;
@@ -361,6 +362,7 @@ header {
   .header-content.fixed {
     padding-top: 20px;
     padding-bottom: 10px;
+    background-color: #fff !important;
     .btn-menu {
       top: 50%;
     }

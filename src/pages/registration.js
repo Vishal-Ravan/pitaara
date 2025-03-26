@@ -8,13 +8,13 @@ const breadcrumbsData = [
     path: '/',
   },
   {
-    label: 'Check in',
+    label: 'Sign Up',
     path: '/registration',
   },
 ];
 const RegistrationPage = () => {
   return (
-    <PublicLayout breadcrumb={breadcrumbsData} breadcrumbTitle='Registration'>
+    <PublicLayout breadcrumb={breadcrumbsData} breadcrumbTitle='Sign Up'>
       <Registration />
       <Subscribe />
     </PublicLayout>
