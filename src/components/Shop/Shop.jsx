@@ -1,220 +1,170 @@
-import { Products } from 'components/Product/Products/Products';
-import { PagingList } from 'components/shared/PagingList/PagingList';
-import { usePagination } from 'components/utils/Pagination/Pagination';
-import productData from 'data/product/product';
-import Slider from 'rc-slider';
-import { useEffect, useState } from 'react';
-import Dropdown from 'react-dropdown';
-import { AsideItem } from '../shared/AsideItem/AsideItem';
+import { useEffect, useState } from "react";
+import { Products } from "components/Product/Products/Products";
+import { PagingList } from "components/shared/PagingList/PagingList";
+import { usePagination } from "components/utils/Pagination/Pagination";
+import productData from "data/product/product";
+import Slider from "rc-slider";
+import Dropdown from "react-dropdown";
+import { AsideItem } from "../shared/AsideItem/AsideItem";
 
 // React Range
 const { createSliderWithTooltip } = Slider;
 const Range = createSliderWithTooltip(Slider.Range);
-const options = [
-  { value: 'highToMin', label: 'From expensive to cheap' },
-  { value: 'minToHigh', label: 'From cheap to expensive' },
+
+const sortOptions = [
+  { value: "highToLow", label: "From expensive to cheap" },
+  { value: "lowToHigh", label: "From cheap to expensive" },
 ];
+
 export const Shop = () => {
   const [productsItem, setProductsItem] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
+  const [category, setCategory] = useState("all");
+  const [searchQuery, setSearchQuery] = useState("");
+  const [priceRange, setPriceRange] = useState([0, 10000]);
+  const [sortOrder, setSortOrder] = useState("highToLow");
 
   useEffect(() => {
-    const fetchTrendingProducts = async () => {
+    const fetchProducts = async () => {
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/product`);
         if (!response.ok) {
-          throw new Error('Failed to fetch products');
+          throw new Error("Failed to fetch products");
         }
         const data = await response.json();
         setProductsItem(data);
+        setFilteredProducts(data); // Set initial filtered products
       } catch (error) {
-        console.error('Error fetching trending products:', error);
+        console.error("Error fetching products:", error);
       }
     };
 
-    fetchTrendingProducts();
+    fetchProducts();
   }, []);
-  const allProducts = [...productsItem];
-  console.log(allProducts,'llll')
-
-  const [productOrder, setProductOrder] = useState(
-    allProducts.sort((a, b) => (a.price < b.price ? 1 : -1))
-  );
-
-  const [products, setProducts] = useState([...productOrder]);
-  const [filter, setFilter] = useState({ isNew: false, isSale: true });
 
   useEffect(() => {
-    setProducts(productOrder);
-  }, [productOrder]);
+    let updatedProducts = [...productsItem];
 
-  useEffect(() => {
-    if (filter.isNew && filter.isSale) {
-      const newPro = productOrder.filter(
-        (pd) => pd.isNew === true && pd.isSale === true
+    // Filter by Category
+    if (category !== "all") {
+      updatedProducts = updatedProducts.filter((item) => item.category.toLowerCase() === category.toLowerCase());
+    }
+
+    // Search Filter
+    if (searchQuery) {
+      updatedProducts = updatedProducts.filter((item) =>
+        item.name.toLowerCase().includes(searchQuery.toLowerCase())
       );
-      setProducts(newPro);
-    } else if (filter.isNew && !filter.isSale) {
-      const newPro = productOrder.filter((pd) => pd.isNew === true);
-      setProducts(newPro);
-    } else if (filter.isSale && !filter.isNew) {
-      const newPro = productOrder.filter((pd) => pd.isSale === true);
-      setProducts(newPro);
-    } else {
-      setProducts([...productOrder]);
     }
-  }, [filter, productOrder]);
-  const recentlyViewed = [...productData].slice(0, 3);
-  const todaysTop = [...productData].slice(3, 6);
-  const paginate = usePagination(products, 9);
 
-  const handleSort = (value) => {
-    if (value === 'highToMin') {
-      const newOrder = allProducts.sort((a, b) => (a.price < b.price ? 1 : -1));
-      setProductOrder(newOrder);
+    // Price Range Filter
+    updatedProducts = updatedProducts.filter((item) => item.price >= priceRange[0] && item.price <= priceRange[1]);
+
+    // Sorting
+    if (sortOrder === "highToLow") {
+      updatedProducts.sort((a, b) => b.price - a.price);
+    } else {
+      updatedProducts.sort((a, b) => a.price - b.price);
     }
-    if (value === 'minToHigh') {
-      const newOrder = allProducts.sort((a, b) => (a.price > b.price ? 1 : -1));
-      setProductOrder(newOrder);
-    }
-  };
+
+    setFilteredProducts(updatedProducts);
+  }, [category, searchQuery, priceRange, sortOrder, productsItem]);
+
+  const paginate = usePagination(filteredProducts, 9);
 
   return (
     <div>
-      {/* <!-- BEGIN SHOP --> */}
-      <div className='shop'>
-        <div className='wrapper'>
-          <div className='shop-content'>
-            {/* <!-- Shop Aside --> */}
-            <div className='shop-aside'>
-              <div className='box-field box-field__search'>
+      <div className="shop">
+        <div className="wrapper">
+          <div className="shop-content">
+            <div className="shop-aside">
+              <div className="box-field box-field__search">
                 <input
-                  type='search'
-                  className='form-control'
-                  placeholder='Search'
+                  type="search"
+                  className="form-control"
+                  placeholder="Search"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
                 />
-                <i className='icon-search'></i>
+                <i className="icon-search"></i>
               </div>
-              <div className='shop-aside__item'>
-                <span className='shop-aside__item-title'>Categories</span>
+              <div className="shop-aside__item">
+                <span className="shop-aside__item-title">Categories</span>
                 <ul>
                   <li>
-                    <a href='#'>
-                      Ring <span>(37)</span>
+                    <a href="#" onClick={() => setCategory("all")}>
+                      All Products
                     </a>
                   </li>
                   <li>
-                    <a href='#'>
-                      Ear Ring <span>(162)</span>
+                    <a href="#" onClick={() => setCategory("Rings")}>
+                      Rings
                     </a>
                   </li>
                   <li>
-                    <a href='#'>
-                      Perfume <span>(153)</span>
+                    <a href="#" onClick={() => setCategory("Bracelets")}>
+                      Bracelets
                     </a>
                   </li>
                   <li>
-                    <a href='#'>
-                      Nails <span>(86)</span>
+                    <a href="#" onClick={() => setCategory("Earrings")}>
+                      Earrings
                     </a>
                   </li>
                   <li>
-                    <a href='#'>
-                      Skin care <span>(48)</span>
+                    <a href="#" onClick={() => setCategory("Necklace")}>
+                      Necklace
                     </a>
                   </li>
                   <li>
-                    <a href='#'>
-                      Hair care <span>(54)</span>
+                    <a href="#" onClick={() => setCategory("Anklet")}>
+                      Anklet
                     </a>
                   </li>
                 </ul>
               </div>
-              {/* <div className='shop-aside__item'>
-                <span className='shop-aside__item-title'>Price</span>
-                <div className='range-slider'>
+              <div className="shop-aside__item">
+                <span className="shop-aside__item-title">Price</span>
+                <div className="range-slider">
                   <Range
                     min={0}
-                    max={20}
-                    defaultValue={[0, 20]}
-                    tipFormatter={(value) => `${value}$`}
+                    max={10000}
+                    defaultValue={priceRange}
+                    onChange={(value) => setPriceRange(value)}
+                    tipFormatter={(value) => `${value} Rupees`}
                     allowCross={false}
                     tipProps={{
-                      placement: 'bottom',
-                      prefixCls: 'rc-slider-tooltip',
+                      placement: "bottom",
+                      prefixCls: "rc-slider-tooltip",
                     }}
                   />
                 </div>
               </div>
-              <div className='shop-aside__item'>
-                <span className='shop-aside__item-title'>You have viewed</span>
-                {recentlyViewed.map((data) => (
-                  <AsideItem key={data.id} aside={data} />
-                ))}
-              </div>
-              <div className='shop-aside__item'>
-                <span className='shop-aside__item-title'>Top 3 for today</span>
-                {todaysTop.map((data) => (
-                  <AsideItem key={data.id} aside={data} />
-                ))}
-              </div> */}
             </div>
-            {/* <!-- Shop Main --> */}
-            <div className='shop-main'>
-              {/* <div className='shop-main__filter'>
-                <div className='shop-main__checkboxes'>
-                  <label className='checkbox-box'>
-                    <input
-                      checked={filter.isSale}
-                      onChange={() =>
-                        setFilter({ ...filter, isSale: !filter.isSale })
-                      }
-                      type='checkbox'
-                    />
-                    <span className='checkmark'></span>
-                    SALE
-                  </label>
-                  <label className='checkbox-box'>
-                    <input
-                      checked={filter.isNew}
-                      onChange={() =>
-                        setFilter({ ...filter, isNew: !filter.isNew })
-                      }
-                      type='checkbox'
-                    />
-                    <span className='checkmark'></span>
-                    NEW
-                  </label>
-                </div>
-                <div className='shop-main__select'>
+
+            <div className="shop-main">
+              <div className="shop-main__filter">
+                <div className="shop-main__select">
                   <Dropdown
-                    options={options}
-                    className='react-dropdown'
-                    onChange={(option) => handleSort(option.value)}
-                    value={options[0]}
+                    options={sortOptions}
+                    className="react-dropdown"
+                    onChange={(option) => setSortOrder(option.value)}
+                    value={sortOptions.find((opt) => opt.value === sortOrder)}
                   />
                 </div>
-              </div> */}
-              <div className='shop-main__items'>
-                <Products products={productsItem} />
               </div>
 
-              {/* <!-- PAGINATE LIST --> */}
+              <div className="shop-main__items">
+                <Products products={filteredProducts} />
+              </div>
+
               <PagingList paginate={paginate} />
             </div>
           </div>
         </div>
-        <img
-          className='promo-video__decor js-img'
-          src='/assets/img/promo-video__decor.jpg'
-          alt=''
-        />
-        <img
-          className='shop-decor js-img'
-          src='/assets/img/shop-decor.jpg'
-          alt=''
-        />
+        <img className="promo-video__decor js-img" src="/assets/img/promo-video__decor.jpg" alt="" />
+        <img className="shop-decor js-img" src="/assets/img/shop-decor.jpg" alt="" />
       </div>
-      {/* <!-- SHOP EOF   --> */}
     </div>
   );
 };

@@ -3193,8 +3193,8 @@ blockquote,
     }
 
     &:hover {
-      background: #222222;
-      border: 1px solid #222222;
+      background: #42203f;
+      border: 1px solid #42203f;
 
       i {
         &:before {
@@ -7050,4 +7050,25 @@ input[type='search']::-webkit-search-results-decoration {
 }
 .shop-all button{
   background-color: #42203f;
+}
+
+
+
+button.remove-btn{
+  background: #42203f;
+  border: 1px solid #42203f;
+  display: flex;
+  align-items: center;
+  color: #fff;
+  justify-content: center;
+  transition: $transition;
+  width: 80px;
+  height: 40px;
+  cursor: pointer;
+}
+
+span.error {
+  padding-top: 3px;
+  color: red;
+  font-size: 11px;
 }

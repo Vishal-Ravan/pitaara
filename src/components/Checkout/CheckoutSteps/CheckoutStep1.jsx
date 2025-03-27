@@ -116,7 +116,7 @@ export const CheckoutStep1 = ({ onNext }) => {
           </div>
 
           <div className='checkout-form__item'>
-            <h4>Delivery Info</h4>
+            <h4>Shipping Address</h4>
             <div className='box-field__row'>
               <div className='box-field'>
                 <input

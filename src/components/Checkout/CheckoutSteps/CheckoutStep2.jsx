@@ -1,10 +1,20 @@
-import { useState } from "react";
+import { useState, useEffect, useRef } from "react";
+import { useRouter } from "next/router";
 
 export const CheckoutStep2 = ({ onNext, onPrev }) => {
   const [payment, setPayment] = useState("online");
   const [loading, setLoading] = useState(false);
   const [alertMessage, setAlertMessage] = useState(""); // Alert state
   const amount = 1000; // Set actual order amount
+  const router = useRouter();
+  const isMounted = useRef(true); // Track component mount state
+
+  useEffect(() => {
+    isMounted.current = true;
+    return () => {
+      isMounted.current = false; // Cleanup to prevent memory leaks
+    };
+  }, []);
 
   const getUserToken = () => {
     const userData = JSON.parse(localStorage.getItem("user"));
@@ -16,10 +26,12 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
   };
 
   const placeOrder = async (paymentMethod) => {
+    if (!isMounted.current) return;
     setLoading(true);
+    
     const token = getUserToken();
     if (!token) {  
-      setAlertMessage("Please log in to proceed with checkout.");
+      if (isMounted.current) setAlertMessage("Please log in to proceed with checkout.");
       setLoading(false);
       return;
     }
@@ -38,32 +50,44 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
       console.log("Order Response:", data);
 
       if (response.ok) {
-        setAlertMessage("Order placed successfully!");
-        clearCart();
-        onNext();
-
-        // Hide alert message after 3 seconds
-        setTimeout(() => setAlertMessage(""), 3000);
+        if (isMounted.current) {
+          setAlertMessage("Order placed successfully!");
+          clearCart();
+          const orderDetails = {
+            orders: data,
+            amount: data.totalAmount,
+            paymentMethod,
+          };
+          
+          localStorage.setItem("orderDetails", JSON.stringify(orderDetails)); // Store in localStorage
+          router.push("/orderconfirm");
+          // onNext();
+          
+          // Hide alert after 3s
+          setTimeout(() => isMounted.current && setAlertMessage(""), 3000);
+        }
       } else {
-        setAlertMessage(data.message || "Checkout failed");
+        if (isMounted.current) setAlertMessage(data.message || "Checkout failed");
       }
     } catch (error) {
-      setAlertMessage("Something went wrong. Please try again.");
+      if (isMounted.current) setAlertMessage("Something went wrong. Please try again.");
     } finally {
-      setLoading(false);
+      if (isMounted.current) setLoading(false);
     }
   };
 
   const handlePayment = async () => {
-    try {
-      setLoading(true);
-      const token = getUserToken();
-      if (!token) {
-        setAlertMessage("Please log in to proceed with checkout.");
-        setLoading(false);
-        return;
-      }
+    if (!isMounted.current) return;
+    setLoading(true);
 
+    const token = getUserToken();
+    if (!token) {
+      if (isMounted.current) setAlertMessage("Please log in to proceed with checkout.");
+      setLoading(false);
+      return;
+    }
+
+    try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/payment/create-order`, {
         method: "POST",
         headers: {
@@ -78,56 +102,54 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
       const orderData = await response.json();
       console.log("Order Created:", orderData);
 
-      if (!window.Razorpay) {
-        setAlertMessage("Razorpay SDK not loaded. Please check your script.");
-        setLoading(false);
-        return;
-      }
+      if (typeof window !== "undefined" && window.Razorpay) {
+        const options = {
+          key: process.env.NEXT_PUBLIC_RAZORPAY_KEY, // Use from .env
+          amount: orderData.amount,
+          currency: orderData.currency,
+          name: "Your Website Name",
+          description: "Payment for your order",
+          order_id: orderData.id,
+          handler: async (paymentResponse) => {
+            try {
+              console.log("Payment Response:", paymentResponse);
 
-      const options = {
-        key: "rzp_test_fqpkJvzLDTe1y3", // Use from .env
-        amount: orderData.amount,
-        currency: orderData.currency,
-        name: "Your Website Name",
-        description: "Payment for your order",
-        order_id: orderData.id,
-        handler: async (paymentResponse) => {
-          try {
-            console.log("Payment Response:", paymentResponse);
+              const verifyResponse = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/payment/verify-payment`, {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                  Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(paymentResponse),
+              });
 
-            const verifyResponse = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/payment/verify-payment`, {
-              method: "POST",
-              headers: {
-                "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
-              },
-              body: JSON.stringify(paymentResponse),
-            });
+              const verifyData = await verifyResponse.json();
+              console.log("Payment Verification Response:", verifyData);
 
-            const verifyData = await verifyResponse.json();
-            console.log("Payment Verification Response:", verifyData);
-
-            if (verifyData.success) {
-              setAlertMessage("Payment successful! Placing your order...");
-              placeOrder("Online");
-            } else {
-              setAlertMessage("Payment verification failed.");
+              if (verifyData.success && isMounted.current) {
+                setAlertMessage("Payment successful! Placing your order...");
+                placeOrder("Online");
+              } else if (isMounted.current) {
+                setAlertMessage("Payment verification failed.");
+              }
+            } catch (error) {
+              console.error("Error verifying payment:", error);
+              if (isMounted.current) setAlertMessage("Something went wrong. Please try again.");
             }
-          } catch (error) {
-            console.error("Error verifying payment:", error);
-            setAlertMessage("Something went wrong. Please try again.");
-          }
-        },
-        theme: { color: "#3399cc" },
-      };
+          },
+          theme: { color: "#3399cc" },
+        };
 
-      const razorpay = new window.Razorpay(options);
-      razorpay.open();
+        const razorpay = new window.Razorpay(options);
+        razorpay.open();
+      } else {
+        if (isMounted.current) setAlertMessage("Razorpay SDK not loaded. Please check your script.");
+      }
     } catch (error) {
       console.error("Payment Error:", error);
-      setAlertMessage("Something went wrong. Please try again.");
+      if (isMounted.current) setAlertMessage("Something went wrong. Please try again.");
     } finally {
-      setLoading(false);
+      if (isMounted.current) setLoading(false);
     }
   };
 

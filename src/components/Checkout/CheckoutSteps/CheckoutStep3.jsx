@@ -1,20 +1,24 @@
-export const CheckoutStep3 = ({ orderDetails }) => {
+import { useRouter } from "next/router";
+
+const CheckoutStep3 = () => {
+  const router = useRouter();
+  const { orderId, amount, paymentMethod } = router.query; // Get order details
+
   return (
-    <div className="checkout-purchase checkout-form">
-      <h4>Thank You for Your Purchase!</h4>
-      <p>
-        Your order has been successfully placed. You can track your order details below.
-      </p>
-      <ul className="checkout-purchase__list">
-        <li><span>Order Number:</span> {orderDetails?.orderId || "N/A"}</li>
-        <li><span>Order Status:</span> {orderDetails?.status || "Pending"}</li>
-        <li><span>Total Amount:</span> ₹{orderDetails?.amount || "0"}</li>
-        <li><span>Reserved for:</span> {orderDetails?.reservedFor || "N/A"}</li>
-        <li><span>Expected Loading Date:</span> {orderDetails?.expectedLoadingDate || "N/A"}</li>
-      </ul>
-      <a href="#" className="checkout-purchase__link">
-        Print Invoice
-      </a>
+    <div>
+      <h2>Order Confirmation</h2>
+      {orderId ? (
+        <div>
+          <p><strong>Order ID:</strong> {orderId}</p>
+          <p><strong>Payment Method:</strong> {paymentMethod}</p>
+          <p><strong>Total Amount:</strong> ₹{amount}</p>
+          <p><strong>Status:</strong> Success</p>
+        </div>
+      ) : (
+        <p>No order details available.</p>
+      )}
     </div>
   );
 };
+
+export default CheckoutStep3;
