@@ -9,7 +9,7 @@ export const Card = ({ wish }) => {
       <div className="cart-table__col">
         <Link href={`/product/${id}`}>
           <a className="cart-table__img">
-            <img src={`${process.env.NEXT_PUBLIC_API_BASE_URL}:5000${image[0]}`} className="js-img" alt={name || "Product"} />
+            <img src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${image[0]}`} className="js-img" alt={name || "Product"} />
           </a>
         </Link>
         <div className="cart-table__info">

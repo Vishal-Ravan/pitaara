@@ -1,5 +1,5 @@
-import { Orderconfirm } from 'components/Orderconfirm/Orderconfirm';
 
+import { OrderConfirm } from 'components/Orderconfirm/Orderconfirm';
 import { PublicLayout } from 'layout/PublicLayout';
 
 const breadcrumbsData = [
@@ -14,8 +14,8 @@ const breadcrumbsData = [
 ];
 const orderconfirm = () => {
   return (
-    <PublicLayout breadcrumb={breadcrumbsData} breadcrumbTitle='Log In'>
-      <Orderconfirm />
+    <PublicLayout breadcrumb={breadcrumbsData} breadcrumbTitle='confirm'>
+      <OrderConfirm />
     </PublicLayout>
   );
 };

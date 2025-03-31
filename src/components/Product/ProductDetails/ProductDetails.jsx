@@ -257,7 +257,7 @@ export const ProductDetails = () => {
               {/* <!-- Social Share Link --> */}
               <div className='contacts-info__social'>
                 <span>Find us here:</span>
-                {/* <ul>
+                <ul>
                   {socialLinks.map((social, index) => (
                     <li key={index}>
                       <a href={social.path}>
@@ -265,7 +265,7 @@ export const ProductDetails = () => {
                       </a>
                     </li>
                   ))}
-                </ul> */}
+                </ul>
               </div>
 
               {/* <!-- Product Color info--> */}

@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 
-export const Card = ({ cart, onChangeQuantity, onRemove, userId }) => {
+export const Card = ({ cart, onChangeQuantity, onRemove }) => {
   const { name, image, id, isStocked, productNumber, oldPrice, price, quantity } = cart;
   const [currentQuantity, setCurrentQuantity] = useState(quantity);
   const [totalPrice, setTotalPrice] = useState(price * quantity);
@@ -27,15 +27,15 @@ export const Card = ({ cart, onChangeQuantity, onRemove, userId }) => {
     const userData = JSON.parse(localStorage.getItem("user"));
     return userData?.token || null;
   };
-
   const removeFromCart = async (productId) => {
     const token = getUserToken();
     if (!token) {
+      console.error("User not authenticated");
       return;
     }
-
+  
     try {
-      const response = await fetch("http://localhost:5000/api/cart/remove", {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/cart/remove`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -43,11 +43,14 @@ export const Card = ({ cart, onChangeQuantity, onRemove, userId }) => {
         },
         body: JSON.stringify({ productId }),
       });
-
+  
       const data = await response.json();
       if (response.ok) {
         console.log("Item removed successfully", data);
-        onRemove(productId); // Update UI without refresh
+        
+        // Refresh the page after successful removal
+        window.location.reload();
+        
       } else {
         console.error("Error removing item:", data.message);
       }
@@ -55,13 +58,14 @@ export const Card = ({ cart, onChangeQuantity, onRemove, userId }) => {
       console.error("Network error:", error);
     }
   };
+  
 
   return (
     <div className="cart-table__row">
       <div className="cart-table__col">
         <Link href={`/product/${id}`}>
           <a className="cart-table__img">
-            <img src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${image}`} className="js-img" alt="" />
+            <img src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${image}`} className="js-img" alt={name} />
           </a>
         </Link>
         <div className="cart-table__info">
@@ -78,7 +82,7 @@ export const Card = ({ cart, onChangeQuantity, onRemove, userId }) => {
             <span>₹{oldPrice}</span> ₹{price}
           </span>
         ) : (
-          <span className="cart-table__price">${price}</span>
+          <span className="cart-table__price">₹{price}</span>
         )}
       </div>
       <div className="cart-table__col">
@@ -101,7 +105,7 @@ export const Card = ({ cart, onChangeQuantity, onRemove, userId }) => {
         </div>
       </div>
       <div className="cart-table__col">
-        <span className="cart-table__total">${totalPrice.toFixed(2)}</span>
+        <span className="cart-table__total">₹{totalPrice.toFixed(2)}</span>
       </div>
       <div className="cart-table__col">
         <button onClick={() => removeFromCart(id)} className="remove-btn">
