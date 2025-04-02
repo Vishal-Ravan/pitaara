@@ -1,19 +1,25 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 
-export const CheckoutStep2 = ({ onNext, onPrev, }) => {
+export const CheckoutStep2 = ({ onNext, onPrev }) => {
   const [loading, setLoading] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
+  const [totalAmount, setTotalAmount] = useState(0);
   const router = useRouter();
-  const totalAmount=100
   const isMounted = useRef(true);
 
   useEffect(() => {
     isMounted.current = true;
+    const { total } = router.query;
+
+    if (total) {
+      setTotalAmount(parseFloat(total));
+    }
+
     return () => {
       isMounted.current = false;
     };
-  }, []);
+  }, [router.query]);
 
   const getUserToken = () => {
     const userData = JSON.parse(localStorage.getItem("user"));
