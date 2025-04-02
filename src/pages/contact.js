@@ -1,5 +1,5 @@
 import { ContactDetailBlock } from 'components/Contact/ContactDetailBlock/ContactDetailBlock';
-import { ContactFrom } from 'components/Contact/ContactForm/ContactForm';
+import { ContactForm } from 'components/Contact/ContactForm/ContactForm';
 import { ContactInfo } from 'components/Contact/ContactInfo/ContactInfo';
 import { Map } from 'components/Contact/Map/Map';
 import { BrandLogo } from 'components/shared/BrandLogo/BrandLogo';
@@ -21,7 +21,7 @@ const ContactPage = () => {
       <ContactDetailBlock />
       <ContactInfo />
       <BrandLogo />
-      <ContactFrom />
+      <ContactForm />
       <Map />
     </PublicLayout>
   );

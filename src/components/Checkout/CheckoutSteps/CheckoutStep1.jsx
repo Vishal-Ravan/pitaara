@@ -31,17 +31,35 @@ export const CheckoutStep1 = ({ onNext }) => {
 
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
+  const [sameAsShipping, setSameAsShipping] = useState(false);
 
   const handleChange = (e) => {
     const { name, value, dataset } = e.target;
-    setFormData({
-      ...formData,
+    setFormData((prevData) => ({
+      ...prevData,
       [dataset.type]: {
-        ...formData[dataset.type],
+        ...prevData[dataset.type],
         [name]: value,
       },
-    });
-    setErrors({ ...errors, [name]: "" });
+    }));
+    setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
+  };
+
+  const handleCheckboxChange = () => {
+    setSameAsShipping(!sameAsShipping);
+    setFormData((prevData) => ({
+      ...prevData,
+      billingAddress: !sameAsShipping ? { ...prevData.shippingAddress } : {
+        fullName: "",
+        email: "",
+        phone: "",
+        address: "",
+        city: "",
+        state: "",
+        postalCode: "",
+        country: "",
+      },
+    }));
   };
 
   const validateForm = (data) => {
@@ -63,7 +81,6 @@ export const CheckoutStep1 = ({ onNext }) => {
       return;
     }
 
-    // Validate Shipping Address
     const shippingErrors = validateForm(formData.shippingAddress);
     if (Object.keys(shippingErrors).length > 0) {
       setErrors(shippingErrors);
@@ -72,7 +89,6 @@ export const CheckoutStep1 = ({ onNext }) => {
     }
 
     try {
-      // Call Shipping Address API
       const shippingResponse = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/shipping`, {
         method: "POST",
         headers: {
@@ -87,7 +103,6 @@ export const CheckoutStep1 = ({ onNext }) => {
 
       console.log("Shipping Address Saved:", shippingData);
 
-      // Validate Billing Address
       const billingErrors = validateForm(formData.billingAddress);
       if (Object.keys(billingErrors).length > 0) {
         setErrors(billingErrors);
@@ -95,7 +110,6 @@ export const CheckoutStep1 = ({ onNext }) => {
         return;
       }
 
-      // Call Billing Address API
       const billingResponse = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/billing`, {
         method: "POST",
         headers: {
@@ -109,9 +123,7 @@ export const CheckoutStep1 = ({ onNext }) => {
       if (!billingResponse.ok) throw new Error("Failed to save billing address");
 
       console.log("Billing Address Saved:", billingData);
-
-      onNext(); // Move to the next step
-
+      onNext();
     } catch (error) {
       console.error("API Error:", error);
     }
@@ -119,45 +131,91 @@ export const CheckoutStep1 = ({ onNext }) => {
   };
 
   return (
-    <div className="checkout-form">
+    <div className="checkout-form checkout-form__item">
       <form onSubmit={(e) => e.preventDefault()}>
-        {/* SHIPPING ADDRESS */}
         <h4>Shipping Address</h4>
-        {Object.keys(formData.shippingAddress).map((key) => (
-          <div key={key} className="box-field">
-            <input
-              type="text"
-              name={key}
-              className="form-control"
-              placeholder={`Enter ${key}`}
-              value={formData.shippingAddress[key]}
-              onChange={handleChange}
-              data-type="shippingAddress"
-            />
-            {errors[key] && <span className="error">{errors[key]}</span>}
-          </div>
-        ))}
+        <div className="box-field">
+          <input type="text" name="fullName" className="form-control" placeholder="Full Name" value={formData.shippingAddress.fullName} onChange={handleChange} data-type="shippingAddress" />
+        </div>
 
-        {/* BILLING ADDRESS */}
+
+        <div className="box-field__row">
+          <div className="box-field">
+
+            <input type="email" name="email" className="form-control" placeholder="Email" value={formData.shippingAddress.email} onChange={handleChange} data-type="shippingAddress" />
+          </div>
+          <div className="box-field">
+
+            <input type="text" name="phone" className="form-control" placeholder="Phone" value={formData.shippingAddress.phone} onChange={handleChange} data-type="shippingAddress" />
+          </div>
+        </div>
+
+        <div className="box-field__row">
+          <div className="box-field">
+            <input type="text" name="address" className="form-control" placeholder="Address" value={formData.shippingAddress.address} onChange={handleChange} data-type="shippingAddress" />
+          </div>
+          <div className="box-field">
+
+            <input type="text" name="city" className="form-control" placeholder="City" value={formData.shippingAddress.city} onChange={handleChange} data-type="shippingAddress" />
+          </div>
+        </div>
+        <div className="box-field__row">
+          <div className="box-field">
+            <input type="text" name="state" className="form-control" placeholder="State" value={formData.shippingAddress.state} onChange={handleChange} data-type="shippingAddress" />
+          </div>
+          <div className="box-field">
+            <input type="text" name="postalCode" className="form-control" placeholder="Postal Code" value={formData.shippingAddress.postalCode} onChange={handleChange} data-type="shippingAddress" />
+          </div></div>
+        <div className="box-field">
+          <input type="text" name="country" className="form-control" placeholder="Country" value={formData.shippingAddress.country} onChange={handleChange} data-type="shippingAddress" />
+        </div>
+
+
+        <label>
+          <input type="checkbox" checked={sameAsShipping} onChange={handleCheckboxChange} />
+          Billing address same as shipping
+        </label>
+
+
+
         <h4>Billing Address</h4>
-        {Object.keys(formData.billingAddress).map((key) => (
-          <div key={key} className="box-field">
-            <input
-              type="text"
-              name={key}
-              className="form-control"
-              placeholder={`Enter ${key}`}
-              value={formData.billingAddress[key]}
-              onChange={handleChange}
-              data-type="billingAddress"
-            />
-            {errors[key] && <span className="error">{errors[key]}</span>}
-          </div>
-        ))}
+        <div className="box-field">
 
+          <input type="text" name="fullName" className="form-control" placeholder="Full Name" value={formData.billingAddress.fullName} onChange={handleChange} data-type="billingAddress" />
+        </div>
+        <div className="box-field__row">
+          <div className="box-field">
+            <input type="email" name="email" className="form-control" placeholder="Email" value={formData.billingAddress.email} onChange={handleChange} data-type="billingAddress" />
+          </div>
+          <div className="box-field">
+            <input type="text" name="phone" className="form-control" placeholder="Phone" value={formData.billingAddress.phone} onChange={handleChange} data-type="billingAddress" />
+          </div></div>
+
+
+        <div className="box-field__row">
+          <div className="box-field">
+            <input type="text" name="address" className="form-control" placeholder="Address" value={formData.billingAddress.address} onChange={handleChange} data-type="billingAddress" />
+          </div>
+          <div className="box-field">
+
+            <input type="text" name="city" className="form-control" placeholder="City" value={formData.billingAddress.city} onChange={handleChange} data-type="billingAddress" />
+          </div>
+        </div>
+        <div className="box-field__row">
+          <div className="box-field">
+            <input type="text" name="state" className="form-control" placeholder="State" value={formData.billingAddress.state} onChange={handleChange} data-type="billingAddress" /></div>
+          <div className="box-field">
+
+            <input type="text" name="postalCode" className="form-control" placeholder="Postal Code" value={formData.billingAddress.postalCode} onChange={handleChange} data-type="billingAddress" />
+          </div></div>
+        <div className="box-field">
+
+          <input type="text" name="country" className="form-control" placeholder="Country" value={formData.billingAddress.country} onChange={handleChange} data-type="billingAddress" />
+        </div>
         <div className="checkout-buttons">
-          <button type="button" onClick={handleSubmit} className="btn btn-next" disabled={loading}>
-            {loading ? "Processing..." : "Next"} <i className="icon-arrow"></i>
+          <button type="button" onClick={handleSubmit} className="btn btn-icon btn-next" disabled={loading}>
+            {loading ? "Processing..." : "Next"}
+            <i className="icon-arrow"></i>
           </button>
         </div>
       </form>

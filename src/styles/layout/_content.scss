@@ -7072,3 +7072,18 @@ span.error {
   color: red;
   font-size: 11px;
 }
+
+.checkout-form.checkout-form__item input[type="checkbox"] {
+  width: 15px;
+  border: 1px solid;
+  height: 15px;
+  -webkit-appearance: auto;
+}
+
+.checkout-form.checkout-form__item label {
+  display: flex;
+
+  margin: 20px 0px;
+  align-items: center;
+  gap: 10px;
+}
