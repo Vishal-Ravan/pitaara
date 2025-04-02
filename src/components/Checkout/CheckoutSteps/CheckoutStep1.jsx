@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState } from "react";
 
 const getUserToken = () => {
   const userData = JSON.parse(localStorage.getItem("user"));
@@ -8,141 +8,156 @@ const getUserToken = () => {
 export const CheckoutStep1 = ({ onNext }) => {
   const [formData, setFormData] = useState({
     shippingAddress: {
-      fullName: '',
-      email: '',
-      phone: '',
-      address: '',
-      city: '',
-      state: '',
-      postalCode: '',
-      country: '',
+      fullName: "",
+      email: "",
+      phone: "",
+      address: "",
+      city: "",
+      state: "",
+      postalCode: "",
+      country: "",
     },
     billingAddress: {
-      fullName: '',
-      email: '',
-      phone: '',
-      address: '',
-      city: '',
-      state: '',
-      postalCode: '',
-      country: '',
+      fullName: "",
+      email: "",
+      phone: "",
+      address: "",
+      city: "",
+      state: "",
+      postalCode: "",
+      country: "",
     },
-    sameAsShipping: false,
   });
 
   const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(false);
 
-  const handleChange = (e, section) => {
+  const handleChange = (e) => {
+    const { name, value, dataset } = e.target;
     setFormData({
       ...formData,
-      [section]: {
-        ...formData[section],
-        [e.target.name]: e.target.value,
+      [dataset.type]: {
+        ...formData[dataset.type],
+        [name]: value,
       },
     });
-    setErrors({ ...errors, [e.target.name]: '' });
+    setErrors({ ...errors, [name]: "" });
   };
 
-  const validateForm = () => {
+  const validateForm = (data) => {
     const newErrors = {};
-    Object.keys(formData.shippingAddress).forEach((key) => {
-      if (!formData.shippingAddress[key]) {
-        newErrors[`shippingAddress.${key}`] = `${key} is required`;
+    Object.keys(data).forEach((key) => {
+      if (!data[key]) {
+        newErrors[key] = `${key} is required`;
       }
     });
-    if (!formData.sameAsShipping) {
-      Object.keys(formData.billingAddress).forEach((key) => {
-        if (!formData.billingAddress[key]) {
-          newErrors[`billingAddress.${key}`] = `${key} is required`;
-        }
-      });
-    }
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+    return newErrors;
   };
 
   const handleSubmit = async () => {
-    if (!validateForm()) return;
+    setLoading(true);
     const token = getUserToken();
     if (!token) {
       alert("Please log in to proceed with checkout.");
+      setLoading(false);
+      return;
+    }
+
+    // Validate Shipping Address
+    const shippingErrors = validateForm(formData.shippingAddress);
+    if (Object.keys(shippingErrors).length > 0) {
+      setErrors(shippingErrors);
+      setLoading(false);
       return;
     }
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/shipping`, {
-        method: 'POST',
+      // Call Shipping Address API
+      const shippingResponse = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/shipping`, {
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({
-          shippingAddress: formData.shippingAddress,
-          billingAddress: formData.sameAsShipping ? formData.shippingAddress : formData.billingAddress,
-        }),
+        body: JSON.stringify({ shippingAddress: formData.shippingAddress }),
       });
 
-      const responseData = await response.json();
-      console.log("API Response:", responseData);
+      const shippingData = await shippingResponse.json();
+      if (!shippingResponse.ok) throw new Error("Failed to save shipping address");
 
-      if (response.ok) {
-        onNext();
-      } else {
-        console.error("Failed to save shipping address", responseData);
+      console.log("Shipping Address Saved:", shippingData);
+
+      // Validate Billing Address
+      const billingErrors = validateForm(formData.billingAddress);
+      if (Object.keys(billingErrors).length > 0) {
+        setErrors(billingErrors);
+        setLoading(false);
+        return;
       }
+
+      // Call Billing Address API
+      const billingResponse = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/billing`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({ billingAddress: formData.billingAddress }),
+      });
+
+      const billingData = await billingResponse.json();
+      if (!billingResponse.ok) throw new Error("Failed to save billing address");
+
+      console.log("Billing Address Saved:", billingData);
+
+      onNext(); // Move to the next step
+
     } catch (error) {
-      console.error("Network Error:", error);
+      console.error("API Error:", error);
     }
+    setLoading(false);
   };
 
   return (
-    <div className='checkout-form'>
+    <div className="checkout-form">
       <form onSubmit={(e) => e.preventDefault()}>
+        {/* SHIPPING ADDRESS */}
         <h4>Shipping Address</h4>
         {Object.keys(formData.shippingAddress).map((key) => (
-          <div key={key} className='box-field'>
+          <div key={key} className="box-field">
             <input
-              type='text'
+              type="text"
               name={key}
-              className='form-control'
+              className="form-control"
               placeholder={`Enter ${key}`}
               value={formData.shippingAddress[key]}
-              onChange={(e) => handleChange(e, 'shippingAddress')}
+              onChange={handleChange}
+              data-type="shippingAddress"
             />
-            {errors[`shippingAddress.${key}`] && <span className='error'>{errors[`shippingAddress.${key}`]}</span>}
+            {errors[key] && <span className="error">{errors[key]}</span>}
           </div>
         ))}
-        
-        <div className='box-field'>
-          <input
-            type='checkbox'
-            checked={formData.sameAsShipping}
-            onChange={() => setFormData({ ...formData, sameAsShipping: !formData.sameAsShipping })}
-          /> Use shipping address as billing address
-        </div>
 
-        {!formData.sameAsShipping && (
-          <>
-            <h4>Billing Address</h4>
-            {Object.keys(formData.billingAddress).map((key) => (
-              <div key={key} className='box-field'>
-                <input
-                  type='text'
-                  name={key}
-                  className='form-control'
-                  placeholder={`Enter ${key}`}
-                  value={formData.billingAddress[key]}
-                  onChange={(e) => handleChange(e, 'billingAddress')}
-                />
-                {errors[`billingAddress.${key}`] && <span className='error'>{errors[`billingAddress.${key}`]}</span>}
-              </div>
-            ))}
-          </>
-        )}
+        {/* BILLING ADDRESS */}
+        <h4>Billing Address</h4>
+        {Object.keys(formData.billingAddress).map((key) => (
+          <div key={key} className="box-field">
+            <input
+              type="text"
+              name={key}
+              className="form-control"
+              placeholder={`Enter ${key}`}
+              value={formData.billingAddress[key]}
+              onChange={handleChange}
+              data-type="billingAddress"
+            />
+            {errors[key] && <span className="error">{errors[key]}</span>}
+          </div>
+        ))}
 
-        <div className='checkout-buttons'>
-          <button type='button' onClick={handleSubmit} className='btn btn-icon btn-next'>
-            Next <i className='icon-arrow'></i>
+        <div className="checkout-buttons">
+          <button type="button" onClick={handleSubmit} className="btn btn-next" disabled={loading}>
+            {loading ? "Processing..." : "Next"} <i className="icon-arrow"></i>
           </button>
         </div>
       </form>

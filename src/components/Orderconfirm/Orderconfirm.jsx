@@ -18,7 +18,7 @@ export const OrderConfirm = () => {
   }, [router]);
 
   if (!orderDetails) return <p style={{ fontSize: "18px", textAlign: "center" }}>Loading...</p>;
-
+console.log(orderDetails,'klkl')
   // Function to handle printing only the invoice section
   const handlePrint = () => {
     const printContent = invoiceRef.current.innerHTML;
@@ -41,10 +41,10 @@ export const OrderConfirm = () => {
 
         <h3 style={{ fontSize: "22px", marginBottom: "10px" }}>Order Details</h3>
         <p style={{ fontSize: "18px" }}>
-          <strong>Order ID:</strong> {orderDetails.orders?.order?._id}
+          <strong>Order ID:</strong> {orderDetails.orderId}
         </p>
         <p style={{ fontSize: "18px" }}>
-          <strong>Total Amount:</strong> ₹{orderDetails.orders?.order?.totalPrice}
+          <strong>Total Amount:</strong> {orderDetails.totalAmount}
         </p>
         <p style={{ fontSize: "18px" }}>
           <strong>Payment Method:</strong> {orderDetails.paymentMethod}
@@ -55,29 +55,27 @@ export const OrderConfirm = () => {
           {/* Shipping Address */}
           <div style={{ width: "48%", padding: "15px", border: "1px solid #ddd", borderRadius: "10px", backgroundColor: "#f9f9f9" }}>
             <h3 style={{ fontSize: "20px", marginBottom: "10px" }}>Shipping Address</h3>
-            <p><strong>Name:</strong> {orderDetails.orders.shippingAddress.fullName}</p>
-            <p><strong>Phone:</strong> {orderDetails.orders.shippingAddress.phone}</p>
-            <p><strong>Email:</strong> {orderDetails.orders.shippingAddress.email}</p>
-            <p><strong>Address:</strong> {orderDetails.orders.shippingAddress.address}</p>
+            <p>{orderDetails.shippingAddress}</p>
+           
           </div>
 
           {/* Billing Address */}
           <div style={{ width: "48%", padding: "15px", border: "1px solid #ddd", borderRadius: "10px", backgroundColor: "#f9f9f9" }}>
             <h3 style={{ fontSize: "20px", marginBottom: "10px" }}>Billing Address</h3>
-            <p><strong>Name:</strong> {orderDetails.orders.billingAddress?.fullName || "N/A"}</p>
-            <p><strong>Phone:</strong> {orderDetails.orders.billingAddress?.phone || "N/A"}</p>
-            <p><strong>Email:</strong> {orderDetails.orders.billingAddress?.email || "N/A"}</p>
-            <p><strong>Address:</strong> {orderDetails.orders.billingAddress?.address || "N/A"}</p>
+            <p>{orderDetails.billingAddress}</p>
           </div>
         </div>
 
         {/* Items List */}
         <h3 style={{ fontSize: "22px", marginTop: "20px" }}>Items</h3>
         <ul style={{ listStyle: "none", padding: "0" }}>
-          {orderDetails.orders?.order?.items?.map((item, index) => (
+          {orderDetails.cartData.map((item, index) => (
             <li key={index} style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>
               <p><strong>Product Name:</strong> {item.productId.name}</p>
-              <p><strong>Quantity:</strong> {item.quantity}</p>
+              {/* <p><strong>Quantity:</strong> {item.productId.quantity}</p> */}
+              <p><strong>Price:</strong> {item.productId.price}</p>
+              <p><strong>Category:</strong> {item.productId.category}</p>
+              <img src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${item.productId.images[0]}`} alt="" width={50}/>
             </li>
           ))}
         </ul>

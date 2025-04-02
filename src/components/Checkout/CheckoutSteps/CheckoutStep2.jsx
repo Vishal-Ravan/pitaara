@@ -1,18 +1,17 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 
-export const CheckoutStep2 = ({ onNext, onPrev }) => {
-  const [payment, setPayment] = useState("online");
+export const CheckoutStep2 = ({ onNext, onPrev, }) => {
   const [loading, setLoading] = useState(false);
-  const [alertMessage, setAlertMessage] = useState(""); // Alert state
-  const amount = 1000; // Set actual order amount
+  const [alertMessage, setAlertMessage] = useState("");
   const router = useRouter();
-  const isMounted = useRef(true); // Track component mount state
+  const totalAmount=100
+  const isMounted = useRef(true);
 
   useEffect(() => {
     isMounted.current = true;
     return () => {
-      isMounted.current = false; // Cleanup to prevent memory leaks
+      isMounted.current = false;
     };
   }, []);
 
@@ -25,12 +24,12 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
     localStorage.removeItem("cart");
   };
 
-  const placeOrder = async (paymentMethod) => {
+  const placeOrder = async () => {
     if (!isMounted.current) return;
     setLoading(true);
-    
+
     const token = getUserToken();
-    if (!token) {  
+    if (!token) {
       if (isMounted.current) setAlertMessage("Please log in to proceed with checkout.");
       setLoading(false);
       return;
@@ -43,7 +42,7 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ paymentMethod }),
+        body: JSON.stringify({ paymentMethod: "Online" }),
       });
 
       const data = await response.json();
@@ -53,17 +52,9 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
         if (isMounted.current) {
           setAlertMessage("Order placed successfully!");
           clearCart();
-          const orderDetails = {
-            orders: data,
-            amount: data.totalAmount,
-            paymentMethod,
-          };
-          
-          localStorage.setItem("orderDetails", JSON.stringify(orderDetails)); // Store in localStorage
+          localStorage.setItem("orderDetails", JSON.stringify(data));
           router.push("/orderconfirm");
-          // onNext();
-          
-          // Hide alert after 3s
+
           setTimeout(() => isMounted.current && setAlertMessage(""), 3000);
         }
       } else {
@@ -94,7 +85,7 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
-        body: JSON.stringify({ amount, currency: "INR" }),
+        body: JSON.stringify({ amount: totalAmount, currency: "INR" }),
       });
 
       if (!response.ok) throw new Error("Failed to create order");
@@ -104,7 +95,7 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
 
       if (typeof window !== "undefined" && window.Razorpay) {
         const options = {
-          key: process.env.NEXT_PUBLIC_RAZORPAY_KEY, // Use from .env
+          key: process.env.NEXT_PUBLIC_RAZORPAY_KEY,
           amount: orderData.amount,
           currency: orderData.currency,
           name: "Your Website Name",
@@ -128,7 +119,7 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
 
               if (verifyData.success && isMounted.current) {
                 setAlertMessage("Payment successful! Placing your order...");
-                placeOrder("Online");
+                placeOrder();
               } else if (isMounted.current) {
                 setAlertMessage("Payment verification failed.");
               }
@@ -153,14 +144,6 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
     }
   };
 
-  const handleCheckout = () => {
-    if (payment === "online") {
-      handlePayment();
-    } else {
-      placeOrder("COD");
-    }
-  };
-
   return (
     <>
       {alertMessage && (
@@ -182,13 +165,13 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
       )}
 
       <div className="checkout-payment checkout-form">
-        <h4>Payment Methods</h4>
+        <h4>Payment Method</h4>
 
-        <div className={`checkout-payment__item ${payment === "online" ? "active" : ""}`}>
+        <div className="checkout-payment__item active">
           <div className="checkout-payment__item-head">
             <label className="radio-box">
-              Credit card
-              <input type="radio" checked={payment === "online"} name="radio" onChange={() => setPayment("online")} />
+              Online Payment
+              <input type="radio" checked={true} readOnly />
               <span className="checkmark"></span>
               <span className="radio-box__info">
                 <i className="icon-info"></i>
@@ -200,28 +183,12 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
           </div>
         </div>
 
-        <div className={`checkout-payment__item ${payment === "COD" ? "active" : ""}`}>
-          <div className="checkout-payment__item-head">
-            <label className="radio-box">
-              COD payment
-              <input type="radio" checked={payment === "COD"} name="radio" onChange={() => setPayment("COD")} />
-              <span className="checkmark"></span>
-              <span className="radio-box__info">
-                <i className="icon-info"></i>
-                <span className="radio-box__info-content">
-                  Pay cash on delivery when you receive your order.
-                </span>
-              </span>
-            </label>
-          </div>
-        </div>
-
         <div className="checkout-buttons">
           <button onClick={onPrev} className="btn btn-grey btn-icon" disabled={loading}>
-            <i className="icon-arrow"></i> back
+            <i className="icon-arrow"></i> Back
           </button>
-          <button onClick={handleCheckout} className="btn btn-icon btn-next" disabled={loading}>
-            {loading ? "Processing..." : "Proceed"} <i className="icon-arrow"></i>
+          <button onClick={handlePayment} className="btn btn-icon btn-next" disabled={loading}>
+            {loading ? "Processing..." : `Pay ₹${totalAmount}`} <i className="icon-arrow"></i>
           </button>
         </div>
       </div>
