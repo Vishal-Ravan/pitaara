@@ -101,7 +101,7 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
 
       if (typeof window !== "undefined" && window.Razorpay) {
         const options = {
-          key: process.env.NEXT_PUBLIC_RAZORPAY_KEY,
+          key: "rzp_test_fqpkJvzLDTe1y3", 
           amount: orderData.amount,
           currency: orderData.currency,
           name: "Your Website Name",
