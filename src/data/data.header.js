@@ -57,10 +57,10 @@ export const navItem = [
   //     },
   //   ],
   // },
-  {
-    name: 'shop',
-    path: '/shop',
-  },
+  // {
+  //   name: 'shop',
+  //   path: '/shop',
+  // },
   {
     name: 'Categories',
     path: '/categories',

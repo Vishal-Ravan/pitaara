@@ -1,16 +1,20 @@
 export const Card = ({ order, index, onCollapse, active }) => {
-  const { createdAt, deliveryAddress, totalPrice, status, } = order;
+  const { createdAt,  totalPrice, status, } = order;
+
   return (
     <>
       <div className={`profile-orders__item ${active === index && 'active'}`}>
         <div className='profile-orders__row'>
           <div className='profile-orders__col'>
             <span className='profile-orders__col-mob'>date</span>
-            <span className='profile-orders__item-date'>{createdAt}</span>
+            <span className='profile-orders__item-date'> {new Date(createdAt).toLocaleDateString()}</span>
           </div>
           <div className='profile-orders__col'>
             <span className='profile-orders__col-mob'>Delivery address</span>
-            <span className='profile-orders__item-addr'>{deliveryAddress}</span>
+            <span className='profile-orders__item-price'>{order.shippingAddress?.fullName}, {order.shippingAddress?.address}, {order.shippingAddress?.city}<br />
+            {order.shippingAddress?.email}, {order.shippingAddress?.phone}</span>
+  
+
           </div>
           <div className='profile-orders__col'>
             <span className='profile-orders__col-mob'>totalPrice</span>

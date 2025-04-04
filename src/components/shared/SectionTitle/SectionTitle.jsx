@@ -3,7 +3,7 @@ export const SectionTitle = ({ subTitle, title, body }) => {
     <div className='trending-top'>
       {/* <span className='saint-text'>{subTitle}</span> */}
       <h2>{title}</h2>
-      {/* <p>{body}</p> */}
+      <p>{body}</p>
     </div>
   );
 };

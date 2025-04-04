@@ -1,12 +1,10 @@
 import { ProductsCarousel } from 'components/Product/Products/ProductsCarousel';
 import { SectionTitle } from 'components/shared/SectionTitle/SectionTitle';
 import Link from "next/link";
-
 import { useEffect, useState } from 'react';
 
 export const Trending = () => {
   const [productsItem, setProductsItem] = useState([]);
-  const [filterItem, setFilterItem] = useState('rings'); // Default to the first category
 
   useEffect(() => {
     const fetchTrendingProducts = async () => {
@@ -25,17 +23,6 @@ export const Trending = () => {
     fetchTrendingProducts();
   }, []);
 
-  const filterList = [
-    { name: 'Rings', value: 'rings' },
-    { name: 'Bracelets', value: 'bracelets' },
-    { name: 'Earrings', value: 'earrings' },
-    { name: 'Necklace', value: 'necklace' },
-    { name: 'Anklet', value: 'anklet' },
-  ];
-
-  // Filter products based on selected category
-  const filteredProducts = productsItem.filter(product => product.category === filterItem);
-
   return (
     <>
       {/* <!-- BEGIN TRENDING --> */}
@@ -48,23 +35,9 @@ export const Trending = () => {
           />
           <div className='tab-wrap trending-tabs'>
             <div className='products-items'>
-              <ul className='nav-tab-list tabs'>
-                {filterList.map((item) => (
-                  <li
-                    key={item.value}
-                    onClick={() => setFilterItem(item.value)}
-                    className={filterItem === item.value ? 'active' : ''} // Add active class
-                    style={{ cursor: 'pointer' }}
-                  >
-                    {item.name}
-                  </li>
-                ))}
-              </ul>
-              <ProductsCarousel productsdata={filteredProducts} />
-          <div className='shop-all'><Link href="/shop" ><button className='btn'>Shop All</button></Link>
-          </div>
+              <ProductsCarousel productsdata={productsItem} />
+            
             </div>
-
           </div>
         </div>
       </section>

@@ -79,10 +79,10 @@ export const ProductsCarousel = ({ productsdata = [] }) => {
 
   const settings = {
     dots: false,
-    infinite: false,
+    infinite: true,
     arrows: true,
     speed: 300,
-    slidesToShow: 5,
+    slidesToShow: 4,
     slidesToScroll: 1,
     prevArrow: <SlickArrowPrev />,
     nextArrow: <SlickArrowNext />,

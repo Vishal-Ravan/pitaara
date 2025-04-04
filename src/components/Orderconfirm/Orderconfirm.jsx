@@ -55,30 +55,67 @@ console.log(orderDetails,'klkl')
           {/* Shipping Address */}
           <div style={{ width: "48%", padding: "15px", border: "1px solid #ddd", borderRadius: "10px", backgroundColor: "#f9f9f9" }}>
             <h3 style={{ fontSize: "20px", marginBottom: "10px" }}>Shipping Address</h3>
-            <p>{orderDetails.shippingAddress}</p>
+            <p><strong>Name:</strong> {orderDetails.shippingAddress.fullName}</p>
+  <p><strong>Phone:</strong> {orderDetails.shippingAddress.phone}</p>
+  <p><strong>Email:</strong> {orderDetails.shippingAddress.email}</p>
+  <p><strong>Address:</strong> {orderDetails.shippingAddress.address}</p>
+  <p><strong>City:</strong> {orderDetails.shippingAddress.city}</p>
+  <p><strong>State:</strong> {orderDetails.shippingAddress.state}</p>
+  <p><strong>Postal Code:</strong> {orderDetails.shippingAddress.postalCode}</p>
+  <p><strong>Country:</strong> {orderDetails.shippingAddress.country}</p>
            
           </div>
 
           {/* Billing Address */}
           <div style={{ width: "48%", padding: "15px", border: "1px solid #ddd", borderRadius: "10px", backgroundColor: "#f9f9f9" }}>
             <h3 style={{ fontSize: "20px", marginBottom: "10px" }}>Billing Address</h3>
-            <p>{orderDetails.billingAddress}</p>
+            <p><strong>Name:</strong> {orderDetails.billingAddress.fullName}</p>
+  <p><strong>Phone:</strong> {orderDetails.billingAddress.phone}</p>
+  <p><strong>Email:</strong> {orderDetails.billingAddress.email}</p>
+  <p><strong>Address:</strong> {orderDetails.billingAddress.address}</p>
+  <p><strong>City:</strong> {orderDetails.billingAddress.city}</p>
+  <p><strong>State:</strong> {orderDetails.billingAddress.state}</p>
+  <p><strong>Postal Code:</strong> {orderDetails.billingAddress.postalCode}</p>
+  <p><strong>Country:</strong> {orderDetails.billingAddress.country}</p>
           </div>
         </div>
 
         {/* Items List */}
         <h3 style={{ fontSize: "22px", marginTop: "20px" }}>Items</h3>
-        <ul style={{ listStyle: "none", padding: "0" }}>
-          {orderDetails.cartData.map((item, index) => (
-            <li key={index} style={{ padding: "10px", borderBottom: "1px solid #ddd" }}>
-              <p><strong>Product Name:</strong> {item.productId.name}</p>
-              {/* <p><strong>Quantity:</strong> {item.productId.quantity}</p> */}
-              <p><strong>Price:</strong> {item.productId.price}</p>
-              <p><strong>Category:</strong> {item.productId.category}</p>
-              <img src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${item.productId.images[0]}`} alt="" width={50}/>
-            </li>
-          ))}
-        </ul>
+        <ul
+  style={{
+    listStyle: "none",
+    padding: "0",
+    display: "grid",
+    gridTemplateColumns: "1fr 1fr", // Two equal-width columns
+    gap: "20px", // space between items
+  }}
+>
+  {orderDetails.cartData.map((item, index) => (
+    <li
+      key={index}
+      style={{
+        padding: "15px",
+        border: "1px solid #ddd",
+        borderRadius: "8px",
+        backgroundColor: "#f8f8f8",
+      }}
+    >
+      <p><strong>Product Name:</strong> {item.productId.name}</p>
+      <p><strong>Price:</strong> {item.productId.price}</p>
+      <p><strong>Category:</strong> {item.productId.category}</p>
+      <img
+        src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${item.productId.images[0]}`}
+        alt={item.productId.name}
+        width={80}
+        height={80}
+        style={{ marginTop: "10px", objectFit: "cover", borderRadius: "4px" }}
+      /> 
+      
+    </li>
+  ))}
+</ul>
+
       </div>
 
       {/* Print & Download Invoice Buttons */}

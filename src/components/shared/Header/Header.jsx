@@ -87,13 +87,16 @@ export const Header = () => {
     }
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/cart`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/cart`,
+        {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       if (response.status === 401 || response.status === 403) {
         handleLogout(); // Auto logout if token is invalid or expired
@@ -147,7 +150,7 @@ export const Header = () => {
         </div>
       )}
       <header className="header">
-        {promo && (
+        {/* {promo && (
           <div className="header-top">
             <span>🔥 30% OFF ON ALL PRODUCTS - USE CODE: BEShop2020</span>
             <i
@@ -155,32 +158,54 @@ export const Header = () => {
               className="header-top-close js-header-top-close icon-close"
             ></i>
           </div>
-        )}
+        )} */}
 
         <div className={`header-content ${fixedNav ? "fixed" : ""}`}>
           <div className="header-logo">
             <Link href="/">
               <a>
-                <img src={header.logo} alt="Logo" width={190}/>
+                <img src={header.logo} alt="Logo" width={120} />
               </a>
             </Link>
           </div>
 
           <div style={{ right: openMenu ? 0 : -360 }} className="header-box">
-            <Nav navItem={navItem} />
+            {/* <Nav navItem={navItem} /> */}
+            <div className="header-search">
+              <input
+                type="text"
+                placeholder="Search..."
+                className="search-input"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    router.push(`/search?q=${e.target.value}`);
+                  }
+                }}
+              />
+              <i
+                className="icon-search"
+                onClick={() => {
+                  const value = document.querySelector(".search-input").value;
+                  router.push(`/search?q=${value}`);
+                }}
+                style={{ cursor: "pointer" }}
+              ></i>
+            </div>
 
             <ul className="header-options">
               <li>
                 {user ? (
                   <Link href="/profile">
-                    <a>
+                    <a className="user-icons">
                       <i className="icon-user">{user.name}</i>
+                      <p>Account</p>
                     </a>
                   </Link>
                 ) : (
                   <Link href="/login">
-                    <a>
+                    <a className="user-icons">
                       <i className="icon-user"></i>
+                      <p>Account</p>
                     </a>
                   </Link>
                 )}
@@ -188,32 +213,38 @@ export const Header = () => {
 
               <li>
                 <Link href="/wishlist">
-                  <a>
+                  <a className="user-icons">
                     <i className="icon-heart"></i>
+                    <p>Wishlist</p>
                   </a>
                 </Link>
               </li>
 
               <li>
                 <Link href="/cart">
-                  <a>
+                  <a className="user-icons">
                     <i className="icon-cart"></i>
-                    <span>{cartCount}</span>
+                    <span className="">{cartCount}</span>
+
+                    <p>Cart</p>
                   </a>
                 </Link>
               </li>
 
               {user && (
-                <li>
-                  <img
-                    src="/assets/img/icons/logout.png"
-                    className="js-img"
-                    alt=""
-                    width={23}
-                    style={{ cursor: "pointer" }}
-                    onClick={handleLogout}
-                  />
-                </li>
+                <a className="user-icons">
+                  <li>
+                    <img
+                      src="/assets/img/icons/logout.png"
+                      className="js-img"
+                      alt=""
+                      width={23}
+                      style={{ cursor: "pointer" }}
+                      onClick={handleLogout}
+                    />
+                    <p>LogOut</p>
+                  </li>
+                </a>
               )}
             </ul>
           </div>
@@ -227,7 +258,28 @@ export const Header = () => {
             ))}
           </div>
         </div>
+        
       </header>
+      <div className="header-box-second">
+          <Link href="/">
+            <h6>Rings</h6>
+          </Link>
+          <Link href="/">
+            <h6>Bracelets
+            </h6>
+          </Link>
+          <Link href="/">
+            <h6>Earrings
+            </h6>
+          </Link>
+          <Link href="/">
+            <h6>Necklace</h6>
+          </Link>
+          <Link href="/">
+            <h6>Anklet
+            </h6>
+          </Link>
+        </div>
     </>
   );
 };
