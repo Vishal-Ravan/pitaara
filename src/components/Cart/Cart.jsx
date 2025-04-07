@@ -6,32 +6,44 @@ import { useRouter } from "next/router";
 
 export const Cart = () => {
   const [cartData, setCartData] = useState([]);
+  const [total, setTotal] = useState(0);
   const socialLinks = [...socialData];
+  const router = useRouter();
 
+  // Get user token from localStorage
   const getUserToken = () => {
     const userData = JSON.parse(localStorage.getItem("user"));
     return userData?.token || null;
   };
-  const router = useRouter();
+
+  // Get or create guestId
+  const getGuestId = () => {
+    let guestId = localStorage.getItem("guestId");
+    if (!guestId) {
+      guestId = `guest_${Math.random().toString(36).substring(2, 15)}`;
+      localStorage.setItem("guestId", guestId);
+    }
+    return guestId;
+  };
+
+  // Fetch cart data on mount
   useEffect(() => {
     const fetchCart = async () => {
       const token = getUserToken();
-      if (!token) {
-        setCartData([]);
-        return;
-      }
+      const guestId = getGuestId();
+
+      const endpoint = token
+        ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/cart`
+        : `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/cart?guestId=${guestId}`;
 
       try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/cart`,
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          }
-        );
+        const response = await fetch(endpoint, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            ...(token && { Authorization: `Bearer ${token}` }),
+          },
+        });
 
         if (!response.ok) {
           throw new Error(`HTTP error! Status: ${response.status}`);
@@ -55,7 +67,44 @@ export const Cart = () => {
 
     fetchCart();
   }, []);
+
+  // Update total whenever cart changes
+  useEffect(() => {
+    const calculateTotal = (cartItems) => {
+      return cartItems.reduce(
+        (total, item) =>
+          total + Number(item.productId.price) * Number(item.quantity),
+        0
+      );
+    };
+    setTotal(calculateTotal(cartData));
+  }, [cartData]);
+
+  // Quantity change handler
+  const handleQuantityChange = (id, newQuantity) => {
+    setCartData((prevCartData) =>
+      prevCartData.map((item) =>
+        item.productId._id === id ? { ...item, quantity: newQuantity } : item
+      )
+    );
+  };
+
+  // Remove item handler
+  const handleRemoveItem = (productId) => {
+    setCartData((prevCart) =>
+      prevCart.filter((item) => item.productId._id !== productId)
+    );
+  };
+
+  // Checkout handler for logged-in users
   const handleCheckout = () => {
+    const token = getUserToken();
+    if (!token) {
+      alert("Please log in to proceed with checkout.");
+      router.push("/login");
+      return;
+    }
+
     router.push({
       pathname: "/checkout",
       query: {
@@ -64,32 +113,7 @@ export const Cart = () => {
       },
     });
   };
-  // Calculate total price dynamically
-  const calculateTotal = (cartItems) => {
-    return cartItems.reduce(
-      (total, item) =>
-        total + Number(item.productId.price) * Number(item.quantity),
-      0
-    );
-  };
 
-  const [total, setTotal] = useState(0);
-
-  useEffect(() => {
-    setTotal(calculateTotal(cartData));
-  }, [cartData]);
-
-  const handleQuantityChange = (id, newQuantity) => {
-    setCartData((prevCartData) =>
-      prevCartData.map((item) =>
-        item.productId._id === id ? { ...item, quantity: newQuantity } : item
-      )
-    );
-  };
-  const handleRemoveItem = (productId) => {
-    setCartData((prevCart) => prevCart.filter((item) => item.id !== productId));
-  };
-  console.log(cartData,'ppppppppp')
   return (
     <>
       <div className="cart">
@@ -111,44 +135,21 @@ export const Cart = () => {
                     id: cartItem.productId._id,
                     name: cartItem.productId.name,
                     image:
-                      cartItem.productId.images?.length > 0
-                        ? cartItem.productId.images[0]
-                        : "/default-image.jpg",
+                      cartItem.productId.images?.[0] || "/default-image.jpg",
                     isStocked: cartItem.productId.isStocked || false,
                     productNumber: cartItem.productId.productNumber || "N/A",
                     oldPrice: cartItem.productId.oldPrice || null,
                     price: cartItem.productId.price,
                     quantity: cartItem.quantity,
-                    
                   }}
                   onChangeQuantity={handleQuantityChange}
                 />
               ))}
             </div>
           </div>
+
           <div className="cart-bottom">
             <div className="cart-bottom__promo">
-              {/* <form className="cart-bottom__promo-form">
-                <div className="box-field__row">
-                  <div className="box-field">
-                    <input
-                      type="text"
-                      className="form-control"
-                      placeholder="Enter promo code"
-                    />
-                  </div>
-                  <button type="submit" className="btn btn-grey">
-                    apply code
-                  </button>
-                </div>
-              </form>
-              <h6>How to get a promo code?</h6>
-              <p>
-                Follow our news on the website, as well as subscribe to our
-                social networks. So you will not only be able to receive
-                up-to-date codes, but also learn about new products and
-                promotional items.
-              </p> */}
               <div className="contacts-info__social">
                 <span>Find us here:</span>
                 <ul>
@@ -162,31 +163,26 @@ export const Cart = () => {
                 </ul>
               </div>
             </div>
+
             <div className="cart-bottom__total">
               <div className="cart-bottom__total-goods">
-                Goods on
-                <span>₹{total.toFixed(2)}</span>
+                Goods on <span>₹{total.toFixed(2)}</span>
               </div>
-              {/* <div className="cart-bottom__total-promo">
-                Discount on promo code
-                <span>No</span>
-              </div> */}
               <div className="cart-bottom__total-num">
-                Total:
-                <span>₹{total.toFixed(2)}</span>
+                Total: <span>₹{total.toFixed(2)}</span>
               </div>
-              <Link href="/checkout">
-                <button
-                  className="btn"
-                  onClick={handleCheckout}
-                  disabled={cartData.length === 0}
-                >
-                  Checkout
-                </button>
-              </Link>
+
+              <button
+                className="btn"
+                onClick={handleCheckout}
+                disabled={cartData.length === 0}
+              >
+                Checkout
+              </button>
             </div>
           </div>
         </div>
+
         <img
           className="promo-video__decor js-img"
           src="assets/img/promo-video__decor.jpg"

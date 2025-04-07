@@ -54,7 +54,7 @@ export const SingleProduct = ({
             className={`addLists ${addedInCart ? "added" : ""}`}
             onClick={() => onAddToCart(_id)}
           >
-            Checkout{" "}
+          <i className="icon-cart"></i>  Add To Cart {" "}
           </button>
         </div>
       </div>

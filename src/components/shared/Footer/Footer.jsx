@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { NavCol } from './NavCol/NavCol';
 
 export const Footer = () => {
-  const footerLogo = '/assets/img/logo.png';
+  const footerLogo = '/assets/img/white.png';
 
   const footerNav = [...footerNavData];
   const footerSocial = [...socialData];

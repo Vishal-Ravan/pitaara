@@ -15,11 +15,11 @@ export const Header = () => {
   const [height, width] = useWindowSize();
   const [cartCount, setCartCount] = useState(0);
   const router = useRouter();
-  const [alertMessage, setAlertMessage] = useState(null); // Alert message state
+  const [alertMessage, setAlertMessage] = useState(null);
 
   const showAlert = (message) => {
     setAlertMessage(message);
-    setTimeout(() => setAlertMessage(null), 3000); // Hide alert after 3 seconds
+    setTimeout(() => setAlertMessage(null), 3000);
   };
 
   useEffect(() => {
@@ -43,9 +43,7 @@ export const Header = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
     setUser(null);
-    showAlert("Session expired. Redirecting to home...");
-
-    // Redirect to home page after logout
+    showAlert("Logout Successfully");
     router.push("/");
   };
 
@@ -54,7 +52,7 @@ export const Header = () => {
       const userData = localStorage.getItem("user");
 
       if (!userData) {
-        setUser(null); // User stays logged out but can access all pages
+        setUser(null);
         return;
       }
 
@@ -79,27 +77,56 @@ export const Header = () => {
     const userData = JSON.parse(localStorage.getItem("user"));
     return userData?.token || null;
   };
+
+  // Set guestId if not available
+  useEffect(() => {
+    let guestId = localStorage.getItem("guestId");
+    if (!guestId) {
+      guestId = crypto.randomUUID(); // or use any UUID generator
+      localStorage.setItem("guestId", guestId);
+    }
+  }, []);
+
   const fetchCart = async () => {
     const token = getUserToken();
-    if (!token) {
-      setCartCount(0);
-      return;
-    }
 
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/cart`,
-        {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
+      let response;
+
+      if (token) {
+        // Authenticated user
+        response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/cart`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      } else {
+        // Guest user
+        const guestId = localStorage.getItem("guestId");
+
+        if (!guestId) {
+          setCartCount(0);
+          return;
         }
-      );
+
+        response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/cart?guestId=${guestId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+      }
 
       if (response.status === 401 || response.status === 403) {
-        handleLogout(); // Auto logout if token is invalid or expired
+        handleLogout();
         return;
       }
 
@@ -109,6 +136,7 @@ export const Header = () => {
 
       const data = await response.json();
       let count = 0;
+
       if (Array.isArray(data)) {
         count = data.length;
       } else if (data?.items && Array.isArray(data.items)) {
@@ -123,11 +151,9 @@ export const Header = () => {
   };
 
   useEffect(() => {
-    fetchCart(); // Initial fetch
-
+    fetchCart();
     const interval = setInterval(fetchCart, 500);
-
-    return () => clearInterval(interval); // Cleanup interval on component unmount
+    return () => clearInterval(interval);
   }, []);
 
   return (
@@ -149,17 +175,8 @@ export const Header = () => {
           {alertMessage}
         </div>
       )}
-      <header className="header">
-        {/* {promo && (
-          <div className="header-top">
-            <span>🔥 30% OFF ON ALL PRODUCTS - USE CODE: BEShop2020</span>
-            <i
-              onClick={() => setPromo(false)}
-              className="header-top-close js-header-top-close icon-close"
-            ></i>
-          </div>
-        )} */}
 
+      <header className="header">
         <div className={`header-content ${fixedNav ? "fixed" : ""}`}>
           <div className="header-logo">
             <Link href="/">
@@ -170,7 +187,6 @@ export const Header = () => {
           </div>
 
           <div style={{ right: openMenu ? 0 : -360 }} className="header-box">
-            {/* <Nav navItem={navItem} /> */}
             <div className="header-search">
               <input
                 type="text"
@@ -224,8 +240,7 @@ export const Header = () => {
                 <Link href="/cart">
                   <a className="user-icons">
                     <i className="icon-cart"></i>
-                    <span className="">{cartCount}</span>
-
+                    <span>{cartCount}</span>
                     <p>Cart</p>
                   </a>
                 </Link>
@@ -258,28 +273,25 @@ export const Header = () => {
             ))}
           </div>
         </div>
-        
       </header>
+
       <div className="header-box-second">
-          <Link href="/">
-            <h6>Rings</h6>
-          </Link>
-          <Link href="/">
-            <h6>Bracelets
-            </h6>
-          </Link>
-          <Link href="/">
-            <h6>Earrings
-            </h6>
-          </Link>
-          <Link href="/">
-            <h6>Necklace</h6>
-          </Link>
-          <Link href="/">
-            <h6>Anklet
-            </h6>
-          </Link>
-        </div>
+        <Link href={{ pathname: "/shop", query: { category: "rings" } }}>
+          <h6>Rings</h6>
+        </Link>
+        <Link href={{ pathname: "/shop", query: { category: "bracelets" } }}>
+          <h6>Bracelets</h6>
+        </Link>
+        <Link href={{ pathname: "/shop", query: { category: "earrings" } }}>
+          <h6>Earrings</h6>
+        </Link>
+        <Link href={{ pathname: "/shop", query: { category: "necklace" } }}>
+          <h6>Necklace</h6>
+        </Link>
+        <Link href={{ pathname: "/shop", query: { category: "anklet" } }}>
+          <h6>Anklet</h6>
+        </Link>
+      </div>
     </>
   );
 };

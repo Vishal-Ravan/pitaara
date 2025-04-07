@@ -368,7 +368,7 @@ h6,
 
     &__img {
       position: relative;
-      height: 430px;
+      height: 330px;
       width: 100%;
 
       img {
@@ -473,14 +473,15 @@ h6,
     }
 
     &__name {
-      font-size: 1.4rem;
+      font-size: 1rem;
       text-transform: uppercase;
-      color: rgb(125, 125, 125);
+      color: rgb(43, 43, 43);
       display: block;
       margin-bottom: 5px;
       font-family: 'Tenor Sans';
       padding: 0 3px;
-      margin-bottom: 30px;
+      font-weight: 600;
+      margin-bottom: 15px;
     }
 
     &__cost {
@@ -2585,7 +2586,7 @@ blockquote,
         }
 
         &__img {
-          height: 370px;
+          height: 330px;
         }
 
         &__name {
@@ -2606,7 +2607,7 @@ blockquote,
         }
 
         &__info {
-          margin-top: 30px;
+          margin-top: 15px;
         }
 
         &__sale,
@@ -4749,7 +4750,7 @@ input[type='search']::-webkit-search-results-decoration {
 
 @media screen and (max-width: 1400px) {
   .products-item__img {
-    height: 435px;
+    height: 330px;
   }
 
   .top-categories__item {
@@ -5015,7 +5016,7 @@ input[type='search']::-webkit-search-results-decoration {
   }
 
   .shop-main__items .products-item__img {
-    height: 315px;
+    height: 330px;
   }
 }
 
@@ -6428,7 +6429,7 @@ input[type='search']::-webkit-search-results-decoration {
   }
 
   .shop-main__items .products-item__img {
-    height: 440px;
+    height: 330px;
   }
 
   .shop-decor {

@@ -1,47 +1,48 @@
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import { SlickArrowNext, SlickArrowPrev } from "components/utils/SlickArrows/SlickArrows";
+import {
+  SlickArrowNext,
+  SlickArrowPrev,
+} from "components/utils/SlickArrows/SlickArrows";
 export const BrandLogo = () => {
-  // Custom category data
   const categories = [
     {
       id: 1,
       name: "Rings",
       imgSrc:
         "https://www.giva.co/cdn/shop/collections/pink_rings_c356f6b3-6547-4e39-9b08-dfdf5ecfc2b0.jpg?v=1742651416",
-      url: "#",
+      url: "/shop?category=rings",
     },
     {
       id: 2,
       name: "Bracelets",
       imgSrc:
         "https://www.giva.co/cdn/shop/collections/pink_necklaces_pend_copy.jpg?v=1742651415",
-      url: "#",
+      url: "/shop?category=bracelets",
     },
     {
       id: 3,
       name: "Earrings",
       imgSrc:
         "https://www.giva.co/cdn/shop/collections/pink_br-min.png?v=1742651417",
-      url: "#",
+      url: "/shop?category=earrings",
     },
     {
       id: 4,
       name: "Necklace",
       imgSrc:
         "https://www.giva.co/cdn/shop/collections/pink_rings_c356f6b3-6547-4e39-9b08-dfdf5ecfc2b0.jpg?v=1742651416",
-      url: "#",
+      url: "/shop?category=necklace",
     },
     {
       id: 5,
       name: "Anklets",
       imgSrc:
         "https://www.giva.co/cdn/shop/collections/pink_br-min.png?v=1742651417",
-      url: "#",
+      url: "/shop?category=anklet",
     },
   ];
-
 
   const settings = {
     dots: false,
@@ -60,6 +61,7 @@ export const BrandLogo = () => {
       { breakpoint: 480, settings: { slidesToShow: 2 } },
     ],
   };
+
   return (
     <div className="category-slider">
       <Slider {...settings}>

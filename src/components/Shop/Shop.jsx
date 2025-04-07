@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import { Products } from "components/Product/Products/Products";
 import { PagingList } from "components/shared/PagingList/PagingList";
 import { usePagination } from "components/utils/Pagination/Pagination";
-import productData from "data/product/product";
 import Slider from "rc-slider";
 import Dropdown from "react-dropdown";
 import { AsideItem } from "../shared/AsideItem/AsideItem";
@@ -17,13 +17,26 @@ const sortOptions = [
 ];
 
 export const Shop = () => {
-  const [productsItem, setProductsItem] = useState([]);
+  const [allProducts, setAllProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
-  const [category, setCategory] = useState("all");
-  const [searchQuery, setSearchQuery] = useState("");
   const [priceRange, setPriceRange] = useState([0, 10000]);
+  const [category, setCategory] = useState("all");
+  const [color, setColor] = useState("all");
+  const [material, setMaterial] = useState("all");
+  const [productsItem, setProductsItem] = useState([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [sortOrder, setSortOrder] = useState("highToLow");
+  const router = useRouter();
 
+  // Fetch category from URL query
+  useEffect(() => {
+    const urlCategory = router.query.category;
+    if (urlCategory) {
+      setCategory(urlCategory);
+    }
+  }, [router.query.category]);
+
+  // Fetch products from API
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -33,7 +46,7 @@ export const Shop = () => {
         }
         const data = await response.json();
         setProductsItem(data);
-        setFilteredProducts(data); // Set initial filtered products
+        setFilteredProducts(data);
       } catch (error) {
         console.error("Error fetching products:", error);
       }
@@ -42,12 +55,15 @@ export const Shop = () => {
     fetchProducts();
   }, []);
 
+  // Apply filters
   useEffect(() => {
     let updatedProducts = [...productsItem];
 
     // Filter by Category
-    if (category !== "all") {
-      updatedProducts = updatedProducts.filter((item) => item.category.toLowerCase() === category.toLowerCase());
+    if (category && category !== "all") {
+      updatedProducts = updatedProducts.filter(
+        (item) => item.category?.toLowerCase() === category.toLowerCase()
+      );
     }
 
     // Search Filter
@@ -58,7 +74,9 @@ export const Shop = () => {
     }
 
     // Price Range Filter
-    updatedProducts = updatedProducts.filter((item) => item.price >= priceRange[0] && item.price <= priceRange[1]);
+    updatedProducts = updatedProducts.filter(
+      (item) => item.price >= priceRange[0] && item.price <= priceRange[1]
+    );
 
     // Sorting
     if (sortOrder === "highToLow") {
