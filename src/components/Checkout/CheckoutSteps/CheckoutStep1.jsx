@@ -74,61 +74,62 @@ export const CheckoutStep1 = ({ onNext }) => {
 
   const handleSubmit = async () => {
     setLoading(true);
-    const token = getUserToken();
-    if (!token) {
-      alert("Please log in to proceed with checkout.");
-      setLoading(false);
-      return;
-    }
-
+    const token = getUserToken(); // can be null if guest
+  
     const shippingErrors = validateForm(formData.shippingAddress);
     if (Object.keys(shippingErrors).length > 0) {
       setErrors(shippingErrors);
       setLoading(false);
       return;
     }
-
+  
     try {
+      // Prepare headers
+      const commonHeaders = {
+        "Content-Type": "application/json",
+        ...(token && { Authorization: `Bearer ${token}` }), // Add token only if logged in
+      };
+  
+      // ✅ Submit shipping address
       const shippingResponse = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/shipping`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+        headers: commonHeaders,
         body: JSON.stringify({ shippingAddress: formData.shippingAddress }),
       });
-
+  
       const shippingData = await shippingResponse.json();
       if (!shippingResponse.ok) throw new Error("Failed to save shipping address");
-
+  
       console.log("Shipping Address Saved:", shippingData);
-
+  
+      // ✅ Validate billing address
       const billingErrors = validateForm(formData.billingAddress);
       if (Object.keys(billingErrors).length > 0) {
         setErrors(billingErrors);
         setLoading(false);
         return;
       }
-
+  
+      // ✅ Submit billing address
       const billingResponse = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/billing`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
+        headers: commonHeaders,
         body: JSON.stringify({ billingAddress: formData.billingAddress }),
       });
-
+  
       const billingData = await billingResponse.json();
       if (!billingResponse.ok) throw new Error("Failed to save billing address");
-
+  
       console.log("Billing Address Saved:", billingData);
+  
+      // ✅ Continue to next step
       onNext();
     } catch (error) {
       console.error("API Error:", error);
     }
     setLoading(false);
   };
+  
 
   return (
     <div className="checkout-form checkout-form__item">

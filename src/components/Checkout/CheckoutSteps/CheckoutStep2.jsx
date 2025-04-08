@@ -1,6 +1,19 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 
+// Generate or retrieve guest ID
+const getGuestId = () => {
+  let guestId = localStorage.getItem("guestId");
+  if (!guestId) {
+    guestId = `guest_${Math.random().toString(36).substring(2, 15)}`;
+    localStorage.setItem("guestId", guestId);
+  }
+  return guestId;
+};
+
+// Check if the token is a guest ID
+const isGuestCheckout = (token) => token?.startsWith("guest_");
+
 export const CheckoutStep2 = ({ onNext, onPrev }) => {
   const [loading, setLoading] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
@@ -11,11 +24,9 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
   useEffect(() => {
     isMounted.current = true;
     const { total } = router.query;
-
     if (total) {
       setTotalAmount(parseFloat(total));
     }
-
     return () => {
       isMounted.current = false;
     };
@@ -23,7 +34,8 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
 
   const getUserToken = () => {
     const userData = JSON.parse(localStorage.getItem("user"));
-    return userData?.token || null;
+    const token = userData?.token;
+    return token || getGuestId();
   };
 
   const clearCart = () => {
@@ -33,34 +45,36 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
   const placeOrder = async () => {
     if (!isMounted.current) return;
     setLoading(true);
-
+  
     const token = getUserToken();
-    if (!token) {
-      if (isMounted.current) setAlertMessage("Please log in to proceed with checkout.");
-      setLoading(false);
-      return;
-    }
-
+    const isGuest = isGuestCheckout(token);
+  
+    // 🔥 Get billing address from localStorage
+    const billingData = JSON.parse(localStorage.getItem("billingAddress"));
+  
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/checkout`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          ...(isGuest ? {} : { Authorization: `Bearer ${token}` }),
         },
-        body: JSON.stringify({ paymentMethod: "Online" }),
+        body: JSON.stringify({
+          paymentMethod: "Online",
+          billingAddress: billingData, // 🔥 Send this
+          ...(isGuest ? { guestId: token } : {}),
+        }),
       });
-
+  
       const data = await response.json();
       console.log("Order Response:", data);
-
+      
       if (response.ok) {
         if (isMounted.current) {
           setAlertMessage("Order placed successfully!");
           clearCart();
           localStorage.setItem("orderDetails", JSON.stringify(data));
           router.push("/orderconfirm");
-
           setTimeout(() => isMounted.current && setAlertMessage(""), 3000);
         }
       } else {
@@ -72,26 +86,26 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
       if (isMounted.current) setLoading(false);
     }
   };
-
+  
   const handlePayment = async () => {
     if (!isMounted.current) return;
     setLoading(true);
 
     const token = getUserToken();
-    if (!token) {
-      if (isMounted.current) setAlertMessage("Please log in to proceed with checkout.");
-      setLoading(false);
-      return;
-    }
+    const isGuest = isGuestCheckout(token);
 
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/payment/create-order`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          ...(isGuest ? {} : { Authorization: `Bearer ${token}` }),
         },
-        body: JSON.stringify({ amount: totalAmount, currency: "INR" }),
+        body: JSON.stringify({
+          amount: totalAmount,
+          currency: "INR",
+          ...(isGuest ? { guestId: token } : {}),
+        }),
       });
 
       if (!response.ok) throw new Error("Failed to create order");
@@ -101,7 +115,7 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
 
       if (typeof window !== "undefined" && window.Razorpay) {
         const options = {
-          key: "rzp_test_fqpkJvzLDTe1y3", 
+          key: "rzp_test_fqpkJvzLDTe1y3", // Use your real Razorpay Key
           amount: orderData.amount,
           currency: orderData.currency,
           name: "Your Website Name",
@@ -115,9 +129,12 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",
-                  Authorization: `Bearer ${token}`,
+                  ...(isGuest ? {} : { Authorization: `Bearer ${token}` }),
                 },
-                body: JSON.stringify(paymentResponse),
+                body: JSON.stringify({
+                  ...paymentResponse,
+                  ...(isGuest ? { guestId: token } : {}),
+                }),
               });
 
               const verifyData = await verifyResponse.json();

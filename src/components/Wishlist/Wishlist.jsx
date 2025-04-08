@@ -5,38 +5,49 @@ import Link from "next/link";
 export const Wishlist = () => {
   const [wishlistData, setWishlistData] = useState([]);
 
+  // Get user token from localStorage
   const getUserToken = () => {
     const userData = JSON.parse(localStorage.getItem("user"));
     return userData?.token || null;
   };
 
+  // Get or create guestId
+  const getGuestId = () => {
+    let guestId = localStorage.getItem("guestId");
+    if (!guestId) {
+      guestId = `guest_${Math.random().toString(36).substring(2, 15)}`;
+      localStorage.setItem("guestId", guestId);
+    }
+    return guestId;
+  };
+
   useEffect(() => {
     const fetchWishlist = async () => {
       const token = getUserToken();
-      if (!token) {
-        console.log("No token found, setting empty wishlist.");
-        setWishlistData([]);
-        return;
-      }
+      const guestId = getGuestId();
+
+      const endpoint = token
+        ? `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/wishlist`
+        : `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/wishlist?guestId=${guestId}`;
 
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/wishlist`, {
+        const response = await fetch(endpoint, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            ...(token && { Authorization: `Bearer ${token}` }),
           },
         });
 
         const data = await response.json();
-        console.log("Wishlist API Raw Response:", data);
+        console.log("Wishlist API Response:", data);
 
-        if (data && Array.isArray(data.products)) {
-          console.log("Wishlist Data Set:", data.products);
+        if (Array.isArray(data)) {
+          setWishlistData(data);
+        } else if (data?.products && Array.isArray(data.products)) {
           setWishlistData(data.products);
         } else {
-          console.error("Unexpected API Response Format:", data);
-          setWishlistData([]); // Fallback to empty
+          setWishlistData([]);
         }
       } catch (error) {
         console.error("Error fetching wishlist:", error);
@@ -47,50 +58,43 @@ export const Wishlist = () => {
     fetchWishlist();
   }, []);
 
-  console.log("Wishlist Data in State:", wishlistData);
-
   return (
-    <>
-      <div className="wishlist">
-        <div className="wrapper">
-          <div className="cart-table">
-            <div className="cart-table__box">
-              <div className="cart-table__row cart-table__row-head">
-                <div className="cart-table__col">Product</div>
-                <div className="cart-table__col">Price</div>
-                <div className="cart-table__col">Status</div>
-                <div className="cart-table__col">Add to Cart</div>
-              </div>
-
-              {wishlistData.length > 0 ? (
-                wishlistData.map((product) => (
-                  <Card
-                    key={product._id}
-                    wish={{
-                      id: product._id,
-                      name: product.name,
-                      image: product.images || "/default-image.jpg",
-                      isStocked: product.isStocked || false,
-                      productNumber: product.productNumber || "N/A",
-                      price: product.price,
-                    }}
-                  />
-                ))
-              ) : (
-                <p>No items in wishlist</p>
-              )}
+    <div className="wishlist">
+      <div className="wrapper">
+        <div className="cart-table">
+          <div className="cart-table__box">
+            <div className="cart-table__row cart-table__row-head">
+              <div className="cart-table__col">Product</div>
+              <div className="cart-table__col">Price</div>
+              <div className="cart-table__col">Action</div>
+              <div className="cart-table__col">Add to Cart</div>
             </div>
-          </div>
-          <div className="wishlist-buttons">
-            {/* <a href="#" className="btn btn-grey">
-              Clear Wishlist
-            </a> */}
-            <Link href="/shop">
-              <a className="btn">Go Shopping</a>
-            </Link>
+
+            {wishlistData.length > 0 ? (
+              wishlistData.map((product) => (
+                <Card
+                  key={product._id}
+                  wish={{
+                    id: product._id,
+                    name: product.name,
+                    image: product.images || "/default-image.jpg",
+                    isStocked: product.isStocked || false,
+                    productNumber: product.productNumber || "N/A",
+                    price: product.price,
+                  }}
+                />
+              ))
+            ) : (
+              <p>No items in wishlist</p>
+            )}
           </div>
         </div>
+        <div className="wishlist-buttons">
+          <Link href="/shop">
+            <a className="btn">Go Shopping</a>
+          </Link>
+        </div>
       </div>
-    </>
+    </div>
   );
 };

@@ -1,27 +1,116 @@
-import { useEffect, useState } from 'react';
-import { SingleProduct } from './SingleProduct/SingleProduct';
-import { useRouter } from 'next/router';
+import { useState, useEffect } from "react";
+import { useRouter } from "next/router";
+import { SingleProduct } from "./SingleProduct/SingleProduct";
 
 export const Products = ({ products }) => {
   const [cart, setCart] = useState([]);
-  const [wishlist, setWishlist] = useState([]); // Wishlist state
+  const [wishlist, setWishlist] = useState([]);
+  const [alertMessage, setAlertMessage] = useState(null);
   const router = useRouter();
-  const [alertMessage, setAlertMessage] = useState(null); // State for alert messages
+
   const showAlert = (message) => {
     setAlertMessage(message);
-    setTimeout(() => setAlertMessage(null), 3000); // Hide alert after 3 seconds
+    setTimeout(() => setAlertMessage(null), 3000);
   };
-  // Fetch Cart & Wishlist Items When Component Mounts
+
+  const handleAddToCart = async (id) => {
+    const userData = JSON.parse(localStorage.getItem("user"));
+    const token = userData?.token;
+    let guestId = localStorage.getItem("guestId");
+
+    // Generate guest ID if not available
+    if (!token && !guestId) {
+      guestId = `guest_${Math.random().toString(36).substr(2, 9)}`;
+      localStorage.setItem("guestId", guestId);
+    }
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/cart/add`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+          body: JSON.stringify({
+            productId: id,
+            quantity: 1,
+            ...(guestId ? { guestId } : {}),
+          }),
+        }
+      );
+
+      const data = await response.json();
+      if (!response.ok) throw new Error(data.message || "Failed to add to cart");
+
+      setCart(data.cart || []);
+      showAlert("Item added to cart successfully!");
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      showAlert(error.message || "Something went wrong. Please try again.");
+    }
+  };
+
+  const handleAddToWishlist = async (id) => {
+    const userData = JSON.parse(localStorage.getItem("user"));
+    const token = userData?.token;
+    let guestId = localStorage.getItem("guestId");
+
+    if (!token && !guestId) {
+      guestId = `guest_${Math.random().toString(36).substr(2, 9)}`;
+      localStorage.setItem("guestId", guestId);
+    }
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/wishlist/add`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+          body: JSON.stringify({
+            productId: id,
+            ...(guestId ? { guestId } : {}),
+          }),
+        }
+      );
+
+      const data = await response.json();
+      if (!response.ok)
+        throw new Error(data.message || "Failed to add to wishlist");
+
+      setWishlist(data.wishlist.products || []);
+      showAlert(data.message);
+    } catch (error) {
+      console.error("Error adding to wishlist:", error);
+      showAlert(error.message || "Something went wrong. Please try again.");
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
-      const userData = JSON.parse(localStorage.getItem('user')); // Parse stored user data
-      const token = userData?.token; // Extract token safely
+      const userData = JSON.parse(localStorage.getItem('user'));
+      const token = userData?.token;
 
       if (!token) return;
 
       try {
         // Fetch Cart
-   
+        const cartResponse = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/cart`, {
+          method: 'GET',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (cartResponse.ok) {
+          const cartData = await cartResponse.json();
+          setCart(cartData.cart || []);
+        }
 
         // Fetch Wishlist
         const wishlistResponse = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/wishlist`, {
@@ -34,7 +123,7 @@ export const Products = ({ products }) => {
 
         if (wishlistResponse.ok) {
           const wishlistData = await wishlistResponse.json();
-          setWishlist(Array.isArray(wishlistData) ? wishlistData : []);
+          setWishlist(wishlistData.wishlist || []);
         }
       } catch (error) {
         console.error('Error fetching data:', error);
@@ -44,86 +133,22 @@ export const Products = ({ products }) => {
     fetchData();
   }, []);
 
-  // Handle Adding to Cart
-
-  const handleAddToCart = async (id) => {
-    const userData = JSON.parse(localStorage.getItem('user'));
-    const token = userData?.token;
-
-    if (!token) {
-      showAlert('You need to be logged in to add items to the wishlist');
-      router.push('/login');
-      return;
-    }
-
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/cart/add`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ productId: id ,quantity: 1}),
-      });
-
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message || 'Failed to add to cart');
-
-      setCart(data.wishlist);
-      showAlert('Item added to cart successfully!');
-    } catch (error) {
-      console.error('Error adding to cart:', error);
-      showAlert(error.message || 'Something went wrong. Please try again.');
-    }
-  };
-
-
-  // Handle Adding to Wishlist
-  const handleAddToWishlist = async (id) => {
-    const userData = JSON.parse(localStorage.getItem('user'));
-    const token = userData?.token;
-
-    if (!token) {
-      showAlert('You need to be logged in to add items to the wishlist');
-      router.push('/login');
-      return;
-    }
-
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/wishlist/add`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ productId: id }),
-      });
-
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.message || 'Failed to add to wishlist');
-
-      setWishlist(data.wishlist);
-      showAlert('Item added to wishlist successfully!');
-    } catch (error) {
-      console.error('Error adding to wishlist:', error);
-      showAlert(error.message || 'Something went wrong. Please try again.');
-    }
-  };
-
   return (
     <>
       {alertMessage && (
-        <div style={{
-          background: '#000', 
-          color: '#fff', 
-          padding: '15px', 
-          textAlign: 'center', 
-          position:'fixed',
-          right:'0px',
-          zIndex:999,
-          top:"70px",
-          borderRadius: '5px'
-        }}>
+        <div
+          style={{
+            background: "#000",
+            color: "#fff",
+            padding: "15px",
+            textAlign: "center",
+            position: "fixed",
+            right: "0px",
+            zIndex: 999,
+            top: "70px",
+            borderRadius: "5px",
+          }}
+        >
           {alertMessage}
         </div>
       )}
@@ -132,8 +157,8 @@ export const Products = ({ products }) => {
         <SingleProduct
           key={product.id}
           product={product}
-          addedInCart={Array.isArray(cart) && cart.find((pd) => pd.productId === product.id)}
-          addedInWishlist={Array.isArray(wishlist) && wishlist.find((pd) => pd.productId === product.id)}
+          addedInCart={Array.isArray(cart) && cart.some((pd) => pd.productId === product.id)}
+          addedInWishlist={Array.isArray(wishlist) && wishlist.some((pd) => pd.productId === product.id)}
           onAddToCart={handleAddToCart}
           onAddToWishlist={handleAddToWishlist}
         />

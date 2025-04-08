@@ -30,7 +30,6 @@ export const SingleProduct = ({
         
             <div className="products-item_wishlist">
               <button
-                disabled={addedInWishlist}
                 className={`addList ${addedInWishlist ? "added" : ""}`}
                 onClick={() => onAddToWishlist(_id)}
               >

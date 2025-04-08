@@ -17,12 +17,9 @@ const sortOptions = [
 ];
 
 export const Shop = () => {
-  const [allProducts, setAllProducts] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [priceRange, setPriceRange] = useState([0, 10000]);
   const [category, setCategory] = useState("all");
-  const [color, setColor] = useState("all");
-  const [material, setMaterial] = useState("all");
   const [productsItem, setProductsItem] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
   const [sortOrder, setSortOrder] = useState("highToLow");

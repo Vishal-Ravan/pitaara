@@ -62,13 +62,13 @@ export const ProductsCarousel = ({ productsdata = [] }) => {
   const handleAddToWishlist = async (id) => {
     const userData = JSON.parse(localStorage.getItem("user"));
     const token = userData?.token;
-
-    if (!token) {
-      showAlert("You need to be logged in to add items to the wishlist.");
-      router.push("/login");
-      return;
+    let guestId = localStorage.getItem("guestId");
+  
+    if (!token && !guestId) {
+      guestId = `guest_${Math.random().toString(36).substr(2, 9)}`;
+      localStorage.setItem("guestId", guestId);
     }
-
+  
     try {
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/wishlist/add`,
@@ -76,23 +76,27 @@ export const ProductsCarousel = ({ productsdata = [] }) => {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
           },
-          body: JSON.stringify({ productId: id }),
+          body: JSON.stringify({
+            productId: id,
+            ...(guestId ? { guestId } : {}),
+          }),
         }
       );
-
+  
       const data = await response.json();
       if (!response.ok)
         throw new Error(data.message || "Failed to add to wishlist");
-
-      setWishlist(data.wishlist);
-      showAlert("Item added to wishlist successfully!");
+  
+      setWishlist(data.wishlist.products || []);
+      showAlert(data.message);
     } catch (error) {
       console.error("Error adding to wishlist:", error);
       showAlert(error.message || "Something went wrong. Please try again.");
     }
   };
+  
 
   const settings = {
     dots: false,

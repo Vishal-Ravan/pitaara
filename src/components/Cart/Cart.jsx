@@ -96,24 +96,20 @@ export const Cart = () => {
     );
   };
 
-  // Checkout handler for logged-in users
   const handleCheckout = () => {
     const token = getUserToken();
-    if (!token) {
-      alert("Please log in to proceed with checkout.");
-      router.push("/login");
-      return;
-    }
-
+    const guestId = getGuestId(); // still use this for tracking guest users
+  
     router.push({
       pathname: "/checkout",
       query: {
         cart: encodeURIComponent(JSON.stringify(cartData)),
         total: total.toFixed(2),
+        isGuest: !token, // pass this to know if guest
+        guestId,
       },
     });
   };
-
   return (
     <>
       <div className="cart">
@@ -125,6 +121,7 @@ export const Cart = () => {
                 <div className="cart-table__col">Price</div>
                 <div className="cart-table__col">Quantity</div>
                 <div className="cart-table__col">Total</div>
+                <div className="cart-table__col">Action</div>
               </div>
 
               {cartData?.map((cartItem) => (

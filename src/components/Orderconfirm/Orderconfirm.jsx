@@ -15,8 +15,8 @@ export const OrderConfirm = () => {
         router.push("/");
       }
     }
-  }, [router]);
 
+  }, [router]);
   if (!orderDetails) return <p style={{ fontSize: "18px", textAlign: "center" }}>Loading...</p>;
 console.log(orderDetails,'klkl')
   // Function to handle printing only the invoice section
@@ -55,9 +55,9 @@ console.log(orderDetails,'klkl')
           {/* Shipping Address */}
           <div style={{ width: "48%", padding: "15px", border: "1px solid #ddd", borderRadius: "10px", backgroundColor: "#f9f9f9" }}>
             <h3 style={{ fontSize: "20px", marginBottom: "10px" }}>Shipping Address</h3>
-            <p><strong>Name:</strong> {orderDetails.shippingAddress.fullName}</p>
+            {/* <p><strong>Name:</strong> {orderDetails.shippingAddress.fullName}</p>
   <p><strong>Phone:</strong> {orderDetails.shippingAddress.phone}</p>
-  <p><strong>Email:</strong> {orderDetails.shippingAddress.email}</p>
+  <p><strong>Email:</strong> {orderDetails.shippingAddress.email}</p> */}
   <p><strong>Address:</strong> {orderDetails.shippingAddress.address}</p>
   <p><strong>City:</strong> {orderDetails.shippingAddress.city}</p>
   <p><strong>State:</strong> {orderDetails.shippingAddress.state}</p>
@@ -69,14 +69,14 @@ console.log(orderDetails,'klkl')
           {/* Billing Address */}
           <div style={{ width: "48%", padding: "15px", border: "1px solid #ddd", borderRadius: "10px", backgroundColor: "#f9f9f9" }}>
             <h3 style={{ fontSize: "20px", marginBottom: "10px" }}>Billing Address</h3>
-            <p><strong>Name:</strong> {orderDetails.billingAddress.fullName}</p>
+            {/* <p><strong>Name:</strong> {orderDetails.billingAddress.fullName}</p>
   <p><strong>Phone:</strong> {orderDetails.billingAddress.phone}</p>
   <p><strong>Email:</strong> {orderDetails.billingAddress.email}</p>
   <p><strong>Address:</strong> {orderDetails.billingAddress.address}</p>
   <p><strong>City:</strong> {orderDetails.billingAddress.city}</p>
   <p><strong>State:</strong> {orderDetails.billingAddress.state}</p>
   <p><strong>Postal Code:</strong> {orderDetails.billingAddress.postalCode}</p>
-  <p><strong>Country:</strong> {orderDetails.billingAddress.country}</p>
+  <p><strong>Country:</strong> {orderDetails.billingAddress.country}</p> */}
           </div>
         </div>
 
@@ -104,13 +104,13 @@ console.log(orderDetails,'klkl')
       <p><strong>Product Name:</strong> {item.productId.name}</p>
       <p><strong>Price:</strong> {item.productId.price}</p>
       <p><strong>Category:</strong> {item.productId.category}</p>
-      <img
+      {/* <img
         src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${item.productId.images[0]}`}
         alt={item.productId.name}
         width={80}
         height={80}
         style={{ marginTop: "10px", objectFit: "cover", borderRadius: "4px" }}
-      /> 
+      />  */}
       
     </li>
   ))}
