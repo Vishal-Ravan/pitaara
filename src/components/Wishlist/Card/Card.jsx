@@ -1,23 +1,60 @@
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 export const Card = ({ wish }) => {
   const { name, image, id, isStocked, productNumber, price } = wish;
   const [alertMessage, setAlertMessage] = useState(null);
+  const [isInCart, setIsInCart] = useState(false);
 
-  // Function to show the alert message
+  // Show alert message temporarily
   const showAlert = (message) => {
     setAlertMessage(message);
     setTimeout(() => setAlertMessage(null), 2000);
   };
 
-  // Function to handle adding an item to the cart
+  // Check if item is already in cart
+  useEffect(() => {
+    const fetchCart = async () => {
+      const userData = JSON.parse(localStorage.getItem("user"));
+      const token = userData?.token;
+      const guestId = localStorage.getItem("guestId");
+
+      try {
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/cart`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              ...(token ? { Authorization: `Bearer ${token}` } : {}),
+              ...(guestId ? { "x-guest-id": guestId } : {}),
+            },
+          }
+        );
+
+        const data = await response.json();
+        if (response.ok) {
+          const productInCart = data?.items?.some(
+            (item) => item.product?._id === id
+          );
+          setIsInCart(productInCart);
+        } else {
+          console.warn("Failed to fetch cart data");
+        }
+      } catch (error) {
+        console.error("Error fetching cart:", error);
+      }
+    };
+
+    fetchCart();
+  }, [id]);
+
+  // Add item to cart
   const handleAddToCart = async (id) => {
     const userData = JSON.parse(localStorage.getItem("user"));
     const token = userData?.token;
     let guestId = localStorage.getItem("guestId");
 
-    // Generate guest ID if not available
     if (!token && !guestId) {
       guestId = `guest_${Math.random().toString(36).substr(2, 9)}`;
       localStorage.setItem("guestId", guestId);
@@ -44,7 +81,7 @@ export const Card = ({ wish }) => {
       if (!response.ok)
         throw new Error(data.message || "Failed to add to cart");
 
-      // Optional: Update cart state if needed
+      setIsInCart(true);
       showAlert("Item added to cart successfully!");
     } catch (error) {
       console.error("Error adding to cart:", error);
@@ -52,7 +89,7 @@ export const Card = ({ wish }) => {
     }
   };
 
-  // Function to handle removing an item from the wishlist
+  // Remove from wishlist
   const handleRemoveFromWishlist = async () => {
     const userData = JSON.parse(localStorage.getItem("user"));
     const token = userData?.token;
@@ -74,13 +111,11 @@ export const Card = ({ wish }) => {
       );
 
       const data = await response.json();
-      console.log("Response Data:", data); // Debug the response here
       if (!response.ok)
         throw new Error(data.message || "Failed to remove from wishlist");
 
-      // Show success message and reload the page
       showAlert("Item removed from wishlist");
-      window.location.reload(); // This will reload the current page to reflect the changes
+      window.location.reload();
     } catch (error) {
       console.error("Error removing from wishlist:", error);
       showAlert(error.message || "Something went wrong. Please try again.");
@@ -116,21 +151,22 @@ export const Card = ({ wish }) => {
         </button>
       </div>
       <div className="cart-table__col">
-        {/* Add to Cart Button */}
-        <button
-          onClick={() => handleAddToCart(id)}
-          title="Add to Cart"
-          style={{
-            background: "#3c3434",
-            border: "1px solid #3c3434",
-            width: "40px",
-            height: "40px",
-            color: "#fff",
-          }}
-        >
-          <i className="icon-cart"></i>
-        </button>
-        {/* Remove from Wishlist Button */}
+        {/* Conditionally render Add to Cart Button */}
+        {!isInCart && (
+          <button
+            onClick={() => handleAddToCart(id)}
+            title="Add to Cart"
+            style={{
+              background: "#3c3434",
+              border: "1px solid #3c3434",
+              width: "40px",
+              height: "40px",
+              color: "#fff",
+            }}
+          >
+            <img src="/assets/img/add-to-cart-white.png" alt="" />
+          </button>
+        )}
       </div>
 
       {/* Alert Message */}

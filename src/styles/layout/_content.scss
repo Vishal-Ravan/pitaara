@@ -3262,9 +3262,9 @@ blockquote,
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 29px 0;
+      padding: 10px 0;
       border: 1px solid #eeeeee;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
 
       &-head {
         font-size: 20px;
@@ -3404,7 +3404,7 @@ blockquote,
       width: 540px;
       background: #faf9ff;
       border: 1px solid #eeeeee;
-      padding: 60px;
+      padding: 30px;
 
       .btn {
         width: 100%;
@@ -7088,4 +7088,9 @@ span.error {
   margin: 20px 0px;
   align-items: center;
   gap: 10px;
+}
+.cart-bottom__total-discount-percent{
+  margin-top: 10px;
+  font-size: 0.8rem;
+  margin-bottom: 15px;
 }

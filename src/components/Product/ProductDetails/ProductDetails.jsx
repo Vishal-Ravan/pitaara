@@ -217,9 +217,10 @@ export const ProductDetails = () => {
 
             <div className='product-info'>
               <h3>{product.name}</h3>
-              <span className='product-stock'>in stock</span>
-              <span className='product-num'>SKU: IN1203</span>
-              <span className='product-price'>₹{product.price}</span>
+              <span className='product-stock'>in stock </span>
+              <span className='product-num'>Quantity: {product.quantity}</span>
+              <span className='product-num'>Dimenstion: {product.dimensions}</span>
+              <span className='product-price'> <span>₹{product.old_price}</span> ₹{product.price} </span>
 
               <p>{product.description}</p>
 
@@ -237,6 +238,15 @@ export const ProductDetails = () => {
               </div>
 
               <div className='product-options'>
+                <div className="product-info__color">
+                  <span>Color:</span>
+                  <h5><span>{product.color}</span></h5>
+                </div>
+
+                <div className="product-info__color">
+                  <span>Material:</span>
+                  <h5><span>{product.material}</span></h5>
+                </div>
                 <div className='product-info__quantity'>
                   <span className='product-info__quantity-title'>
                     Quantity:

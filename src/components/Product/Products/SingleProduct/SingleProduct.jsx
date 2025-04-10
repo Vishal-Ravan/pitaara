@@ -7,7 +7,7 @@ export const SingleProduct = ({
   addedInWishlist,
   addedInCart,
 }) => {
-  const { name, oldPrice, price, images, isSale, isNew, _id } = product;
+  const { name, old_price, price, images, isSale, isNew, _id } = product;
 
   return (
     <>
@@ -26,10 +26,10 @@ export const SingleProduct = ({
           ) : (
             <div className="placeholder">No Image Available</div>
           )}
-          <div className="products-item__data">
+          <div className="products-item__data" title="Add to wishlist">
         
             <div className="products-item_wishlist">
-              <button
+              <button 
                 className={`addList ${addedInWishlist ? "added" : ""}`}
                 onClick={() => onAddToWishlist(_id)}
               >
@@ -40,7 +40,7 @@ export const SingleProduct = ({
         </div>
         <div className="products-item__info">
           <span className="products-item__cost">
-            ₹ {price}&nbsp; &nbsp;<span>  ₹ 1000</span> 
+            ₹ {price}&nbsp; &nbsp;<span>  ₹ {old_price}</span> 
           </span>
           <Link href={`/product/${_id}`}>
             <a>

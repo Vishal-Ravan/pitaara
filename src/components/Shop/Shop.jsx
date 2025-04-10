@@ -12,13 +12,13 @@ const { createSliderWithTooltip } = Slider;
 const Range = createSliderWithTooltip(Slider.Range);
 
 const sortOptions = [
-  { value: "highToLow", label: "From expensive to cheap" },
-  { value: "lowToHigh", label: "From cheap to expensive" },
+  { value: "highToLow", label: "Price High To Low" },
+  { value: "lowToHigh", label: "Price Low To High" },
 ];
 
 export const Shop = () => {
   const [filteredProducts, setFilteredProducts] = useState([]);
-  const [priceRange, setPriceRange] = useState([0, 10000]);
+  const [priceRange, setPriceRange] = useState([0, 1000]);
   const [category, setCategory] = useState("all");
   const [productsItem, setProductsItem] = useState([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -143,7 +143,7 @@ export const Shop = () => {
                 <div className="range-slider">
                   <Range
                     min={0}
-                    max={10000}
+                    max={1000}
                     defaultValue={priceRange}
                     onChange={(value) => setPriceRange(value)}
                     tipFormatter={(value) => `${value} Rupees`}

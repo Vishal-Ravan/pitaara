@@ -19,11 +19,11 @@ export const Banner = () => {
         <div
           className="wrappers"
           style={{
-            backgroundImage: "url(/assets/img/pittara.png)",
+            backgroundImage: "url(/assets/img/2.png)",
             backgroundSize: "cover",
             backgroundPosition: "center",
-            minHeight: "700px",
-            height: "700px",
+            minHeight: "640px",
+            height: "640px",
             marginTop: "100px",
             width: "100%",
           }}
@@ -33,11 +33,39 @@ export const Banner = () => {
         <div
           className="wrappers"
           style={{
-            backgroundImage: "url(/assets/img/pittara.png)",
+            backgroundImage: "url(/assets/img/3.png)",
             backgroundSize: "cover",
             backgroundPosition: "center",
-            minHeight: "700px",
-            height: "700px",
+            minHeight: "640px",
+            height: "640px",
+            marginTop: "100px",
+            width: "100%",
+          }}
+        ></div>
+      </div>
+      <div className="">
+        <div
+          className="wrappers"
+          style={{
+            backgroundImage: "url(/assets/img/4.png)",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            minHeight: "640px",
+            height: "640px",
+            marginTop: "100px",
+            width: "100%",
+          }}
+        ></div>
+      </div>
+      <div className="">
+        <div
+          className="wrappers"
+          style={{
+            backgroundImage: "url(/assets/img/5.png)",
+            backgroundSize: "cover",
+            backgroundPosition: "center",
+            minHeight: "640px",
+            height: "640px",
             marginTop: "100px",
             width: "100%",
           }}

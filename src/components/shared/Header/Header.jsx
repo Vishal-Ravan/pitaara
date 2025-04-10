@@ -177,11 +177,11 @@ export const Header = () => {
       )}
 
       <header className="header">
-        <div className={`header-content ${fixedNav ? "fixed" : ""}`}>
+        <div className={`header-content `}>
           <div className="header-logo">
             <Link href="/">
               <a>
-                <img src={header.logo} alt="Logo" width={120} />
+                <img src={header.logo} alt="Logo" width={150} />
               </a>
             </Link>
           </div>
@@ -214,7 +214,7 @@ export const Header = () => {
                   <Link href="/profile">
                     <a className="user-icons">
                       <i className="icon-user">{user.name}</i>
-                      <p>Account</p>
+                      {/* <p>Account</p> */}
                     </a>
                   </Link>
                 ) : (
@@ -239,7 +239,7 @@ export const Header = () => {
               <li>
                 <Link href="/cart">
                   <a className="user-icons">
-                    <i className="icon-cart"></i>
+                   <img src="/assets/img/add-to-cart.png" alt="" width={25} />
                     <span>{cartCount}</span>
                     <p>Cart</p>
                   </a>

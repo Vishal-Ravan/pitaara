@@ -11,35 +11,35 @@ export const BrandLogo = () => {
       id: 1,
       name: "Rings",
       imgSrc:
-        "https://www.giva.co/cdn/shop/collections/pink_rings_c356f6b3-6547-4e39-9b08-dfdf5ecfc2b0.jpg?v=1742651416",
+        "/assets/img/ring.png",
       url: "/shop?category=rings",
     },
     {
       id: 2,
       name: "Bracelets",
       imgSrc:
-        "https://www.giva.co/cdn/shop/collections/pink_necklaces_pend_copy.jpg?v=1742651415",
+        "/assets/img/brecelate.png",
       url: "/shop?category=bracelets",
     },
     {
       id: 3,
       name: "Earrings",
       imgSrc:
-        "https://www.giva.co/cdn/shop/collections/pink_br-min.png?v=1742651417",
+        "/assets/img/ear.png",
       url: "/shop?category=earrings",
     },
     {
       id: 4,
       name: "Necklace",
       imgSrc:
-        "https://www.giva.co/cdn/shop/collections/pink_rings_c356f6b3-6547-4e39-9b08-dfdf5ecfc2b0.jpg?v=1742651416",
+        "/assets/img/chain.png",
       url: "/shop?category=necklace",
     },
     {
       id: 5,
       name: "Anklets",
       imgSrc:
-        "https://www.giva.co/cdn/shop/collections/pink_br-min.png?v=1742651417",
+        "/assets/img/anklet.png",
       url: "/shop?category=anklet",
     },
   ];
@@ -69,7 +69,7 @@ export const BrandLogo = () => {
           <div key={item.id} className="category-slide">
             <a href={item.url}>
               <div className="image-container">
-                <img src={item.imgSrc} alt={item.name} />
+                <img src={item.imgSrc} alt={item.name} className="brand-logo"/>
               </div>
               <p className="category-name">{item.name}</p>
             </a>
