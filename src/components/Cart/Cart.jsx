@@ -151,16 +151,18 @@ export const Cart = () => {
 
   // Checkout
   const handleCheckout = () => {
+    localStorage.setItem("cartData", JSON.stringify(cartData));
+  
     router.push({
       pathname: "/checkout",
       query: {
-        cart: encodeURIComponent(JSON.stringify(cartData)),
         total: (total - discount + gst).toFixed(2),
         isGuest: !token,
         guestId,
       },
     });
   };
+  
 
   return (
     <div className="cart">

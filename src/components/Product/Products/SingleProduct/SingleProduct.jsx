@@ -18,6 +18,8 @@ export const SingleProduct = ({
           {isNew && <span className="products-item__new">new</span>}
         </div> */}
         <div className="products-item__img">
+        <Link href={`/product/${_id}`} >
+
           {images && images.length > 0 ? (
             <img
               src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${images[0]}`}
@@ -26,6 +28,7 @@ export const SingleProduct = ({
           ) : (
             <div className="placeholder">No Image Available</div>
           )}
+          </Link>
           <div className="products-item__data" title="Add to wishlist">
         
             <div className="products-item_wishlist">
@@ -39,9 +42,12 @@ export const SingleProduct = ({
           </div>
         </div>
         <div className="products-item__info">
+          <Link href={`/product/${_id}`} >
+
           <span className="products-item__cost">
             ₹ {price}&nbsp; &nbsp;<span>  ₹ {old_price}</span> 
           </span>
+          </Link>
           <Link href={`/product/${_id}`}>
             <a>
               <span className="products-item__name">{name}</span>

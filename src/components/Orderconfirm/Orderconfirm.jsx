@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 export const OrderConfirm = () => {
   const router = useRouter();
   const [orderDetails, setOrderDetails] = useState(null);
+  const [invoiceNumber, setInvoiceNumber] = useState(1);
   const invoiceRef = useRef(null);
 
   useEffect(() => {
@@ -14,21 +15,28 @@ export const OrderConfirm = () => {
       } else {
         router.push("/");
       }
+
+      const lastInvoice = localStorage.getItem("lastInvoiceNumber");
+      const nextInvoice = lastInvoice ? parseInt(lastInvoice) + 1 : 1;
+      setInvoiceNumber(nextInvoice);
+      localStorage.setItem("lastInvoiceNumber", nextInvoice.toString());
     }
   }, [router]);
-  if (!orderDetails)
-    return <p style={{ fontSize: "18px", textAlign: "center" }}>Loading...</p>;
-  console.log(orderDetails, "klkl");
-  // Function to handle printing only the invoice section
+
   const handlePrint = () => {
     const printContent = invoiceRef.current.innerHTML;
     const originalContent = document.body.innerHTML;
-
     document.body.innerHTML = printContent;
     window.print();
     document.body.innerHTML = originalContent;
-    window.location.reload(); // Reload to restore the page
+    window.location.reload();
   };
+
+  if (!orderDetails)
+    return <p style={{ fontSize: "18px", textAlign: "center" }}>Loading...</p>;
+console.log(orderDetails,'lloooooooooo')
+  const invoiceDate = new Date().toLocaleDateString();
+  let grandTotal = 0;
 
   return (
     <div
@@ -39,20 +47,25 @@ export const OrderConfirm = () => {
         fontFamily: "Arial, sans-serif",
       }}
     >
-      {/* Invoice Section */}
-      <div
-        ref={invoiceRef}
-        style={{ backgroundColor: "#fff", padding: "20px" }}
-      >
-        <h2
-          style={{
-            textAlign: "center",
-            fontSize: "24px",
-            marginBottom: "20px",
-          }}
-        >
+      <div ref={invoiceRef} style={{ backgroundColor: "#fff", padding: "20px" }}>
+        <div style={{ display: "flex", justifyContent: "space-between" }}>
+          <div>
+            <p><strong>Invoice Date:</strong> {invoiceDate}</p>
+            <p><strong>Invoice No:</strong> {invoiceNumber}</p>
+          </div>
+          <div style={{ textAlign: "right" }}>
+            <h3 style={{  fontSize: "24px" }}>Seller Details</h3>
+            <p><strong>GST Number:</strong> 27ABCDE1234F1Z5</p>
+            <p><strong>Contact:</strong> +91-9876543210</p>
+            <p><strong>Email:</strong> seller@example.com</p>
+            <p><strong>Website:</strong> www.example.com</p>
+          </div>
+        </div>
+
+        <h2 style={{ textAlign: "center", fontSize: "24px", margin: "20px 0" }}>
           Order Confirmation
         </h2>
+
         <p style={{ fontSize: "18px", fontWeight: "bold" }}>
           Message:{" "}
           <span style={{ fontWeight: "normal" }}>
@@ -60,184 +73,137 @@ export const OrderConfirm = () => {
           </span>
         </p>
 
-        <h3 style={{ fontSize: "22px", marginBottom: "10px" }}>
-          Order Details
-        </h3>
-        <p style={{ fontSize: "18px" }}>
-          <strong>Order ID:</strong> {orderDetails.orderId}
-        </p>
-        <p style={{ fontSize: "18px" }}>
-          <strong>Total Amount:</strong> {orderDetails.totalAmount}
-        </p>
-        <p style={{ fontSize: "18px" }}>
-          <strong>Payment Method:</strong> {orderDetails.paymentMethod}
-        </p>
+        <p><strong>Order ID:</strong> {orderDetails.orderId}</p>
+        <p><strong>Total Amount:</strong> ₹{orderDetails.totalAmount}</p>
+        <p><strong>Payment Method:</strong> {orderDetails.paymentMethod}</p>
 
         {/* Address Section */}
-        <div
-          style={{
-            display: "flex",
-            justifyContent: "space-between",
-            gap: "20px",
-            marginTop: "20px",
-          }}
-        >
-          {/* Shipping Address */}
-          <div
-            style={{
-              width: "48%",
-              padding: "15px",
-              border: "1px solid #ddd",
-              borderRadius: "10px",
-              backgroundColor: "#f9f9f9",
-            }}
-          >
-            <h3 style={{ fontSize: "20px", marginBottom: "10px" }}>
-              Shipping Address
-            </h3>
-            <p>
-              <strong>Name:</strong> {orderDetails.shippingAddress.fullName}
-            </p>
-            <p>
-              <strong>Phone:</strong> {orderDetails.shippingAddress.phone}
-            </p>
-            <p>
-              <strong>Email:</strong> {orderDetails.shippingAddress.email}
-            </p>
-            <p>
-              <strong>Address:</strong> {orderDetails.shippingAddress.address}
-            </p>
-            <p>
-              <strong>City:</strong> {orderDetails.shippingAddress.city}
-            </p>
-            <p>
-              <strong>State:</strong> {orderDetails.shippingAddress.state}
-            </p>
-            <p>
-              <strong>Postal Code:</strong>{" "}
-              {orderDetails.shippingAddress.postalCode}
-            </p>
-            <p>
-              <strong>Country:</strong> {orderDetails.shippingAddress.country}
-            </p>
+        <div style={{ display: "flex", justifyContent: "space-between", gap: "20px", marginTop: "20px" }}>
+          <div style={{ width: "48%", padding: "15px", border: "1px solid #ddd", borderRadius: "10px", backgroundColor: "#f9f9f9" }}>
+            <h3 style={{  fontSize: "24px" }}>Shipping Address</h3>
+            {Object.entries(orderDetails.shippingAddress)
+  .filter(([key]) => key !== "_id")
+  .map(([key, value]) => (
+    <p key={key}>
+      <strong>{key.charAt(0).toUpperCase() + key.slice(1)}:</strong> {value}
+    </p>
+))}
+
           </div>
 
-          {/* Billing Address */}
-          <div
-            style={{
-              width: "48%",
-              padding: "15px",
-              border: "1px solid #ddd",
-              borderRadius: "10px",
-              backgroundColor: "#f9f9f9",
-            }}
-          >
-            <h3 style={{ fontSize: "20px", marginBottom: "10px" }}>
-              Billing Address
-            </h3>
-            <p>
-              <strong>Name:</strong> {orderDetails.billingAddress.fullName}
-            </p>
-            <p>
-              <strong>Phone:</strong> {orderDetails.billingAddress.phone}
-            </p>
-            <p>
-              <strong>Email:</strong> {orderDetails.billingAddress.email}
-            </p>
-            <p>
-              <strong>Address:</strong> {orderDetails.billingAddress.address}
-            </p>
-            <p>
-              <strong>City:</strong> {orderDetails.billingAddress.city}
-            </p>
-            <p>
-              <strong>State:</strong> {orderDetails.billingAddress.state}
-            </p>
-            <p>
-              <strong>Postal Code:</strong>{" "}
-              {orderDetails.billingAddress.postalCode}
-            </p>
-            <p>
-              <strong>Country:</strong> {orderDetails.billingAddress.country}
-            </p>
+          <div style={{ width: "48%", padding: "15px", border: "1px solid #ddd", borderRadius: "10px", backgroundColor: "#f9f9f9" }}>
+            <h3 style={{  fontSize: "24px" }}>Billing Address</h3>
+            {Object.entries(orderDetails.billingAddress)
+  .filter(([key]) => key !== "_id") // hide _id field
+  .map(([key, value]) => (
+    <p key={key}>
+      <strong>{key.charAt(0).toUpperCase() + key.slice(1)}:</strong> {value}
+    </p>
+))}
+
           </div>
         </div>
 
-        {/* Items List */}
+        {/* Items Table */}
         <h3 style={{ fontSize: "22px", marginTop: "20px" }}>Items</h3>
-        <ul
-          style={{
-            listStyle: "none",
-            padding: "0",
-            display: "grid",
-            gridTemplateColumns: "1fr 1fr", // Two equal-width columns
-            gap: "20px", // space between items
-          }}
-        >
-          {orderDetails.cartData.map((item, index) => (
-            <li
-              key={index}
-              style={{
-                padding: "15px",
-                border: "1px solid #ddd",
-                borderRadius: "8px",
-                backgroundColor: "#f8f8f8",
-              }}
-            >
-              <p>
-                <strong>Product Name:</strong> {item.productId.name}
-              </p>
-              <p>
-                <strong>Price:</strong> {item.productId.price}
-              </p>
-              <p>
-                <strong>Category:</strong> {item.productId.category}
-              </p>
-              {/* <img
-        src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${item.productId.images[0]}`}
-        alt={item.productId.name}
-        width={80}
-        height={80}
-        style={{ marginTop: "10px", objectFit: "cover", borderRadius: "4px" }}
-      />  */}
-            </li>
-          ))}
-        </ul>
+        <table style={{ width: "100%", borderCollapse: "collapse", marginTop: "10px" }}>
+          <thead>
+            <tr style={{ backgroundColor: "#eee" }}>
+              <th style={tableTh}>#</th>
+              <th style={tableTh}>Product Name</th>
+              <th style={tableTh}>HSN Code</th>
+              <th style={tableTh}>Category</th>
+              <th style={tableTh}>Price (₹)</th>
+            </tr>
+          </thead>
+          <tbody>
+            {orderDetails.cartData.map((item, index) => (
+              <tr key={index}>
+                <td style={tableTd}>{index + 1}</td>
+                <td style={tableTd}>{item.productId.name}</td>
+                <td style={tableTd}>1234</td> {/* Static HSN Code */}
+                <td style={tableTd}>{item.productId.category}</td>
+                <td style={tableTd}>₹{item.productId.price}</td>
+              </tr>
+            ))}
+
+            {/* Totals */}
+            <tr>
+              <td colSpan="4" style={{ ...tableTd, textAlign: "right", fontWeight: "bold" }}>
+                Subtotal
+              </td>
+              <td style={tableTd}>
+                ₹{orderDetails.cartData.reduce((total, item) => total + item.productId.price, 0).toFixed(2)}
+              </td>
+            </tr>
+            <tr>
+              <td colSpan="4" style={{ ...tableTd, textAlign: "right", fontWeight: "bold" }}>
+                GST (3%)
+              </td>
+              <td style={tableTd}>
+                ₹{(
+                  orderDetails.cartData.reduce((total, item) => total + item.productId.price, 0) * 0.03
+                ).toFixed(2)}
+              </td>
+            </tr>
+            <tr>
+              <td colSpan="4" style={{ ...tableTd, textAlign: "right", fontWeight: "bold" }}>
+                Total (Incl. GST)
+              </td>
+              <td style={{ ...tableTd, fontWeight: "bold" }}>
+                ₹{(
+                  orderDetails.cartData.reduce((total, item) => total + item.productId.price, 0) * 1.03
+                ).toFixed(2)}
+              </td>
+            </tr>
+          </tbody>
+
+        </table>
+
+        {/* Signature Footer */}
+        <div style={{ display: "flex", justifyContent: "space-between", marginTop: "50px" }}>
+          <div>
+            <p><strong>Signature</strong></p>
+            <div style={{ borderTop: "1px solid #000", width: "150px", marginTop: "20px" }}></div>
+          </div>
+          <div style={{ textAlign: "right" }}>
+            <p><strong>Thank you for shopping with us!</strong></p>
+          </div>
+        </div>
       </div>
 
-      {/* Print & Download Invoice Buttons */}
+      {/* Buttons */}
       <div style={{ textAlign: "center", marginTop: "20px" }}>
-        <button
-          style={{
-            backgroundColor: "#007bff",
-            color: "white",
-            fontSize: "18px",
-            padding: "10px 20px",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer",
-            marginRight: "10px",
-          }}
-          onClick={handlePrint}
-        >
+        <button style={buttonStyle("#007bff")} onClick={handlePrint}>
           Print Invoice
         </button>
-
-        <button
-          style={{
-            backgroundColor: "#28a745",
-            color: "white",
-            fontSize: "18px",
-            padding: "10px 20px",
-            border: "none",
-            borderRadius: "5px",
-            cursor: "pointer",
-          }}
-          onClick={handlePrint} // Download PDF will also open print preview to save as PDF
-        >
+        <button style={buttonStyle("#28a745")} onClick={handlePrint}>
           Download Invoice
         </button>
       </div>
     </div>
   );
+};
+
+// Button and Table Styling
+const buttonStyle = (bgColor) => ({
+  backgroundColor: bgColor,
+  color: "white",
+  fontSize: "18px",
+  padding: "10px 20px",
+  border: "none",
+  borderRadius: "5px",
+  cursor: "pointer",
+  marginRight: "10px",
+});
+
+const tableTh = {
+  border: "1px solid #ccc",
+  padding: "10px",
+  textAlign: "left",
+};
+
+const tableTd = {
+  border: "1px solid #ccc",
+  padding: "10px",
 };

@@ -31,7 +31,10 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
       isMounted.current = false;
     };
   }, [router.query]);
-
+  useEffect(() => {
+    const cartItems = JSON.parse(localStorage.getItem("cartData")) || [];
+    console.log(cartItems,'loolo')
+  },[])
   const getUserToken = () => {
     const userData = JSON.parse(localStorage.getItem("user"));
     const token = userData?.token;
@@ -49,9 +52,10 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
     const token = getUserToken();
     const isGuest = isGuestCheckout(token);
   
-    // 🔥 Get billing address from localStorage
+    // 🔥 Get billing address and cart items from localStorage
     const billingData = JSON.parse(localStorage.getItem("billingAddress"));
-  
+    const cartItems = JSON.parse(localStorage.getItem("cartData")) || [];
+  console.log(cartItems,'loolo')
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/checkout`, {
         method: "POST",
@@ -61,14 +65,15 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
         },
         body: JSON.stringify({
           paymentMethod: "Online",
-          billingAddress: billingData, // 🔥 Send this
+          billingAddress: billingData,
+          items: cartItems, // 🛒 Include cart items here
           ...(isGuest ? { guestId: token } : {}),
         }),
       });
   
       const data = await response.json();
       console.log("Order Response:", data);
-      
+  
       if (response.ok) {
         if (isMounted.current) {
           setAlertMessage("Order placed successfully!");

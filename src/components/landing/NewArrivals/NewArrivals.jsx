@@ -15,7 +15,8 @@ export const NewArrivals = () => {
         const data = await response.json();
 
         // Filter only products with new_arival === "new"
-        const newArrivals = data.filter(item => item.new_arival?.toLowerCase() === "new");
+        const newArrivals = data
+        .filter(item => String(item.new_arival).toLowerCase() === "true");
         setProductsItem(newArrivals);
       } catch (error) {
         console.error('Error fetching new arrival products:', error);

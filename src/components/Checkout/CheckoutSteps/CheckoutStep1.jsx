@@ -155,6 +155,7 @@ export const CheckoutStep1 = ({ onNext }) => {
             required
             data-type="shippingAddress"
           />
+          {errors.fullName && <p className="error">{errors.fullName}</p>}
         </div>
 
         <div className="box-field__row">
@@ -169,6 +170,7 @@ export const CheckoutStep1 = ({ onNext }) => {
               data-type="shippingAddress"
               required
             />
+            {errors.email && <p className="error">{errors.email}</p>}
           </div>
           <div className="box-field">
             <input
@@ -181,6 +183,7 @@ export const CheckoutStep1 = ({ onNext }) => {
               data-type="shippingAddress"
               required
             />
+            {errors.phone && <p className="error">{errors.phone}</p>}
           </div>
         </div>
 
@@ -196,6 +199,7 @@ export const CheckoutStep1 = ({ onNext }) => {
               data-type="shippingAddress"
               required
             />
+            {errors.address && <p className="error">{errors.address}</p>}
           </div>
           <div className="box-field">
             <input
@@ -208,6 +212,7 @@ export const CheckoutStep1 = ({ onNext }) => {
               data-type="shippingAddress"
               required
             />
+            {errors.city && <p className="error">{errors.city}</p>}
           </div>
         </div>
         <div className="box-field__row">
@@ -222,6 +227,7 @@ export const CheckoutStep1 = ({ onNext }) => {
               data-type="shippingAddress"
               required
             />
+            {errors.state && <p className="error">{errors.state}</p>}
           </div>
           <div className="box-field">
             <input
@@ -234,6 +240,7 @@ export const CheckoutStep1 = ({ onNext }) => {
               data-type="shippingAddress"
               required
             />
+            {errors.postalCode && <p className="error">{errors.postalCode}</p>}
           </div>
         </div>
         <div className="box-field">
@@ -247,6 +254,7 @@ export const CheckoutStep1 = ({ onNext }) => {
             data-type="shippingAddress"
             required
           />
+          {errors.country && <p className="error">{errors.country}</p>}
         </div>
 
         <label>
@@ -270,6 +278,7 @@ export const CheckoutStep1 = ({ onNext }) => {
             data-type="billingAddress"
             required
           />
+          {errors.fullName && <p className="error">{errors.fullName}</p>}
         </div>
         <div className="box-field__row">
           <div className="box-field">
@@ -283,6 +292,7 @@ export const CheckoutStep1 = ({ onNext }) => {
               data-type="billingAddress"
               required
             />
+            {errors.email && <p className="error">{errors.email}</p>}
           </div>
           <div className="box-field">
             <input
@@ -295,6 +305,7 @@ export const CheckoutStep1 = ({ onNext }) => {
               data-type="billingAddress"
               required
             />
+            {errors.phone && <p className="error">{errors.phone}</p>}
           </div>
         </div>
 
@@ -310,6 +321,7 @@ export const CheckoutStep1 = ({ onNext }) => {
               data-type="billingAddress"
               required
             />
+            {errors.address && <p className="error">{errors.address}</p>}
           </div>
           <div className="box-field">
             <input
@@ -322,6 +334,7 @@ export const CheckoutStep1 = ({ onNext }) => {
               data-type="billingAddress"
               required
             />
+            {errors.city && <p className="error">{errors.city}</p>}
           </div>
         </div>
         <div className="box-field__row">
@@ -336,6 +349,7 @@ export const CheckoutStep1 = ({ onNext }) => {
               data-type="billingAddress"
               required
             />
+            {errors.state && <p className="error">{errors.state}</p>}
           </div>
           <div className="box-field">
             <input
@@ -348,6 +362,7 @@ export const CheckoutStep1 = ({ onNext }) => {
               required
               data-type="billingAddress"
             />
+            {errors.postalCode && <p className="error">{errors.postalCode}</p>}
           </div>
         </div>
         <div className="box-field">
@@ -361,6 +376,7 @@ export const CheckoutStep1 = ({ onNext }) => {
             required
             data-type="billingAddress"
           />
+          {errors.country && <p className="error">{errors.country}</p>}
         </div>
         <div className="checkout-buttons">
           <button
