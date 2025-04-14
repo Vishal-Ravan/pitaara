@@ -177,8 +177,8 @@ export const Shop = () => {
             </div>
           </div>
         </div>
-        <img className="promo-video__decor js-img" src="/assets/img/promo-video__decor.jpg" alt="" />
-        <img className="shop-decor js-img" src="/assets/img/shop-decor.jpg" alt="" />
+        {/* <img className="promo-video__decor js-img" src="/assets/img/promo-video__decor.jpg" alt="" />
+        <img className="shop-decor js-img" src="/assets/img/shop-decor.jpg" alt="" /> */}
       </div>
     </div>
   );

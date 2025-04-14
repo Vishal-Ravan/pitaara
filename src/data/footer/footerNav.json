@@ -6,10 +6,7 @@
         "name": "About us",
         "path": "/about"
       },
-      {
-        "name": "Categories",
-        "path": "/categories"
-      },
+     
       {
         "name": "Shop",
         "path": "/shop"
@@ -25,23 +22,23 @@
     "navLinks": [
       {
         "name": "Rings",
-        "path": "/rings"
+        "path": "shop?category=rings"
       },
       {
         "name": "Bracelets",
-        "path": "/bracelets"
+        "path": "shop?category=bracelets"
       },
       {
         "name": "Earrings",
-        "path": "/earrings"
+        "path": "shop?category=earrings"
       },
       {
         "name": "Necklace",
-        "path": "/necklace"
+        "path": "shop?category=necklace"
       },
       {
         "name": "Anklet",
-        "path": "/anklet"
+        "path": "shop?category=anklet"
       }
      
     ]
@@ -55,17 +52,14 @@
       },
       {
         "name": "Privacy policy",
-        "path": "/faq"
+        "path": "/privacy-policy"
       },
     
       {
         "name": "Exchange and Return",
-        "path": "/blog"
-      },
-      {
-        "name": "Return Policy",
-        "path": "/blog"
+        "path": "/exchange-and-return"
       }
+   
      
      
     ]

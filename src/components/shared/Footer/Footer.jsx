@@ -58,19 +58,17 @@ export const Footer = () => {
               <span className='footer-nav__col-title'>Contact</span>
               <ul>
                 <li>
-                  <i className='icon-map-pin'></i> 27 Division St, New York, NY
-                  10002, USA
+                  <i className='icon-map-pin'></i> 248, NH-52, Hisar Rajgarh Road, Near IIFL Finance, Siwani,Bhiwani, Haryana - 127046
                 </li>
                 <li>
                   <i className='icon-smartphone'></i>
                   <div className='footer-nav__col-phones'>
-                    <a href='tel:+13459971345'>+1 345 99 71 345</a>
-                    <a href='tel:+13457464975'>+1 345 74 64 975</a>
+                    <a href='tel:+919220557803'>+91 9220557803</a>
                   </div>
                 </li>
                 <li>
                   <i className='icon-mail'></i>
-                  <a href='mailto:info@beshop.com'>info@beshop.com</a>
+                  <a href='mailto:info@pittara.in'>info@pittara.in</a>
                 </li>
               </ul>
             </div>
