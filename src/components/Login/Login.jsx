@@ -96,11 +96,7 @@ export const Login = () => {
           </form>
         </div>
       </div>
-      <img
-        className='promo-video__decor js-img'
-        src='/assets/img/promo-video__decor.jpg'
-        alt=''
-      />
+     
         {alertMessage && (
         <div style={{
           background: '#000', 

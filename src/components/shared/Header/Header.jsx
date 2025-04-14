@@ -181,7 +181,7 @@ export const Header = () => {
           <div className="header-logo">
             <Link href="/">
               <a>
-                <img src="/assets/img/logo.png" alt="Logo" width={150} />
+                <img src="/assets/img/logo.png" alt="Logo" width={180} />
               </a>
             </Link>
           </div>
