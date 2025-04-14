@@ -89,11 +89,7 @@ export const Checkout = () => {
             </div>
           </div>
         </div>
-        <img
-          className='promo-video__decor js-img'
-          src='/assets/img/promo-video__decor.jpg'
-          alt=''
-        />
+       
       </div>
       {/* <!-- CHECKOUT EOF   --> */}
     </>

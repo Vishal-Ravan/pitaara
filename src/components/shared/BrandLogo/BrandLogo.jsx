@@ -34,14 +34,14 @@ export const BrandLogo = () => {
       imgSrc:
         "/assets/img/chain.png",
       url: "/shop?category=necklace",
-    },
-    {
-      id: 5,
-      name: "Anklets",
-      imgSrc:
-        "/assets/img/anklet.png",
-      url: "/shop?category=anklet",
-    },
+    }
+    // {
+    //   id: 5,
+    //   name: "Anklets",
+    //   imgSrc:
+    //     "/assets/img/anklet.png",
+    //   url: "/shop?category=anklet",
+    // },
   ];
 
   const settings = {

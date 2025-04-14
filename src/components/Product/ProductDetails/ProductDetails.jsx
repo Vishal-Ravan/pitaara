@@ -107,7 +107,12 @@ export const ProductDetails = () => {
       console.error("Error adding to cart:", error.message);
     }
   };
-
+  useEffect(() => {
+    if (product && quantity > product.quantity) {
+      setQuantity(product.quantity > 0 ? product.quantity : 1);
+    }
+  }, [product]);
+  
   const addToWishlist = async () => {
     try {
       const userData = JSON.parse(localStorage.getItem('user'));
@@ -194,30 +199,33 @@ export const ProductDetails = () => {
               </div>
 
               <div className='product-slider__nav'>
-                <Slider
-                  arrows={false}
-                  asNavFor={nav1}
-                  ref={(slider2) => setNav2(slider2)}
-                  slidesToShow={4}
-                  swipeToSlide={true}
-                  focusOnSelect={true}
-                >
-                  {product.images.map((image, index) => (
-                    <div key={index} className='product-slider__nav-item'>
-                      <img
-                        src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${image}`}
-                        alt="Product"
-                        height={80}
-                      />
-                    </div>
-                  ))}
-                </Slider>
+              <Slider
+  arrows={false}
+  asNavFor={nav1}
+  ref={(slider2) => setNav2(slider2)}
+  slidesToShow={product.images.length >= 4 ? 4 : product.images.length}
+  swipeToSlide={true}
+  focusOnSelect={true}
+>
+  {product.images.map((image, index) => (
+    <div key={index} className='product-slider__nav-item'>
+      <img
+        src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${image}`}
+        alt="Product"
+        height={80}
+      />
+    </div>
+  ))}
+</Slider>
+
               </div>
             </div>
 
             <div className='product-info'>
               <h3>{product.name}</h3>
-              <span className='product-stock'>in stock </span>
+              <span className='product-stock'>
+  {product.quantity > 0 ? 'In Stock' : 'Out of Stock'}
+</span>
               <span className='product-num'>Quantity: {product.quantity}</span>
               <span className='product-num'>Dimenstion: {product.dimensions}</span>
               <span className='product-price'>  ₹{product.price} </span>
@@ -260,7 +268,7 @@ export const ProductDetails = () => {
                       }}
                       className='counter-link counter-link__prev'
                     >
-                      <i className='icon-arrow'></i>
+                    -
                     </span>
                     <input
                       type='text'
@@ -268,24 +276,34 @@ export const ProductDetails = () => {
                       disabled
                       value={quantity}
                     />
-                    <span
-                      onClick={() => setQuantity(quantity + 1)}
-                      className='counter-link counter-link__next'
-                    >
-                      <i className='icon-arrow'></i>
-                    </span>
+                   <span
+  onClick={() => {
+    if (quantity < product.quantity) {
+      setQuantity(quantity + 1);
+    }
+  }}
+  className='counter-link counter-link__next'
+>
+  +
+</span>
                   </div>
                 </div>
               </div>
 
               <div className='product-buttons'>
-                <button onClick={addToCart} className='btn btn-icon'>
-                  <i className='icon-cart'></i> cart
-                </button>
+              <div className='product-buttons'>
+  <button
+    onClick={addToCart}
+    className='btn btn-icon'
+    disabled={product.quantity === 0}
+  >
+    <i className='icon-cart'></i> cart
+  </button>
 
-                <button className='btn btn-grey btn-icon' onClick={addToWishlist}>
-                  <i className='icon-heart'></i> wish
-                </button>
+  <button className='btn btn-grey btn-icon' onClick={addToWishlist}>
+    <i className='icon-heart'></i> wish
+  </button>
+</div>
               </div>
             </div>
           </div>

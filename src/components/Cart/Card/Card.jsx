@@ -167,7 +167,7 @@ export const Card = ({ cart, onChangeQuantity, onRemove }) => {
                 onClick={() => handleQuantityChange("decrement")}
                 className="counter-link counter-link__prev"
               >
-                <i className="icon-arrow"></i>
+               -
               </span>
               <input
                 type="text"
@@ -179,7 +179,7 @@ export const Card = ({ cart, onChangeQuantity, onRemove }) => {
                 onClick={() => handleQuantityChange("increment")}
                 className="counter-link counter-link__next"
               >
-                <i className="icon-arrow"></i>
+               +
               </span>
             </div>
           </div>
