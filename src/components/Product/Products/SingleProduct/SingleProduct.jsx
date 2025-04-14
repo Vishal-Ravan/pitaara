@@ -45,7 +45,7 @@ export const SingleProduct = ({
           <Link href={`/product/${_id}`} >
 
           <span className="products-item__cost">
-            ₹ {price}&nbsp; &nbsp;<span>  ₹ {old_price}</span> 
+            ₹ {price}&nbsp; &nbsp;
           </span>
           </Link>
           <Link href={`/product/${_id}`}>

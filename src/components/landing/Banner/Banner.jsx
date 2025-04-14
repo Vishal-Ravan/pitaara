@@ -17,7 +17,7 @@ export const Banner = () => {
       {/* Slide 1 */}
       <div className="">
         <div
-          className="wrappers"
+          className="wrappers mobile-banner-wrap"
           style={{
             backgroundImage: "url(/assets/img/5.png)",
             backgroundSize: "cover",
@@ -31,7 +31,7 @@ export const Banner = () => {
       </div>{" "}
       <div className="">
         <div
-          className="wrappers"
+          className="wrappers mobile-banner-wrap"
           style={{
             backgroundImage: "url(/assets/img/6.png)",
             backgroundSize: "cover",
@@ -45,7 +45,7 @@ export const Banner = () => {
       </div>
       <div className="">
         <div
-          className="wrappers"
+          className="wrappers mobile-banner-wrap"
           style={{
             backgroundImage: "url(/assets/img/7.png)",
             backgroundSize: "cover",
@@ -59,7 +59,7 @@ export const Banner = () => {
       </div>
       <div className="">
         <div
-          className="wrappers"
+          className="wrappers mobile-banner-wrap"
           style={{
             backgroundImage: "url(/assets/img/8.png)",
             backgroundSize: "cover",

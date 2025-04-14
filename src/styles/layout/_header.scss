@@ -64,7 +64,7 @@ header {
   &-box {
     display: flex;
     align-items: center;
-    width: calc(100% - 160px);
+    // width: calc(100% - 160px);
     justify-content: space-between;
   }
   &-nav {
@@ -302,6 +302,11 @@ header {
   .header-content {
     padding: 15px 15px;
   }
+  
+  .header-search{
+    width:  55% !important;
+    margin-right: 42px !important;
+  }
   .header-top span {
     font-size: 9px;
     display: block;
@@ -310,12 +315,13 @@ header {
     top: 48%;
   }
   .header-logo {
-    width: 85px;
+    width: 130px;
   }
   .header-box {
     right: -306px;
     position: fixed;
     top: 0;
+    z-index: 999;
     width: 230px;
     height: 100%;
     flex-direction: column;
@@ -435,7 +441,7 @@ header {
   gap: 6rem;
   padding-top: 0px;
   padding-bottom: 6px;
-  z-index: 999;
+  z-index: 10;
 }
 .header-box-second h6{
   font-weight: 600;
@@ -445,11 +451,14 @@ header {
 }
 .category-slider {
   width: 90%;
-  padding-top: 100px;
-  padding-bottom: 50px;
+  padding-top: 50px;
+  padding-bottom: 0px;
   margin: auto;
 }
-
+.image-container{
+  width: 250px !important;
+  height: 250px !important;
+}
 .category-slide {
   text-align: center;
   padding: 10px;

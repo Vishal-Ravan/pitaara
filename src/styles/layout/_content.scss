@@ -353,6 +353,7 @@ h6,
 
   &-item {
     margin: 0 15px;
+    margin-bottom: 20px;
     // width: calc(25% - 30px);
     position: relative;
     display: block;
@@ -473,7 +474,7 @@ h6,
     }
 
     &__name {
-      font-size: 1rem;
+      font-size: 14px;
       text-transform: uppercase;
       color: rgb(43, 43, 43);
       display: block;
@@ -1879,6 +1880,7 @@ h6,
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-bottom: 20px;
 
   &__link {
     min-width: 40px;
@@ -5599,7 +5601,9 @@ input[type='search']::-webkit-search-results-decoration {
   .wishlist .cart-table__col {
     width: 16%;
   }
-
+  .header-box-second{
+    gap: 20px;
+  }
   .scroll-off {
     // overflow: hidden;
     body {
@@ -5692,7 +5696,6 @@ input[type='search']::-webkit-search-results-decoration {
 
   .products-item__name {
     font-size: 20px;
-    margin-bottom: 0px;
   }
 
   .products-item__cost {
@@ -5964,9 +5967,9 @@ input[type='search']::-webkit-search-results-decoration {
   .detail-block__items {
     margin-left: 0;
     margin-right: 0;
+    gap: 5px;
     margin-top: 30px;
-    flex-wrap: wrap;
-    flex-direction: column;
+  
   }
 
   .detail-block__item {
@@ -5974,7 +5977,11 @@ input[type='search']::-webkit-search-results-decoration {
     margin-bottom: 15px;
     width: 100%;
     max-width: 320px;
-    justify-content: flex-start;
+    justify-content: center;
+    text-align: center;
+    max-height: 143px;
+    display: flex;
+    flex-direction: column;
 
     &:last-of-type {
       margin-bottom: 0;
@@ -5986,7 +5993,7 @@ input[type='search']::-webkit-search-results-decoration {
   }
 
   .detail-block__item-info {
-    font-size: 16px;
+    font-size: 12px;
     line-height: 22px;
   }
 
@@ -6572,6 +6579,8 @@ input[type='search']::-webkit-search-results-decoration {
   .cart-bottom__total {
     padding: 15px;
     margin-top: 30px;
+    margin-bottom: 20px;
+
   }
 
   .cart-bottom__promo .contacts-info__social {
@@ -6981,15 +6990,25 @@ input[type='search']::-webkit-search-results-decoration {
 
 @media screen and (max-width: 480px) {
   .main-block {
-    background-image: url(/assets/img/main-bg-sm.jpg) !important;
+    background-image: url(/assets/img/detail-main-bg.png) !important;
 
     &.load-bg {
       background-image: none;
     }
   }
-
+ 
+  .mobile-banner-wrap{
+    height: 200px !important;
+    min-height: 200px !important;
+    margin-top: 30px;
+    background-repeat: no-repeat;
+    background-size: contain !important;
+  }
+  .header-box-second h6{
+    font-size: 16px;
+  }
   .detail-block {
-    background-image: url(/assets/img/detail-main-bg-sm.jpg);
+    background-image: url(/assets/img/detail-main-bg.png);
   }
 
   .insta-photo {

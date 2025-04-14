@@ -112,22 +112,22 @@ export const Shop = () => {
                     </a>
                   </li>
                   <li>
-                    <a href="#" onClick={() => setCategory("Rings")}>
+                    <a href="#" onClick={() => setCategory("rings")}>
                       Rings
                     </a>
                   </li>
                   <li>
-                    <a href="#" onClick={() => setCategory("Bracelets")}>
+                    <a href="#" onClick={() => setCategory("bracelets")}>
                       Bracelets
                     </a>
                   </li>
                   <li>
-                    <a href="#" onClick={() => setCategory("Earrings")}>
+                    <a href="#" onClick={() => setCategory("earrings")}>
                       Earrings
                     </a>
                   </li>
                   <li>
-                    <a href="#" onClick={() => setCategory("Necklace")}>
+                    <a href="#" onClick={() => setCategory("necklaces")}>
                       Necklace
                     </a>
                   </li>

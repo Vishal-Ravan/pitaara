@@ -24,7 +24,7 @@ export default function Home() {
       {/* <Info /> */}
       <NewArrivals />
       {/* <LatestNews /> */}
-      <Subscribe />
+      {/* <Subscribe /> */}
     </Layout>
   );
 }

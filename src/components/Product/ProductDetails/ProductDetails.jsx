@@ -220,7 +220,7 @@ export const ProductDetails = () => {
               <span className='product-stock'>in stock </span>
               <span className='product-num'>Quantity: {product.quantity}</span>
               <span className='product-num'>Dimenstion: {product.dimensions}</span>
-              <span className='product-price'> <span>₹{product.old_price}</span> ₹{product.price} </span>
+              <span className='product-price'>  ₹{product.price} </span>
 
               <p>{product.description}</p>
 

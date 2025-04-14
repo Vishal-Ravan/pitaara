@@ -123,7 +123,7 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
           key: "rzp_test_fqpkJvzLDTe1y3", // Use your real Razorpay Key
           amount: orderData.amount,
           currency: orderData.currency,
-          name: "Your Website Name",
+          name: "Pittara",
           description: "Payment for your order",
           order_id: orderData.id,
           handler: async (paymentResponse) => {

@@ -186,7 +186,6 @@ export const Header = () => {
             </Link>
           </div>
 
-          <div style={{ right: openMenu ? 0 : -360 }} className="header-box">
             <div className="header-search">
               <input
                 type="text"
@@ -207,6 +206,7 @@ export const Header = () => {
                 style={{ cursor: "pointer" }}
               ></i>
             </div>
+            <div style={{ right: openMenu ? 0 : -360 }} className="header-box">
 
             <ul className="header-options">
               <li>
@@ -285,7 +285,7 @@ export const Header = () => {
         <Link href={{ pathname: "/shop", query: { category: "earrings" } }}>
           <h6>Earrings</h6>
         </Link>
-        <Link href={{ pathname: "/shop", query: { category: "necklace" } }}>
+        <Link href={{ pathname: "/shop", query: { category: "necklaces" } }}>
           <h6>Necklace</h6>
         </Link>
         {/* <Link href={{ pathname: "/shop", query: { category: "anklet" } }}>
