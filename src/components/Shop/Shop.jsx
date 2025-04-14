@@ -131,11 +131,11 @@ export const Shop = () => {
                       Necklace
                     </a>
                   </li>
-                  <li>
+                  {/* <li>
                     <a href="#" onClick={() => setCategory("Anklet")}>
                       Anklet
                     </a>
-                  </li>
+                  </li> */}
                 </ul>
               </div>
               <div className="shop-aside__item">

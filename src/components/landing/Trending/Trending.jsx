@@ -31,7 +31,7 @@ export const Trending = () => {
           <SectionTitle
             subTitle='Shop The Style'
             title='Shop Your Style'
-            body='Nourish your skin with toxin-free cosmetic products. With the offers that you can’t refuse.'
+            body='We bring you the best Pinterest-worthy accessories for every budget'
           />
           <div className='tab-wrap trending-tabs'>
             <div className='products-items'>

@@ -33,7 +33,7 @@ export const NewArrivals = () => {
         <SectionTitle
           subTitle='Cosmetics'
           title='New arrivals'
-          body='Nourish your skin with toxin-free cosmetic products. With the offers that you can’t refuse.'
+          body='Just dropped: Fresh new arrivals you’ll want to wear on repeat!'
         />
         <div className='trending-content'>
           <div className='tab-wrap trending-tabs'>

@@ -19,7 +19,7 @@ export default function Home() {
 
       <Trending />
       {/* <Discount /> */}
-      <Advantage />
+      {/* <Advantage /> */}
       {/* <TopCategories /> */}
       {/* <Info /> */}
       <NewArrivals />

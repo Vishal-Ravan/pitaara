@@ -288,9 +288,9 @@ export const Header = () => {
         <Link href={{ pathname: "/shop", query: { category: "necklace" } }}>
           <h6>Necklace</h6>
         </Link>
-        <Link href={{ pathname: "/shop", query: { category: "anklet" } }}>
+        {/* <Link href={{ pathname: "/shop", query: { category: "anklet" } }}>
           <h6>Anklet</h6>
-        </Link>
+        </Link> */}
       </div>
     </>
   );

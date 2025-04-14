@@ -35,11 +35,8 @@
       {
         "name": "Necklace",
         "path": "shop?category=necklace"
-      },
-      {
-        "name": "Anklet",
-        "path": "shop?category=anklet"
       }
+    
      
     ]
   },
