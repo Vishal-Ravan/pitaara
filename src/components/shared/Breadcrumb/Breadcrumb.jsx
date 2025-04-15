@@ -8,7 +8,7 @@ export const Breadcrumb = ({ breadcrumb, title, description }) => {
   return (
     <>
       {/* <!-- BEGIN DETAIL MAIN BLOCK --> */}
-      <div className='detail-block detail-block_margin'>
+      <div className='detail-block detail-block_margin contact'>
         <div className='wrapper'>
           <div className='detail-block__content'>
             <h1>{title}</h1>

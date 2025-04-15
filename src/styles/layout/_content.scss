@@ -175,8 +175,8 @@ h6,
 
     &:hover {
       color: #eee;
-      background: #222222;
-      border-color: #222222;
+      background: #432140;
+      border-color: #432140;
     }
   }
 }
@@ -1232,9 +1232,20 @@ h6,
     }
   }
 }
-
+.mobile-only{
+  display: none;
+}
 // about page
-
+.detail-block.detail-block_margin.contact{
+  padding-top: 218px;
+  background-image: url(/assets/img/cnt.png);
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+  text-align: center;
+  z-index: 1;
+}
 .detail-block {
   padding-top: 218px;
   background-image: url(/assets/img/detail-main-bg.png);
@@ -1654,7 +1665,7 @@ h6,
 // categories page
 
 .detail-block_margin {
-  padding-bottom: 47px;
+  padding-bottom: 117px;
 }
 
 .all-categories {
@@ -4062,6 +4073,7 @@ blockquote,
 
   &-form {
     margin: auto;
+    margin-bottom: 40px;
     max-width: 570px;
     padding: 60px;
     background-position: center;
@@ -4710,7 +4722,7 @@ input[type='search']::-webkit-search-results-decoration {
     color: #666666;
     cursor: pointer;
     outline: none;
-    padding: 14px 45px 12px 40px;
+    padding: 14px 45px 12px 25px;
     font-size: 15px;
   }
 
@@ -5355,7 +5367,7 @@ input[type='search']::-webkit-search-results-decoration {
   }
 
   .shop-main__select {
-    margin-top: 20px;
+    margin-top: 0px;
     width: 100%;
 
     .jq-selectbox__select {
@@ -5604,6 +5616,22 @@ input[type='search']::-webkit-search-results-decoration {
   .header-box-second{
     gap: 20px;
   }
+  .mobile-only{
+    display: block;
+   
+  }
+  ul.category-list.desktop-only{
+    display: none;
+  }
+  .shop-aside__item.price {
+    display: none !important;
+}
+.mob-fil {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px;
+  margin-bottom: 20px;
+}
   .scroll-off {
     // overflow: hidden;
     body {
@@ -6408,7 +6436,7 @@ input[type='search']::-webkit-search-results-decoration {
   }
 
   .shop {
-    padding-top: 60px;
+    padding-top: 20px;
   }
 
   .shop-content {
@@ -6453,9 +6481,11 @@ input[type='search']::-webkit-search-results-decoration {
   }
 
   .shop-main {
-    margin-top: 40px;
+    margin-top: -20px;
   }
-
+  span.shop-aside__item-title{
+    display: none;
+  }
   .shop-main__filter {
     margin-bottom: 20px;
   }
@@ -7153,4 +7183,15 @@ span.error {
   display: flex
 ;
   width: 100%;
+}
+
+.new{
+  margin-bottom: 30px;
+}
+
+.desktop-only{
+  display: block;
+}
+.shop-aside__item.price{
+  display: block;
 }

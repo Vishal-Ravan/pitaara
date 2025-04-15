@@ -40,7 +40,7 @@ export const Card = ({ order, index, onCollapse, active }) => {
             ))}
             <li>
               Payment Methods:
-              <span>Сredit card: **** **** **** 1633</span>
+              <span>Online</span>
             </li>
           </ul>
         </div>

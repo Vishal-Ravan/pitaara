@@ -16,7 +16,7 @@ const RegistrationPage = () => {
   return (
     <PublicLayout breadcrumb={breadcrumbsData} breadcrumbTitle='Sign Up'>
       <Registration />
-      <Subscribe />
+      {/* <Subscribe /> */}
     </PublicLayout>
   );
 };

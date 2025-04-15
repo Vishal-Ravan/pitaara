@@ -46,7 +46,46 @@ export const Header = () => {
     showAlert("Logout Successfully");
     router.push("/");
   };
-
+  const searchProduct = async (query) => {
+    try {
+      const trimmedQuery = query.trim().toLowerCase();
+  
+      if (!trimmedQuery) {
+        showAlert("Please enter a search term.");
+        return;
+      }
+  
+      const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/product`;
+      const response = await fetch(apiUrl, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+  
+      if (!response.ok) {
+        throw new Error("Search request failed");
+      }
+  
+      const data = await response.json();
+  
+      // Local filtering if needed
+      const filteredResults = data.filter((item) =>
+        item.name?.toLowerCase().includes(trimmedQuery)
+      );
+  
+      if (filteredResults.length > 0) {
+        router.push(`/shop?q=${trimmedQuery}`);
+      } else {
+        showAlert("No products found.");
+      }
+    } catch (error) {
+      console.error("Error during search:", error);
+      showAlert("Something went wrong while searching.");
+    }
+  };
+  
+  
   useEffect(() => {
     const checkUserStatus = async () => {
       const userData = localStorage.getItem("user");
@@ -186,28 +225,28 @@ export const Header = () => {
             </Link>
           </div>
 
-            <div className="header-search">
-              <input
-                type="text"
-                placeholder="Search..."
-                className="search-input"
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") {
-                    router.push(`/search?q=${e.target.value}`);
-                  }
-                }}
-              />
-              <i
-                className="icon-search"
-                onClick={() => {
-                  const value = document.querySelector(".search-input").value;
-                  router.push(`/search?q=${value}`);
-                }}
-                style={{ cursor: "pointer" }}
-              ></i>
-            </div>
-            <div style={{ right: openMenu ? 0 : -360 }} className="header-box">
+          <div className="header-search">
+          <input
+  type="text"
+  placeholder="Search..."
+  className="search-input"
+  onKeyDown={(e) => {
+    if (e.key === "Enter") {
+      searchProduct(e.target.value); // updated
+    }
+  }}
+/>
+<i
+  className="icon-search"
+  onClick={() => {
+    const value = document.querySelector(".search-input").value;
+    searchProduct(value); // updated
+  }}
+  style={{ cursor: "pointer" }}
+></i>
 
+          </div>
+          <div style={{ right: openMenu ? 0 : -360 }} className="header-box">
             <ul className="header-options">
               <li>
                 {user ? (
@@ -239,7 +278,7 @@ export const Header = () => {
               <li>
                 <Link href="/cart">
                   <a className="user-icons">
-                   <img src="/assets/img/add-to-cart.png" alt="" width={25} />
+                    <img src="/assets/img/add-to-cart.png" alt="" width={25} />
                     <span>{cartCount}</span>
                     <p>Cart</p>
                   </a>

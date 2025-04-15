@@ -37,7 +37,9 @@ export const Shop = () => {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/product`);
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/product`
+        );
         if (!response.ok) {
           throw new Error("Failed to fetch products");
         }
@@ -93,7 +95,7 @@ export const Shop = () => {
         <div className="wrapper">
           <div className="shop-content">
             <div className="shop-aside">
-              <div className="box-field box-field__search">
+              {/* <div className="box-field box-field__search">
                 <input
                   type="search"
                   className="form-control"
@@ -102,43 +104,77 @@ export const Shop = () => {
                   onChange={(e) => setSearchQuery(e.target.value)}
                 />
                 <i className="icon-search"></i>
+              </div> */}
+              <div className="mob-fil">
+                <div className="shop-main__filter">
+                  <div className="shop-main__select">
+                    <Dropdown
+                      options={sortOptions}
+                      className="react-dropdown"
+                      onChange={(option) => setSortOrder(option.value)}
+                      value={sortOptions.find((opt) => opt.value === sortOrder)}
+                    />
+                  </div>
+                </div>
+                <div className="shop-aside__item">
+                  <span className="shop-aside__item-title">Categories</span>
+
+                  <ul className="category-list desktop-only">
+                    <li>
+                      <a href="#" onClick={() => setCategory("all")}>
+                        All Products
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" onClick={() => setCategory("rings")}>
+                        Rings
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" onClick={() => setCategory("bracelets")}>
+                        Bracelets
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" onClick={() => setCategory("earrings")}>
+                        Earrings
+                      </a>
+                    </li>
+                    <li>
+                      <a href="#" onClick={() => setCategory("necklaces")}>
+                        Necklace
+                      </a>
+                    </li>
+                  </ul>
+
+                  {/* Mobile View */}
+                  <div className="mobile-only">
+                    <Dropdown
+                      className="Dropdown-root react-dropdown"
+                      options={[
+                        { value: "all", label: "All Products" },
+                        { value: "rings", label: "Rings" },
+                        { value: "bracelets", label: "Bracelets" },
+                        { value: "earrings", label: "Earrings" },
+                        { value: "necklaces", label: "Necklace" },
+                      ]}
+                      onChange={(option) => setCategory(option.value)}
+                      value={
+                        category !== "all"
+                          ? {
+                              value: category,
+                              label:
+                                category.charAt(0).toUpperCase() +
+                                category.slice(1),
+                            }
+                          : null
+                      }
+                      placeholder="Select Category"
+                    />
+                  </div>
+                </div>
               </div>
-              <div className="shop-aside__item">
-                <span className="shop-aside__item-title">Categories</span>
-                <ul>
-                  <li>
-                    <a href="#" onClick={() => setCategory("all")}>
-                      All Products
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" onClick={() => setCategory("rings")}>
-                      Rings
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" onClick={() => setCategory("bracelets")}>
-                      Bracelets
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" onClick={() => setCategory("earrings")}>
-                      Earrings
-                    </a>
-                  </li>
-                  <li>
-                    <a href="#" onClick={() => setCategory("necklaces")}>
-                      Necklace
-                    </a>
-                  </li>
-                  {/* <li>
-                    <a href="#" onClick={() => setCategory("Anklet")}>
-                      Anklet
-                    </a>
-                  </li> */}
-                </ul>
-              </div>
-              <div className="shop-aside__item">
+              <div className="shop-aside__item price">
                 <span className="shop-aside__item-title">Price</span>
                 <div className="range-slider">
                   <Range
@@ -158,17 +194,6 @@ export const Shop = () => {
             </div>
 
             <div className="shop-main">
-              <div className="shop-main__filter">
-                <div className="shop-main__select">
-                  <Dropdown
-                    options={sortOptions}
-                    className="react-dropdown"
-                    onChange={(option) => setSortOrder(option.value)}
-                    value={sortOptions.find((opt) => opt.value === sortOrder)}
-                  />
-                </div>
-              </div>
-
               <div className="shop-main__items">
                 <Products products={filteredProducts} />
               </div>

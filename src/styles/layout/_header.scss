@@ -404,7 +404,7 @@ header {
   border: 1px solid #ccc;
   padding: 5px 10px;
   border-radius: 5px;
-  width: 70%;
+  width: 40%;
   margin: 0 auto;
 }
 
@@ -412,6 +412,7 @@ header {
   border: none;
   outline: none;
   padding: 5px;
+  width: 100%;
   font-size: 14px;
 }
 
@@ -436,6 +437,7 @@ header {
   background-color: #ffffff;
   position: fixed;
   width: 100%;
+  box-shadow: 7px 2px 13px #d3d3d3;
   top: 0px;
   grid-gap: 6rem;
   gap: 6rem;

@@ -14,7 +14,7 @@ const breadcrumbsData = [
 ];
 const orderconfirm = () => {
   return (
-    <PublicLayout breadcrumb={breadcrumbsData} breadcrumbTitle='confirm'>
+    <PublicLayout  breadcrumbTitle='confirmation'>
       <OrderConfirm />
     </PublicLayout>
   );

@@ -65,7 +65,7 @@ export const Login = () => {
               <input
                 type='text'
                 className='form-control'
-                placeholder='Enter your email or nickname'
+                placeholder='Enter your email '
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -91,7 +91,7 @@ export const Login = () => {
                   Register now
                 </a>
               </span>
-              <a href='#'>Lost your password?</a>
+              {/* <a href='#'>Lost your password?</a> */}
             </div>
           </form>
         </div>

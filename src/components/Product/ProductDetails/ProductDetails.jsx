@@ -6,6 +6,7 @@ import { Reviews } from "../Reviews/Reviews";
 import { ReviewFrom } from "../ReviewForm/ReviewFrom";
 import { useRouter } from "next/router";
 import { CartContext } from "pages/_app";
+import { NewArrivals } from "components/landing/NewArrivals/NewArrivals";
 
 export const ProductDetails = () => {
   const router = useRouter();
@@ -237,13 +238,12 @@ export const ProductDetails = () => {
               </span>
               {/* <span className="product-num">Quantity: {product.quantity}</span> */}
               <span className="product-num">
-                Dimenstion: {product.dimensions}
+              Dimension : {product.dimensions}
               </span>
               <span className="product-price"> ₹{product.price} </span>
 
               <p>{product.description}</p>
 
-         
               <div className="product-options">
                 <div className="product-info__color">
                   <span>Color:</span>
@@ -314,6 +314,9 @@ export const ProductDetails = () => {
             </div>
           </div>
         </div>
+        <div className="new" >
+          <NewArrivals />
+        </div>{" "}
       </div>
     </>
   );

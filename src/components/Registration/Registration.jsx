@@ -218,11 +218,7 @@ export const Registration = () => {
             </form>
           </div>
         </div>
-        <img
-          className='promo-video__decor js-img'
-          src='/assets/img/promo-video__decor.jpg'
-          alt=''
-        />
+      
       </div>
       {/* <!-- REGISTRATION EOF   --> */}
     </>
