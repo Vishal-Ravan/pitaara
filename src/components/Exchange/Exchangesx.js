@@ -16,8 +16,7 @@ export const Exchange = () => {
             <ul>
               Eligibility for Return/Exchange:
               <li>
-              •  Returns or exchanges must be initiated within 7 days of
-                receiving the order.
+              •  Returns or exchanges must be initiated within 3 days of receiving the order.
               </li>
               <li>
               •  The product must be unused, unworn, and in its original
@@ -70,8 +69,7 @@ export const Exchange = () => {
                 product is received and inspected.
               </li>
               <li>
-              •  For returns, the refund will be processed to your original
-                payment method within 5–7 working days.
+              •  For returns, the refund will be processed to your original payment method within 5–7 working days on the original source of payment.
               </li>
             </ul>
 
@@ -79,7 +77,7 @@ export const Exchange = () => {
             <ul>
               <li>• Returns without WhatsApp initiation will not be accepted.</li>
               <li>
-              • COD orders are <b>eligible for exchange only</b>, not refunds.
+              • COD orders are eligible for any product
               </li>
               <li>
               • We reserve the right to reject returns if the product doesn't

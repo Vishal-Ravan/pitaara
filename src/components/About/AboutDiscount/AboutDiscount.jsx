@@ -111,8 +111,7 @@ export const AboutDiscount = () => {
               power dressing, brunch hopping, or just vibing in your PJs.
             </p>
             <p>
-              Our collection includes pieces that let your personality pop, your
-              confidence glow, and your style shine—day in, day out. Because
+            Our collection includes  pieces that let your personality pop, your confidence glow, and your style shine—day in, day out. Because
               you're not basic, and your jewellery shouldn't be either.
             </p>
           </div>

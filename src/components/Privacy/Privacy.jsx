@@ -146,7 +146,7 @@ export const PrivacyPolicy = () => {
               accounting, or regulatory obligations.
             </p>
             <p>
-              You may request deletion of your account or data by contacting{" "}
+            You may request deletion of your account or data by contacting info@pittara.co.in. 
               <a href="mailto:support@pittara.co.in" target="_blank">
                 <b>support@pittara.co.in.</b>
               </a>
@@ -162,16 +162,15 @@ export const PrivacyPolicy = () => {
               </li>
 
               <p>
-                To exercise these rights, email us at{" "}
-                <a href="mailto:privacy@pittara.co.in" target="_blank">
-                  <b>privacy@pittara.co.in.</b>
+              To exercise these rights, email us at 
+                <a href="mailto:info@pittara.co.in" target="_blank">
+                  <b>info@pittara.co.in.</b>
                 </a>
               </p>
             </ul>
             <h6>8. Children's Privacy</h6>
             <p>
-            Our Website is not directed at individuals under the age of 18. We do not knowingly collect data from minors. If you believe a child has provided us with personal information, please contact us immediately for deletion.
-            </p>
+            Our Website is not directed at individuals under the age of 18. We do not knowingly collect data from minors. If you believe a child has provided us with personal information, please contact us immediately for deletion. </p>
             <h6>9. Third-Party Links</h6>
             <p>
             Our Website may contain links to third-party sites. We are not responsible for their privacy practices. Please read their policies before sharing your data.

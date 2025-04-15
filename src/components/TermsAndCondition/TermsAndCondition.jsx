@@ -29,17 +29,9 @@ export const TermsAndCondition = () => {
             </p>
             <h6>2. Product Disclaimer</h6>
             <p>
-              PITTARA jewellery is designed using an anti-tarnish coating,
-              intended to prolong product longevity under standard conditions.
-              However, results may vary due to individual usage patterns,
-              storage conditions, skin pH levels, exposure to water, humidity,
-              sweat, chemicals, or cosmetic products.
+            PITTARA collection is an anti-tarnish jewellery, intended to prolong product longevity under standard conditions. However, results may vary due to trading of  the stock, individual usage patterns, storage conditions, skin pH levels, exposure to water, humidity, sweat, chemicals, or cosmetic products.
               <br />
-              While we strive for accuracy in product descriptions and imagery,
-              PITTARA does not guarantee that all product-related content is
-              completely accurate, reliable, or error-free. Minor variations in
-              color, texture, and finish are natural and do not constitute
-              grounds for complaint under these Terms.
+              While we strive for accuracy in product descriptions and imagery, PITTARA does not guarantee that all product-related content is completely accurate, reliable, or error-free as we are a trader only.  Minor variations in color, texture, and finish are natural and do not constitute grounds for complaint under these Terms.
             </p>
 
             <h6>3. Orders, Pricing & Payment</h6>
@@ -67,9 +59,8 @@ export const TermsAndCondition = () => {
 
             <h6>5. Returns & Exchanges</h6>
             <p>
-              Products are eligible for return or exchange within 7 days of
-              delivery, provided they are unused, in original packaging, and
-              accompanied by the invoice.
+            Products are eligible for return or exchange within 3 days of delivery, provided they are unused, in original packaging, and accompanied by the invoice.
+
             </p>
             <ul>
               Not eligible for returns:
@@ -113,10 +104,7 @@ export const TermsAndCondition = () => {
             </p>
             <h6>9. Governing Law & Jurisdiction</h6>
             <p>
-              These Terms and all transactions on pittara.co.in shall be
-              governed by and construed in accordance with the laws of India.
-              All disputes arising out of these Terms shall be subject to the
-              exclusive jurisdiction of the courts in Delhi, India.
+            These Terms and all transactions on pittara.co.in shall be governed by and construed in accordance with the laws of India. All disputes arising out of these Terms shall be subject to the exclusive jurisdiction of the courts in Haryana, India.
             </p>
 
             <h6>10. Modifications to Terms</h6>
