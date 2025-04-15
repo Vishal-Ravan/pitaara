@@ -1,11 +1,11 @@
-import productData from 'data/product/product';
-import { useContext, useEffect, useState } from 'react';
-import Slider from 'react-slick';
-import socialData from 'data/social';
-import { Reviews } from '../Reviews/Reviews';
-import { ReviewFrom } from '../ReviewForm/ReviewFrom';
-import { useRouter } from 'next/router';
-import { CartContext } from 'pages/_app';
+import productData from "data/product/product";
+import { useContext, useEffect, useState } from "react";
+import Slider from "react-slick";
+import socialData from "data/social";
+import { Reviews } from "../Reviews/Reviews";
+import { ReviewFrom } from "../ReviewForm/ReviewFrom";
+import { useRouter } from "next/router";
+import { CartContext } from "pages/_app";
 
 export const ProductDetails = () => {
   const router = useRouter();
@@ -14,7 +14,7 @@ export const ProductDetails = () => {
 
   useEffect(() => {
     if (id) {
-      setProductId(id);  // Store the id in productId
+      setProductId(id); // Store the id in productId
     }
   }, [id]);
 
@@ -69,14 +69,14 @@ export const ProductDetails = () => {
 
   const addToCart = async () => {
     try {
-      const userData = JSON.parse(localStorage.getItem('user'));
+      const userData = JSON.parse(localStorage.getItem("user"));
       const token = userData?.token;
-      let guestId = localStorage.getItem('guestId');
+      let guestId = localStorage.getItem("guestId");
 
       // Generate guest ID if not available
       if (!token && !guestId) {
         guestId = `guest_${Math.random().toString(36).substr(2, 9)}`;
-        localStorage.setItem('guestId', guestId);
+        localStorage.setItem("guestId", guestId);
       }
 
       if (!productId) {
@@ -84,18 +84,21 @@ export const ProductDetails = () => {
         return;
       }
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/cart/add`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-        body: JSON.stringify({
-          productId,
-          quantity,
-          ...(guestId ? { guestId } : {}),
-        }),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/cart/add`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+          body: JSON.stringify({
+            productId,
+            quantity,
+            ...(guestId ? { guestId } : {}),
+          }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -112,17 +115,17 @@ export const ProductDetails = () => {
       setQuantity(product.quantity > 0 ? product.quantity : 1);
     }
   }, [product]);
-  
+
   const addToWishlist = async () => {
     try {
-      const userData = JSON.parse(localStorage.getItem('user'));
+      const userData = JSON.parse(localStorage.getItem("user"));
       const token = userData?.token;
-      let guestId = localStorage.getItem('guestId');
+      let guestId = localStorage.getItem("guestId");
 
       // Generate guest ID if not available
       if (!token && !guestId) {
         guestId = `guest_${Math.random().toString(36).substr(2, 9)}`;
-        localStorage.setItem('guestId', guestId);
+        localStorage.setItem("guestId", guestId);
       }
 
       if (!productId) {
@@ -130,18 +133,21 @@ export const ProductDetails = () => {
         return;
       }
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/wishlist/add`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
-        },
-        body: JSON.stringify({
-          productId,
-          quantity,
-          ...(guestId ? { guestId } : {}),
-        }),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/wishlist/add`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          },
+          body: JSON.stringify({
+            productId,
+            quantity,
+            ...(guestId ? { guestId } : {}),
+          }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -158,27 +164,29 @@ export const ProductDetails = () => {
 
   return (
     <>
-      <div className='product'>
+      <div className="product">
         {alertMessage && (
-          <div style={{
-            background: '#000',
-            color: '#fff',
-            padding: '15px',
-            textAlign: 'center',
-            position: 'fixed',
-            right: '0px',
-            zIndex: 999,
-            top: "70px",
-            borderRadius: '5px'
-          }}>
+          <div
+            style={{
+              background: "#000",
+              color: "#fff",
+              padding: "15px",
+              textAlign: "center",
+              position: "fixed",
+              right: "0px",
+              zIndex: 999,
+              top: "70px",
+              borderRadius: "5px",
+            }}
+          >
             {alertMessage}
           </div>
         )}
-        <div className='wrapper' style={{ marginBottom: '70px' }}>
-          <div className='product-content'>
+        <div className="wrapper" style={{ marginBottom: "70px" }}>
+          <div className="product-content">
             {/* Product Main Slider */}
-            <div className='product-slider'>
-              <div className='product-slider__main'>
+            <div className="product-slider">
+              <div className="product-slider__main">
                 <Slider
                   fade={true}
                   asNavFor={nav2}
@@ -198,112 +206,110 @@ export const ProductDetails = () => {
                 </Slider>
               </div>
 
-              <div className='product-slider__nav'>
-              <Slider
-  arrows={false}
-  asNavFor={nav1}
-  ref={(slider2) => setNav2(slider2)}
-  slidesToShow={product.images.length >= 4 ? 4 : product.images.length}
-  swipeToSlide={true}
-  focusOnSelect={true}
->
-  {product.images.map((image, index) => (
-    <div key={index} className='product-slider__nav-item'>
-      <img
-        src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${image}`}
-        alt="Product"
-        height={80}
-      />
-    </div>
-  ))}
-</Slider>
-
+              <div className="product-slider__nav">
+                <Slider
+                  arrows={false}
+                  asNavFor={nav1}
+                  ref={(slider2) => setNav2(slider2)}
+                  slidesToShow={
+                    product.images.length >= 4 ? 4 : product.images.length
+                  }
+                  swipeToSlide={true}
+                  focusOnSelect={true}
+                >
+                  {product.images.map((image, index) => (
+                    <div key={index} className="product-slider__nav-item">
+                      <img
+                        src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${image}`}
+                        alt="Product"
+                        height={80}
+                      />
+                    </div>
+                  ))}
+                </Slider>
               </div>
             </div>
 
-            <div className='product-info'>
+            <div className="product-info">
               <h3>{product.name}</h3>
-              <span className='product-stock'>
-  {product.quantity > 0 ? 'In Stock' : 'Out of Stock'}
-</span>
-              <span className='product-num'>Quantity: {product.quantity}</span>
-              <span className='product-num'>Dimenstion: {product.dimensions}</span>
-              <span className='product-price'>  ₹{product.price} </span>
+              <span className="product-stock">
+                {product.quantity > 0 ? "In Stock" : "Out of Stock"}
+              </span>
+              {/* <span className="product-num">Quantity: {product.quantity}</span> */}
+              <span className="product-num">
+                Dimenstion: {product.dimensions}
+              </span>
+              <span className="product-price"> ₹{product.price} </span>
 
               <p>{product.description}</p>
 
-              <div className='contacts-info__social'>
-                <span>Find us here:</span>
-                <ul>
-                  {socialLinks.map((social, index) => (
-                    <li key={index}>
-                      <a href={social.path}>
-                        <i className={social.icon ? social.icon : ''}></i>
-                      </a>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              <div className='product-options'>
+         
+              <div className="product-options">
                 <div className="product-info__color">
                   <span>Color:</span>
-                  <h5><span>{product.color}</span></h5>
+                  <h5>
+                    <span>{product.color}</span>
+                  </h5>
                 </div>
 
                 <div className="product-info__color">
                   <span>Material:</span>
-                  <h5><span>{product.material}</span></h5>
+                  <h5>
+                    <span>{product.material}</span>
+                  </h5>
                 </div>
-                <div className='product-info__quantity'>
-                  <span className='product-info__quantity-title'>
+                <div className="product-info__quantity">
+                  <span className="product-info__quantity-title">
                     Quantity:
                   </span>
-                  <div className='counter-box'>
+                  <div className="counter-box">
                     <span
                       onClick={() => {
                         if (quantity > 1) {
                           setQuantity(quantity - 1);
                         }
                       }}
-                      className='counter-link counter-link__prev'
+                      className="counter-link counter-link__prev"
                     >
-                    -
+                      -
                     </span>
                     <input
-                      type='text'
-                      className='counter-input'
+                      type="text"
+                      className="counter-input"
                       disabled
                       value={quantity}
                     />
-                   <span
-  onClick={() => {
-    if (quantity < product.quantity) {
-      setQuantity(quantity + 1);
-    }
-  }}
-  className='counter-link counter-link__next'
->
-  +
-</span>
+                    <span
+                      onClick={() => {
+                        if (quantity < product.quantity) {
+                          setQuantity(quantity + 1);
+                        }
+                      }}
+                      className="counter-link counter-link__next"
+                    >
+                      +
+                    </span>
                   </div>
                 </div>
               </div>
 
-              <div className='product-buttons'>
-              <div className='product-buttons'>
-  <button
-    onClick={addToCart}
-    className='btn btn-icon'
-    disabled={product.quantity === 0}
-  >
-    <i className='icon-cart'></i> cart
-  </button>
+              <div className="product-buttons">
+                <div className="product-buttons">
+                  <button
+                    onClick={addToCart}
+                    className="btn btn-icon"
+                    disabled={product.quantity === 0}
+                  >
+                    <i className="icon-cart"></i> cart
+                  </button>
 
-  <button className='btn btn-grey btn-icon' onClick={addToWishlist}>
-    <i className='icon-heart'></i> wish
-  </button>
-</div>
+                  <button
+                    className="btn btn-grey btn-icon"
+                    onClick={addToWishlist}
+                  >
+                    <i className="icon-heart"></i> wish
+                  </button>
+                </div>
               </div>
             </div>
           </div>
@@ -312,41 +318,6 @@ export const ProductDetails = () => {
     </>
   );
 };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 // import productData from 'data/product/product';
 // import { useContext, useEffect, useState } from 'react';
@@ -362,8 +333,6 @@ export const ProductDetails = () => {
 //   const { id } = router.query;
 //   const [productId, setProductId] = useState(null);
 
-
-  
 //   useEffect(() => {
 //     if (id) {
 //       setProductId(id);  // Store the id in productId
@@ -450,8 +419,6 @@ export const ProductDetails = () => {
 //     }
 //   };
 
-
-
 //   const addToWishlist = async () => {
 //     try {
 //       const userData = JSON.parse(localStorage.getItem('user'));
@@ -486,9 +453,6 @@ export const ProductDetails = () => {
 //     }
 //   };
 
-
-
-
 //   if (!product) return <></>;
 //   return (
 //     <>
@@ -496,10 +460,10 @@ export const ProductDetails = () => {
 //       <div className='product'>
 //       {alertMessage && (
 //         <div style={{
-//           background: '#000', 
-//           color: '#fff', 
-//           padding: '15px', 
-//           textAlign: 'center', 
+//           background: '#000',
+//           color: '#fff',
+//           padding: '15px',
+//           textAlign: 'center',
 //           position:'fixed',
 //           right:'0px',
 //           zIndex:999,

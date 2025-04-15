@@ -6,8 +6,6 @@ export const Card = ({ cart, onChangeQuantity, onRemove }) => {
     name,
     image,
     id,
-    isStocked,
-    productNumber,
     oldPrice,
     price,
     quantity,
@@ -131,8 +129,7 @@ export const Card = ({ cart, onChangeQuantity, onRemove }) => {
       )}
 
       <div className="cart-table__row">
-        <div className="cart-table__col">
-          <Link href={`/product/${id}`}>
+      <Link href={`/product/${id}`}>
             <a className="cart-table__img">
               <img
                 src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${image}`}
@@ -141,20 +138,20 @@ export const Card = ({ cart, onChangeQuantity, onRemove }) => {
               />
             </a>
           </Link>
+          <div className="cart-table-data">
+        <div className="cart-table__col">
+      
           <div className="cart-table__info">
             <Link href={`/product/${id}`}>
               <a className="title5">{name}</a>
             </Link>
-            {isStocked && (
-              <span className="cart-table__info-stock">In stock</span>
-            )}
-            <span className="cart-table__info-num">SKU: {productNumber}</span>
+        
           </div>
         </div>
-        <div className="cart-table__col">
+        <div className="cart-table__col price-cart">
           {oldPrice ? (
             <span className="cart-table__price">
-              <span>₹{oldPrice}</span> ₹{price}
+               ₹{price}
             </span>
           ) : (
             <span className="cart-table__price">₹{price}</span>
@@ -184,6 +181,7 @@ export const Card = ({ cart, onChangeQuantity, onRemove }) => {
             </div>
           </div>
         </div>
+        
         <div className="cart-table__col">
           <span className="cart-table__total">₹{totalPrice.toFixed(2)}</span>
         </div>
@@ -193,13 +191,13 @@ export const Card = ({ cart, onChangeQuantity, onRemove }) => {
           </button>
           <button
           title="Add To  Wishlist"
-            style={{ background: "#3c3434",border:'1px solid #3c3434', width:"40px"}}
+            style={{  width:"40px"}}
             onClick={() => handleAddToWishlist(id)}
             className="remove-btn"
           >
             <i className="icon-heart"></i>
           </button>
-        </div>
+        </div></div>
       </div>
     </div>
   );

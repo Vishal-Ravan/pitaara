@@ -156,9 +156,8 @@ export const Card = ({ wish }) => {
           <button
             onClick={() => handleAddToCart(id)}
             title="Add to Cart"
+            className="remove-btn"
             style={{
-              background: "#3c3434",
-              border: "1px solid #3c3434",
               width: "40px",
               height: "40px",
               color: "#fff",

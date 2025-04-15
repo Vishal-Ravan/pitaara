@@ -226,7 +226,7 @@ export const Cart = () => {
 
             <h6>How to get a promo code?</h6>
             <p>Follow our news and social media for the latest codes and offers.</p>
-            <div className="contacts-info__social">
+            {/* <div className="contacts-info__social">
               <span>Find us here:</span>
               <ul>
                 {socialLinks.map((social, index) => (
@@ -237,7 +237,7 @@ export const Cart = () => {
                   </li>
                 ))}
               </ul>
-            </div>
+            </div> */}
           </div>
 
           <div className="cart-bottom__total">
