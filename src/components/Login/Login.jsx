@@ -91,7 +91,7 @@ export const Login = () => {
                   Register now
                 </a>
               </span>
-              {/* <a href='#'>Lost your password?</a> */}
+              <a href='/forgot-password'>Forgot Password?</a>
             </div>
           </form>
         </div>
