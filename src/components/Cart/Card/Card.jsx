@@ -9,6 +9,7 @@ export const Card = ({ cart, onChangeQuantity, onRemove }) => {
     oldPrice,
     price,
     quantity,
+    stock
   } = cart;
   const [currentQuantity, setCurrentQuantity] = useState(quantity);
   const [totalPrice, setTotalPrice] = useState(price * quantity);
@@ -20,17 +21,24 @@ export const Card = ({ cart, onChangeQuantity, onRemove }) => {
 
   const handleQuantityChange = (type) => {
     let newQuantity = currentQuantity;
-
+  
     if (type === "increment") {
-      newQuantity += 1;
+      // Only increment if stock is available
+      if (currentQuantity < stock) {
+        newQuantity += 1;
+      } else {
+        setAlertMessage("Sorry, we're out of stock!");
+        setTimeout(() => setAlertMessage(""), 3000); // Clear the alert after 3 seconds
+        return; // Don't allow increment if out of stock
+      }
     } else if (type === "decrement" && currentQuantity > 1) {
       newQuantity -= 1;
     }
-
+  
     setCurrentQuantity(newQuantity);
     onChangeQuantity(id, newQuantity);
   };
-
+  
   const getUserToken = () => {
     const userData = JSON.parse(localStorage.getItem("user"));
     return userData?.token || null;

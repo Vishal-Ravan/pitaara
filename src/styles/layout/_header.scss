@@ -766,3 +766,17 @@ margin-bottom: 20px;
 .header-logo {
   padding-top: 20px;
 }
+
+
+.product-stock {
+  font-weight: bold;
+  font-size: 14px;
+}
+
+.in-stock {
+  color: green;
+}
+
+.out-of-stock {
+  color: red !important;
+}

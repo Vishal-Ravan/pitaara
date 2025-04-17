@@ -178,6 +178,7 @@ export const Cart = () => {
             </div>
 
             {cartData.map((cartItem) => (
+              <>
               <Card
                 key={cartItem._id}
                 onRemove={handleRemoveItem}
@@ -189,11 +190,12 @@ export const Cart = () => {
                   productNumber: cartItem.productId.productNumber || "N/A",
                   oldPrice: cartItem.productId.oldPrice || null,
                   price: cartItem.productId.price,
+                  stock: cartItem.productId.stock ,
                   quantity: cartItem.quantity,
                 }}
                 onChangeQuantity={handleQuantityChange}
               />
-            ))}
+           </> ))}
           </div>
         </div>
 
