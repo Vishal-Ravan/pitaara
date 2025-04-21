@@ -358,9 +358,12 @@ header {
     border-top: 1px solid #000;
     width: 100%;
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    gap: 20px;
+    align-items: self-start;
+    
   }
-
+  
   .header-content.fixed {
     padding-top: 20px;
     padding-bottom: 10px;
@@ -779,4 +782,7 @@ margin-bottom: 20px;
 
 .out-of-stock {
   color: red !important;
+}
+a.user-icons.wh span{
+  right: 0;
 }

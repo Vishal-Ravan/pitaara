@@ -7,7 +7,6 @@ import Slider from "rc-slider";
 import Dropdown from "react-dropdown";
 import { AsideItem } from "../shared/AsideItem/AsideItem";
 
-// React Range
 const { createSliderWithTooltip } = Slider;
 const Range = createSliderWithTooltip(Slider.Range);
 
@@ -17,32 +16,25 @@ const sortOptions = [
 ];
 
 export const Shop = () => {
+  const router = useRouter();
+  const { category: categoryFromURL, q: searchQueryFromURL } = router.query;
+
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [priceRange, setPriceRange] = useState([0, 1000]);
-  const [category, setCategory] = useState("all");
   const [productsItem, setProductsItem] = useState([]);
-  const [searchQuery, setSearchQuery] = useState("");
+  const [searchQuery, setSearchQuery] = useState(searchQueryFromURL || "");
   const [sortOrder, setSortOrder] = useState("highToLow");
-  const router = useRouter();
+  const [category, setCategory] = useState(categoryFromURL || "all");
 
-  // Fetch category from URL query
-  useEffect(() => {
-    const urlCategory = router.query.category;
-    if (urlCategory) {
-      setCategory(urlCategory);
-    }
-  }, [router.query.category]);
-
-  // Fetch products from API
+  // Fetch all products
   useEffect(() => {
     const fetchProducts = async () => {
       try {
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/product`
         );
-        if (!response.ok) {
-          throw new Error("Failed to fetch products");
-        }
+        if (!response.ok) throw new Error("Failed to fetch products");
+
         const data = await response.json();
         setProductsItem(data);
         setFilteredProducts(data);
@@ -54,30 +46,30 @@ export const Shop = () => {
     fetchProducts();
   }, []);
 
-  // Apply filters
+  // Filter products based on category, search, price, and sort
   useEffect(() => {
     let updatedProducts = [...productsItem];
 
-    // Filter by Category
+    // Apply Category Filter
     if (category && category !== "all") {
       updatedProducts = updatedProducts.filter(
         (item) => item.category?.toLowerCase() === category.toLowerCase()
       );
     }
 
-    // Search Filter
+    // Apply Search Filter
     if (searchQuery) {
       updatedProducts = updatedProducts.filter((item) =>
         item.name.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 
-    // Price Range Filter
+    // Apply Price Filter
     updatedProducts = updatedProducts.filter(
       (item) => item.price >= priceRange[0] && item.price <= priceRange[1]
     );
 
-    // Sorting
+    // Apply Sort Filter
     if (sortOrder === "highToLow") {
       updatedProducts.sort((a, b) => b.price - a.price);
     } else {
@@ -89,91 +81,104 @@ export const Shop = () => {
 
   const paginate = usePagination(filteredProducts, 9);
 
+  // Handle Category Change
+  const handleCategoryChange = (categoryValue) => {
+    setCategory(categoryValue);
+    setSearchQuery(""); // Clear search query when changing category
+    router.push({
+      pathname: "/shop",
+      query: { category: categoryValue }, // Update URL query
+    });
+  };
+
   return (
     <div>
       <div className="shop">
         <div className="wrapper">
           <div className="shop-content">
             <div className="shop-aside">
-              {/* <div className="box-field box-field__search">
+              {/* Search bar */}
+              <div className="box-field box-field__search">
                 <input
                   type="search"
                   className="form-control"
                   placeholder="Search"
                   value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  onChange={(e) => {
+                    const newQuery = e.target.value;
+                    setSearchQuery(newQuery);
+                    router.push({
+                      pathname: "/shop",
+                      query: { ...router.query, q: newQuery },
+                    });
+                  }}
                 />
                 <i className="icon-search"></i>
-              </div> */}
-              <div className="mob-fil">
-                <div className="shop-main__filter">
-                  <div className="shop-main__select">
-                    <Dropdown
-                      options={sortOptions}
-                      className="react-dropdown"
-                      onChange={(option) => setSortOrder(option.value)}
-                      value={sortOptions.find((opt) => opt.value === sortOrder)}
-                    />
-                  </div>
-                </div>
-                <div className="shop-aside__item">
-                  <span className="shop-aside__item-title">Categories</span>
-
-                  <ul className="category-list desktop-only">
-                    <li>
-                      <a href="#" onClick={() => setCategory("all")}>
-                        All Products
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#" onClick={() => setCategory("rings")}>
-                        Rings
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#" onClick={() => setCategory("bracelets")}>
-                        Bracelets
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#" onClick={() => setCategory("earrings")}>
-                        Earrings
-                      </a>
-                    </li>
-                    <li>
-                      <a href="#" onClick={() => setCategory("necklaces")}>
-                        Necklace
-                      </a>
-                    </li>
-                  </ul>
-
-                  {/* Mobile View */}
-                  <div className="mobile-only">
-                    <Dropdown
-                      className="Dropdown-root react-dropdown"
-                      options={[
-                        { value: "all", label: "All Products" },
-                        { value: "rings", label: "Rings" },
-                        { value: "bracelets", label: "Bracelets" },
-                        { value: "earrings", label: "Earrings" },
-                        { value: "necklaces", label: "Necklace" },
-                      ]}
-                      onChange={(option) => setCategory(option.value)}
-                      value={
-                        category !== "all"
-                          ? {
-                              value: category,
-                              label:
-                                category.charAt(0).toUpperCase() +
-                                category.slice(1),
-                            }
-                          : null
-                      }
-                      placeholder="Select Category"
-                    />
-                  </div>
-                </div>
               </div>
+
+              {/* Category Filter */}
+              <div className="shop-aside__item">
+                <span className="shop-aside__item-title">Categories</span>
+                <ul className="category-list desktop-only">
+                  <li>
+                    <a
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleCategoryChange("all"); // Show all products
+                      }}
+                    >
+                      All Products
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleCategoryChange("rings");
+                      }}
+                    >
+                      Rings
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleCategoryChange("bracelets");
+                      }}
+                    >
+                      Bracelets
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleCategoryChange("earrings");
+                      }}
+                    >
+                      Earrings
+                    </a>
+                  </li>
+                  <li>
+                    <a
+                      href="#"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        handleCategoryChange("necklaces");
+                      }}
+                    >
+                      Necklaces
+                    </a>
+                  </li>
+                </ul>
+              </div>
+
+              {/* Price Range */}
               <div className="shop-aside__item price">
                 <span className="shop-aside__item-title">Price</span>
                 <div className="range-slider">
@@ -193,6 +198,7 @@ export const Shop = () => {
               </div>
             </div>
 
+            {/* Product Grid */}
             <div className="shop-main">
               <div className="shop-main__items">
                 <Products products={filteredProducts} />
@@ -202,8 +208,6 @@ export const Shop = () => {
             </div>
           </div>
         </div>
-        {/* <img className="promo-video__decor js-img" src="/assets/img/promo-video__decor.jpg" alt="" />
-        <img className="shop-decor js-img" src="/assets/img/shop-decor.jpg" alt="" /> */}
       </div>
     </div>
   );

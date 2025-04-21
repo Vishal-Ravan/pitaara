@@ -14,6 +14,7 @@ export const Header = () => {
   const [openMenu, setOpenMenu] = useState(false);
   const [height, width] = useWindowSize();
   const [cartCount, setCartCount] = useState(0);
+  const [whishlistCount, setWhishlistCount] = useState(0);
   const router = useRouter();
   const [alertMessage, setAlertMessage] = useState(null);
 
@@ -22,6 +23,12 @@ export const Header = () => {
     setTimeout(() => setAlertMessage(null), 3000);
   };
 
+  const handleCategoryClick = (category) => {
+    router.push({
+      pathname: "/shop",
+      query: { category },
+    });
+  };
   useEffect(() => {
     window.addEventListener("scroll", isSticky);
     return () => window.removeEventListener("scroll", isSticky);
@@ -49,12 +56,12 @@ export const Header = () => {
   const searchProduct = async (query) => {
     try {
       const trimmedQuery = query.trim().toLowerCase();
-  
+
       if (!trimmedQuery) {
         showAlert("Please enter a search term.");
         return;
       }
-  
+
       const apiUrl = `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/product`;
       const response = await fetch(apiUrl, {
         method: "GET",
@@ -62,18 +69,18 @@ export const Header = () => {
           "Content-Type": "application/json",
         },
       });
-  
+
       if (!response.ok) {
         throw new Error("Search request failed");
       }
-  
+
       const data = await response.json();
-  
+
       // Local filtering if needed
       const filteredResults = data.filter((item) =>
         item.name?.toLowerCase().includes(trimmedQuery)
       );
-  
+
       if (filteredResults.length > 0) {
         router.push(`/shop?q=${trimmedQuery}`);
       } else {
@@ -84,8 +91,7 @@ export const Header = () => {
       showAlert("Something went wrong while searching.");
     }
   };
-  
-  
+
   useEffect(() => {
     const checkUserStatus = async () => {
       const userData = localStorage.getItem("user");
@@ -189,9 +195,77 @@ export const Header = () => {
     }
   };
 
+  const fetchWhishlist = async () => {
+    const token = getUserToken();
+
+    try {
+      let response;
+
+      if (token) {
+        // Authenticated user
+        response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/wishlist`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      } else {
+        // Guest user
+        const guestId = localStorage.getItem("guestId");
+
+        if (!guestId) {
+          setWhishlistCount(0);
+          return;
+        }
+
+        response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/wishlist?guestId=${guestId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+      }
+
+      if (response.status === 401 || response.status === 403) {
+        handleLogout();
+        return;
+      }
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      let counts = 0;
+      if (Array.isArray(data)) {
+        counts = data.length;
+      } else if (data?.products && Array.isArray(data.products)) {
+        counts = data.products.length;
+      }
+
+      setWhishlistCount(counts); // Update state immediately
+    } catch (error) {
+      console.error("Error fetching wishlist data:", error);
+      setWhishlistCount(0);
+    }
+  };
+
   useEffect(() => {
     fetchCart();
-    const interval = setInterval(fetchCart, 500);
+    const interval = setInterval(fetchCart, 100);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    fetchWhishlist();
+    const interval = setInterval(fetchWhishlist, 100);
     return () => clearInterval(interval);
   }, []);
 
@@ -226,25 +300,24 @@ export const Header = () => {
           </div>
 
           <div className="header-search">
-          <input
-  type="text"
-  placeholder="Search..."
-  className="search-input"
-  onKeyDown={(e) => {
-    if (e.key === "Enter") {
-      searchProduct(e.target.value); // updated
-    }
-  }}
-/>
-<i
-  className="icon-search"
-  onClick={() => {
-    const value = document.querySelector(".search-input").value;
-    searchProduct(value); // updated
-  }}
-  style={{ cursor: "pointer" }}
-></i>
-
+            <input
+              type="text"
+              placeholder="Search..."
+              className="search-input"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  searchProduct(e.target.value); // updated
+                }
+              }}
+            />
+            <i
+              className="icon-search"
+              onClick={() => {
+                const value = document.querySelector(".search-input").value;
+                searchProduct(value); // updated
+              }}
+              style={{ cursor: "pointer" }}
+            ></i>
           </div>
           <div style={{ right: openMenu ? 0 : -360 }} className="header-box">
             <ul className="header-options">
@@ -268,8 +341,9 @@ export const Header = () => {
 
               <li>
                 <Link href="/wishlist">
-                  <a className="user-icons">
+                  <a className="user-icons wh">
                     <i className="icon-heart"></i>
+                    <span>{whishlistCount}</span>
                     <p>Wishlist</p>
                   </a>
                 </Link>
@@ -315,22 +389,22 @@ export const Header = () => {
       </header>
 
       <div className="header-box-second">
-        <Link href={{ pathname: "/shop", query: { category: "rings" } }}>
-          <h6>Rings</h6>
-        </Link>
-        <Link href={{ pathname: "/shop", query: { category: "bracelets" } }}>
-          <h6>Bracelets</h6>
-        </Link>
-        <Link href={{ pathname: "/shop", query: { category: "earrings" } }}>
-          <h6>Earrings</h6>
-        </Link>
-        <Link href={{ pathname: "/shop", query: { category: "necklaces" } }}>
-          <h6>Necklace</h6>
-        </Link>
-        {/* <Link href={{ pathname: "/shop", query: { category: "anklet" } }}>
-          <h6>Anklet</h6>
-        </Link> */}
-      </div>
+      <h6 onClick={() => handleCategoryClick("rings")} style={{ cursor: "pointer" }}>
+        Rings
+      </h6>
+      <h6 onClick={() => handleCategoryClick("bracelets")} style={{ cursor: "pointer" }}>
+        Bracelets
+      </h6>
+      <h6 onClick={() => handleCategoryClick("earrings")} style={{ cursor: "pointer" }}>
+        Earrings
+      </h6>
+      <h6 onClick={() => handleCategoryClick("necklaces")} style={{ cursor: "pointer" }}>
+        Necklace
+      </h6>
+      {/* <h6 onClick={() => handleCategoryClick("anklet")} style={{ cursor: "pointer" }}>
+        Anklet
+      </h6> */}
+    </div>
     </>
   );
 };

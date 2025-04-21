@@ -33,7 +33,7 @@ export const BrandLogo = () => {
       name: "Necklace",
       imgSrc:
         "/assets/img/chain.png",
-      url: "/shop?category=necklace",
+      url: "/shop?category=necklaces",
     }
     // {
     //   id: 5,
