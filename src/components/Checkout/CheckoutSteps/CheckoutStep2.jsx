@@ -80,9 +80,10 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
           ...(isGuest ? { guestId: token } : {}),
         }),
       });
-
+    debugger
       const data = await response.json();
       console.log("Order Response:", data);
+      debugger
 
       if (response.ok) {
         if (isMounted.current) {
