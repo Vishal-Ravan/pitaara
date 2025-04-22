@@ -102,7 +102,8 @@ export const CheckoutStep1 = ({ onNext }) => {
       setLoading(false);
       return;
     }
-  
+    console.log("Shipping Address:", formData.shippingAddress);
+  console.log("Billing Address:", formData.billingAddress);
     try {
       const headers = {
         "Content-Type": "application/json",
