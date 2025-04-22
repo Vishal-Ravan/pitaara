@@ -57,7 +57,7 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
           paymentMethod: "Online",
           billingAddress: billingData,
           items: cartItems, // 🛒 Include cart items here
-          ...(isGuest ? { guestId: token } : {}),
+          ...(isGuest ? { guestId: "1c3d8278-ea26-4549-9f83-5b90089937f5" } : {}),
         }),
       });
 
