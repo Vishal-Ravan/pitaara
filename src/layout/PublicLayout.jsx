@@ -10,7 +10,7 @@ export const PublicLayout = ({
   return (
     <Layout>
       <Breadcrumb
-        breadcrumb={breadcrumb}
+        // breadcrumb={breadcrumb}
         title={breadcrumbTitle}
         description={description}
       />

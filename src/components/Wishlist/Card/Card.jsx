@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 
 export const Card = ({ wish }) => {
   const { name, image, id, isStocked, productNumber, price } = wish;
+  console.log(isStocked,'ooo')
   const [alertMessage, setAlertMessage] = useState(null);
   const [isInCart, setIsInCart] = useState(false);
 
@@ -151,22 +152,26 @@ export const Card = ({ wish }) => {
         </button>
       </div>
       <div className="cart-table__col">
-        {/* Conditionally render Add to Cart Button */}
-        {!isInCart && (
-          <button
-            onClick={() => handleAddToCart(id)}
-            title="Add to Cart"
-            className="remove-btn"
-            style={{
-              width: "40px",
-              height: "40px",
-              color: "#fff",
-            }}
-          >
-            <img src="/assets/img/add-to-cart-white.png" alt="" />
-          </button>
-        )}
-      </div>
+  {isStocked ? (
+    !isInCart && (
+      <button
+        onClick={() => handleAddToCart(id)}
+        title="Add to Cart"
+        className="remove-btn"
+        style={{
+          width: "40px",
+          height: "40px",
+          color: "#fff",
+        }}
+      >
+        <img src="/assets/img/add-to-cart-white.png" alt="" />
+      </button>
+    )
+  ) : (
+    <span style={{ color: "red", fontWeight: "bold" }}>Out of Stock</span>
+  )}
+</div>
+
 
       {/* Alert Message */}
       {alertMessage && (

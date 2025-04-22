@@ -7,7 +7,7 @@ export const SingleProduct = ({
   addedInWishlist,
   addedInCart,
 }) => {
-  const { name, old_price, price, images, isSale, isNew, _id } = product;
+  const { name, old_price, price, images, isSale, isNew, _id ,stock } = product;
 
   return (
     <>
@@ -54,13 +54,19 @@ export const SingleProduct = ({
             </a>
           </Link>
 
-          <button
-            disabled={addedInCart}
-            className={`addLists ${addedInCart ? "added" : ""}`}
-            onClick={() => onAddToCart(_id)}
-          >
-          <i className="icon-cart"></i>  Add To Cart {" "}
-          </button>
+          {stock === 0 ? (
+            <button className="addListss out-of-stock" disabled>
+              <i className="icon-block"></i> Out of Stock
+            </button>
+          ) : (
+            <button
+              disabled={addedInCart}
+              className={`addLists ${addedInCart ? "added" : ""}`}
+              onClick={() => onAddToCart(_id)}
+            >
+              <i className="icon-cart"></i> Add To Cart
+            </button>
+          )}
         </div>
       </div>
       {/* <!-- SINGLE PRODUCT ITEM EOF --> */}

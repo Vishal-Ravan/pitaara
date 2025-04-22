@@ -78,7 +78,7 @@ export const Wishlist = () => {
                     id: product._id,
                     name: product.name,
                     image: product.images || "/default-image.jpg",
-                    isStocked: product.isStocked || false,
+                    isStocked: product.stock || false,
                     productNumber: product.productNumber || "N/A",
                     price: product.price,
                   }}

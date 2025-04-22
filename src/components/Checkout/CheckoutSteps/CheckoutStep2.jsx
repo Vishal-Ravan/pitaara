@@ -120,7 +120,7 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
 
       if (typeof window !== "undefined" && window.Razorpay) {
         const options = {
-          key: "rzp_test_fqpkJvzLDTe1y3", // Use your real Razorpay Key
+          key: "rzp_live_Zx37ebQvBSKo25", // Use your real Razorpay Key
           amount: orderData.amount,
           currency: orderData.currency,
           name: "Pittara",

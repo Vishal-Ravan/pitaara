@@ -234,17 +234,16 @@ export const ProductDetails = () => {
             <div className="product-info">
               <h3>{product.name}</h3>
               <span
-  className={`product-stock ${
-    product.stock > 0 ? "in-stock" : "out-of-stock"
-  }`}
->
-  {product.stock === 1
-    ? "1 product left"
-    : product.stock === 0
-    ? "Out of Stock"
-    : "In Stock"}
-</span>
-
+                className={`product-stock ${
+                  product.stock > 0 ? "in-stock" : "out-of-stock"
+                }`}
+              >
+                {product.stock === 1
+                  ? "1 product left"
+                  : product.stock === 0
+                  ? "Out of Stock"
+                  : "In Stock"}
+              </span>
 
               {/* <span className="product-num">Quantity: {product.quantity}</span> */}
               <span className="product-num">
@@ -305,19 +304,21 @@ export const ProductDetails = () => {
 
               <div className="product-buttons">
                 <div className="product-buttons">
-                  <button
-                    onClick={addToCart}
-                    className="btn btn-icon"
-                    disabled={product.quantity === 0}
-                  >
-                    <i className="icon-cart"></i> cart
-                  </button>
+                  {product.stock > 0 ? (
+                    <button onClick={addToCart} className="btn btn-icon">
+                      <i className="icon-cart"></i> Add to Cart
+                    </button>
+                  ) : (
+                    <button className="btn btn-disabled" disabled>
+                      <i className="icon-ban"></i> Out of Stock
+                    </button>
+                  )}
 
                   <button
                     className="btn btn-grey btn-icon"
                     onClick={addToWishlist}
                   >
-                    <i className="icon-heart"></i> wish
+                    <i className="icon-heart"></i> Add to wish
                   </button>
                 </div>
               </div>
