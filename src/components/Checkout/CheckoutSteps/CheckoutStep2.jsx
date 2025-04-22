@@ -1,20 +1,17 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 
-// Static guest ID when no token is available
-const STATIC_GUEST_ID = "guest_1234567890"; // Replace with your static guest ID
-
-// Check if the token exists or return the static guest ID
+// Generate or retrieve guest ID
 const getGuestId = async () => {
   let guestId = await Promise.resolve(localStorage.getItem("guestId"));
   if (!guestId) {
-    guestId = STATIC_GUEST_ID;  // Use the static guest ID
+    guestId = `guest_${Math.random().toString(36).substring(2, 15)}`;
     await Promise.resolve(localStorage.setItem("guestId", guestId));
   }
   return guestId;
 };
 
-// Check if it's a guest checkout (token is absent)
+// Check if the token is a guest ID (or simply if no token exists)
 const isGuestCheckout = (token) => {
   return !token; // If there's no token, treat it as a guest
 };
@@ -42,13 +39,12 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
     console.log(cartItems, "loolo");
   }, []);
 
-  // Get user token or return static guest ID if no token exists
   const getUserToken = async () => {
     const userData = JSON.parse(localStorage.getItem("user"));
     const token = userData?.token;
 
     if (!token) {
-      return STATIC_GUEST_ID; // Return static guest ID if no token exists
+      return await getGuestId(); // Return guest ID if no token exists
     }
 
     return token;
@@ -81,12 +77,13 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
           paymentMethod: "Online",
           billingAddress: billingData,
           items: cartItems, // 🛒 Include cart items here
-          guestId: token, // Always pass guestId or token
+          ...(isGuest ? { guestId: token } : {}),
         }),
       });
-
+    debugger
       const data = await response.json();
       console.log("Order Response:", data);
+    debugger
 
       if (response.ok) {
         if (isMounted.current) {
@@ -123,7 +120,7 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
         body: JSON.stringify({
           amount: totalAmount,
           currency: "INR",
-          guestId: token, // Always send the guest ID or token
+          ...(isGuest ? { guestId: token } : {}),
         }),
       });
 
@@ -152,7 +149,7 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
                 },
                 body: JSON.stringify({
                   ...paymentResponse,
-                  guestId: token, // Always pass guest ID or token
+                  ...(isGuest ? { guestId: token } : {}),
                 }),
               });
 
