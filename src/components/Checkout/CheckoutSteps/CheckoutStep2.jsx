@@ -11,9 +11,10 @@ const getGuestId = async () => {
   return guestId;
 };
 
-
-// Check if the token is a guest ID
-const isGuestCheckout = (token) => token?.startsWith("guest_");
+// Check if the token is a guest ID (or simply if no token exists)
+const isGuestCheckout = (token) => {
+  return !token; // If there's no token, treat it as a guest
+};
 
 export const CheckoutStep2 = ({ onNext, onPrev }) => {
   const [loading, setLoading] = useState(false);
@@ -32,14 +33,21 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
       isMounted.current = false;
     };
   }, [router.query]);
+
   useEffect(() => {
     const cartItems = JSON.parse(localStorage.getItem("cartData")) || [];
-    console.log(cartItems,'loolo')
-  },[])
-  const getUserToken = () => {
+    console.log(cartItems, "loolo");
+  }, []);
+
+  const getUserToken = async () => {
     const userData = JSON.parse(localStorage.getItem("user"));
     const token = userData?.token;
-    return token || getGuestId();
+
+    if (!token) {
+      return await getGuestId(); // Return guest ID if no token exists
+    }
+
+    return token;
   };
 
   const clearCart = () => {
@@ -49,14 +57,15 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
   const placeOrder = async () => {
     if (!isMounted.current) return;
     setLoading(true);
-  
-    const token = getUserToken();
+
+    const token = await getUserToken();
     const isGuest = isGuestCheckout(token);
-  
+
     // 🔥 Get billing address and cart items from localStorage
     const billingData = JSON.parse(localStorage.getItem("billingAddress"));
     const cartItems = JSON.parse(localStorage.getItem("cartData")) || [];
-  console.log(cartItems,'loolo')
+    console.log(cartItems, "loolo");
+
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/checkout`, {
         method: "POST",
@@ -71,10 +80,10 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
           ...(isGuest ? { guestId: token } : {}),
         }),
       });
-  
+
       const data = await response.json();
       console.log("Order Response:", data);
-  
+
       if (response.ok) {
         if (isMounted.current) {
           setAlertMessage("Order placed successfully!");
@@ -92,12 +101,12 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
       if (isMounted.current) setLoading(false);
     }
   };
-  
+
   const handlePayment = async () => {
     if (!isMounted.current) return;
     setLoading(true);
 
-    const token = getUserToken();
+    const token = await getUserToken();
     const isGuest = isGuestCheckout(token);
 
     try {
