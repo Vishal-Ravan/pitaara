@@ -33,10 +33,23 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
   }, [router.query]);
 
   const getUserToken = () => {
+    // Try from logged-in user
     const userData = JSON.parse(localStorage.getItem("user"));
     const token = userData?.token;
-    return token || getGuestId();
+    if (token) return token;
+  
+    // Try from query string
+    const urlParams = new URLSearchParams(window.location.search);
+    const guestIdFromQuery = urlParams.get("guestId");
+    if (guestIdFromQuery) {
+      localStorage.setItem("guestId", guestIdFromQuery); // Persist it
+      return guestIdFromQuery;
+    }
+  
+    // Fall back to localStorage or generate new one
+    return getGuestId();
   };
+  
 
   const clearCart = () => {
     localStorage.removeItem("cart");
