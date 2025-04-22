@@ -2,15 +2,14 @@ import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 
 // Generate or retrieve guest ID
-const getGuestId = () => {
-  let guestId = localStorage.getItem("guestId");
-  if (!guestId || !guestId.startsWith("guest_")) {
+const getGuestId = async () => {
+  let guestId = await Promise.resolve(localStorage.getItem("guestId"));
+  if (!guestId) {
     guestId = `guest_${Math.random().toString(36).substring(2, 15)}`;
-    localStorage.setItem("guestId", guestId);
+    await Promise.resolve(localStorage.setItem("guestId", guestId));
   }
   return guestId;
 };
-
 
 
 // Check if the token is a guest ID
@@ -33,25 +32,15 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
       isMounted.current = false;
     };
   }, [router.query]);
-
+  useEffect(() => {
+    const cartItems = JSON.parse(localStorage.getItem("cartData")) || [];
+    console.log(cartItems,'loolo')
+  },[])
   const getUserToken = () => {
-    // Try from logged-in user
     const userData = JSON.parse(localStorage.getItem("user"));
     const token = userData?.token;
-    if (token) return token;
-  
-    // Try from query string
-    const urlParams = new URLSearchParams(window.location.search);
-    const guestIdFromQuery = urlParams.get("guestId");
-    if (guestIdFromQuery) {
-      localStorage.setItem("guestId", guestIdFromQuery); // Persist it
-      return guestIdFromQuery;
-    }
-  
-    // Fall back to localStorage or generate new one
-    return getGuestId();
+    return token || getGuestId();
   };
-  
 
   const clearCart = () => {
     localStorage.removeItem("cart");
@@ -60,32 +49,32 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
   const placeOrder = async () => {
     if (!isMounted.current) return;
     setLoading(true);
-
+  
     const token = getUserToken();
     const isGuest = isGuestCheckout(token);
-
+  
     // 🔥 Get billing address and cart items from localStorage
     const billingData = JSON.parse(localStorage.getItem("billingAddress"));
     const cartItems = JSON.parse(localStorage.getItem("cartData")) || [];
-  
+  console.log(cartItems,'loolo')
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/checkout`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          ...(isGuest ? {} : { Authorization: `Bearer ${token}` }), // Send token if logged in
+          ...(isGuest ? {} : { Authorization: `Bearer ${token}` }),
         },
         body: JSON.stringify({
           paymentMethod: "Online",
           billingAddress: billingData,
           items: cartItems, // 🛒 Include cart items here
-          ...(isGuest ? { guestId: token } : {}), // Send guestId if it's a guest checkout
+          ...(isGuest ? { guestId: token } : {}),
         }),
       });
-
+  
       const data = await response.json();
       console.log("Order Response:", data);
-
+  
       if (response.ok) {
         if (isMounted.current) {
           setAlertMessage("Order placed successfully!");
@@ -103,7 +92,7 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
       if (isMounted.current) setLoading(false);
     }
   };
-
+  
   const handlePayment = async () => {
     if (!isMounted.current) return;
     setLoading(true);
@@ -116,12 +105,12 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          ...(isGuest ? {} : { Authorization: `Bearer ${token}` }), // Send token if logged in
+          ...(isGuest ? {} : { Authorization: `Bearer ${token}` }),
         },
         body: JSON.stringify({
           amount: totalAmount,
           currency: "INR",
-          ...(isGuest ? { guestId: token } : {}), // Send guestId if it's a guest checkout
+          ...(isGuest ? { guestId: token } : {}),
         }),
       });
 
@@ -146,11 +135,11 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",
-                  ...(isGuest ? {} : { Authorization: `Bearer ${token}` }), // Send token if logged in
+                  ...(isGuest ? {} : { Authorization: `Bearer ${token}` }),
                 },
                 body: JSON.stringify({
                   ...paymentResponse,
-                  ...(isGuest ? { guestId: token } : {}), // Send guestId if it's a guest checkout
+                  ...(isGuest ? { guestId: token } : {}),
                 }),
               });
 
