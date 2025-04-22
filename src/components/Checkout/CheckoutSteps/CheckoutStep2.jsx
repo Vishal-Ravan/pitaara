@@ -59,9 +59,11 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
         body: JSON.stringify({
           paymentMethod: "Online",
           billingAddress: billingData,
+          paymentId:"hdsgud",
           items: cartItems, // 🛒 Include cart items here
           // If guest, send static guestId
           ...(isGuest ? { guestId: staticGuestId } : {}),
+
         }),
       });
   
