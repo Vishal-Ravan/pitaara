@@ -53,17 +53,12 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
   const placeOrder = async () => {
     if (!isMounted.current) return;
     setLoading(true);
-
+  
     const token = getUserToken(); // Get either authToken or guestId
     const isGuest = !localStorage.getItem("authToken"); // Check if it's a guest checkout
-
-    // Get billing address and cart items from localStorage
-    const billingData = JSON.parse(localStorage.getItem("billingAddress"));
-    const shippingData = JSON.parse(localStorage.getItem("shippingAddress"));
-    console.log(billingData,'looo')
-    console.log(shippingData,'loooss')
+  
     const cartItems = JSON.parse(localStorage.getItem("cartData")) || [];
-
+  
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/checkout`, {
         method: "POST",
@@ -72,21 +67,21 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
         },
         body: JSON.stringify({
           paymentMethod: "Online",
-          billingAddress: billingData,
-          shippingAddress: shippingData,
           items: cartItems, // 🛒 Include cart items here
           guestId: isGuest ? token : undefined, // Use guestId only for guest users
           authToken: !isGuest ? token : undefined, // Use authToken only for logged-in users
         }),
       });
-
+  
       const data = await response.json();
       console.log("Order Response:", data);
-
+  
       if (response.ok) {
         if (isMounted.current) {
           setAlertMessage("Order placed successfully!");
-          clearCart();
+          if (isGuest) {
+            clearCart(); // Only clear cart for guests
+          }
           localStorage.setItem("orderDetails", JSON.stringify(data));
           router.push("/orderconfirm");
           setTimeout(() => isMounted.current && setAlertMessage(""), 3000);
@@ -100,6 +95,7 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
       if (isMounted.current) setLoading(false);
     }
   };
+  
 
   const handlePayment = async () => {
     if (!isMounted.current) return;
