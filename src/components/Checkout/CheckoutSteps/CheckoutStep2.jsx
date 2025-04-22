@@ -1,6 +1,17 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 
+// Generate or retrieve guest ID
+const getGuestId = () => {
+  let guestId = localStorage.getItem("guestId");
+  if (!guestId) {
+    guestId = `guest_${Math.random().toString(36).substring(2, 15)}`;
+    localStorage.setItem("guestId", guestId);
+  }
+  return guestId;
+};
+
+// Checkout Step for Guest Users
 export const CheckoutStep2 = ({ onNext, onPrev }) => {
   const [loading, setLoading] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
@@ -10,66 +21,55 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
 
   useEffect(() => {
     isMounted.current = true;
-    const { total, guestId, isGuest } = router.query; // Get parameters from the URL
+    const { total } = router.query;
     if (total) {
       setTotalAmount(parseFloat(total));
-    }
-    if (isGuest && guestId) {
-      console.log("Guest ID from URL:", guestId); // Debugger for guest ID
-      localStorage.setItem("guestId", guestId); // Optionally, save it to localStorage if needed
     }
     return () => {
       isMounted.current = false;
     };
   }, [router.query]);
 
-  const getUserToken = () => {
-    const userData = JSON.parse(localStorage.getItem("user"));
-    const token = userData?.token;
-    if (token) {
-      return token; // Return logged-in user's token if available
-    }
-    return localStorage.getItem("guestId"); // Return the guestId from localStorage if available
-  };
+  useEffect(() => {
+    const cartItems = JSON.parse(localStorage.getItem("cartData")) || [];
+    console.log(cartItems, 'cart items for guest');
+  }, []);
 
   const clearCart = () => {
     localStorage.removeItem("cart");
   };
 
+  // Guest Checkout - Always uses guest ID
+  const getUserToken = () => getGuestId();
+
   const placeOrder = async () => {
     if (!isMounted.current) return;
     setLoading(true);
-  
-    const token = getUserToken(); // Get token or guest ID
-    const isGuest = !token || token.startsWith("guest_"); // Check if guest
-  
+
+    const token = getUserToken();
+    const isGuest = true; // Always guest checkout
+
+    // Get billing address and cart items from localStorage
     const billingData = JSON.parse(localStorage.getItem("billingAddress"));
     const cartItems = JSON.parse(localStorage.getItem("cartData")) || [];
-  
-    // Static guest ID
-    const staticGuestId = "1c3d8278-ea26-4549-9f83-5b90089937f5"; // Change this as per your requirement
-  
+
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/checkout`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          ...(isGuest ? {} : { Authorization: `Bearer ${token}` }),
         },
         body: JSON.stringify({
           paymentMethod: "Online",
           billingAddress: billingData,
-          paymentId:"hdsgud",
           items: cartItems, // 🛒 Include cart items here
-          // If guest, send static guestId
-          ...(isGuest ? { guestId: staticGuestId } : {}),
-
+          guestId: token, // Use guest ID for checkout
         }),
       });
-  
+
       const data = await response.json();
       console.log("Order Response:", data);
-  
+
       if (response.ok) {
         if (isMounted.current) {
           setAlertMessage("Order placed successfully!");
@@ -87,26 +87,24 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
       if (isMounted.current) setLoading(false);
     }
   };
-  
 
   const handlePayment = async () => {
     if (!isMounted.current) return;
     setLoading(true);
 
-    const token = getUserToken();
-    const isGuest = token?.startsWith("guest_");
+    const token = getUserToken(); // Always use guest ID for payment
+    const isGuest = true; // Always guest checkout
 
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/payment/create-order`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          ...(isGuest ? {} : { Authorization: `Bearer ${token}` }),
         },
         body: JSON.stringify({
           amount: totalAmount,
           currency: "INR",
-          ...(isGuest ? { guestId: token } : {}),
+          guestId: token, // Use guest ID for payment
         }),
       });
 
@@ -131,11 +129,10 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",
-                  ...(isGuest ? {} : { Authorization: `Bearer ${token}` }),
                 },
                 body: JSON.stringify({
                   ...paymentResponse,
-                  ...(isGuest ? { guestId: token } : {}),
+                  guestId: token, // Use guest ID for payment verification
                 }),
               });
 
