@@ -1,23 +1,17 @@
 import { useState, useEffect, useRef } from "react";
 import { useRouter } from "next/router";
 
-// Helper to get the guest ID if no user token is found
+// Generate or retrieve guest ID
 const getGuestId = () => {
   let guestId = localStorage.getItem("guestId");
   if (!guestId) {
     guestId = `guest_${Math.random().toString(36).substring(2, 15)}`;
-    localStorage.setItem("guestId", guestId); // Store guest ID if it's a new session
+    localStorage.setItem("guestId", guestId);
   }
   return guestId;
 };
 
-// Helper to get the current user token or guest ID
-const getUserToken = () => {
-  const userData = JSON.parse(localStorage.getItem("user"));
-  const token = userData?.token;
-  return token || getGuestId();
-};
-
+// Checkout Step for Guest Users and Logged-in Users
 export const CheckoutStep2 = ({ onNext, onPrev }) => {
   const [loading, setLoading] = useState(false);
   const [alertMessage, setAlertMessage] = useState("");
@@ -36,18 +30,34 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
     };
   }, [router.query]);
 
+  useEffect(() => {
+    const cartItems = JSON.parse(localStorage.getItem("cartData")) || [];
+    console.log(cartItems, 'cart items for guest');
+  }, []);
+
   const clearCart = () => {
-    localStorage.removeItem("cartData");
+    localStorage.removeItem("cart");
+  };
+
+  // Function to get user token (Auth token or Guest ID)
+  const getUserToken = () => {
+    // Check if user is logged in (assuming token is stored in localStorage)
+    const authToken = localStorage.getItem("authToken");
+    if (authToken) {
+      return authToken; // Logged-in user, use authToken
+    } else {
+      return getGuestId(); // Guest checkout, use guest ID
+    }
   };
 
   const placeOrder = async () => {
     if (!isMounted.current) return;
     setLoading(true);
 
-    const token = getUserToken(); // Retrieve token or guest ID
-    const isGuest = token?.startsWith("guest_"); // Check if it's a guest user
+    const token = getUserToken(); // Get either authToken or guestId
+    const isGuest = !localStorage.getItem("authToken"); // Check if it's a guest checkout
 
-    // Retrieve the billing address and cart items from localStorage
+    // Get billing address and cart items from localStorage
     const billingData = JSON.parse(localStorage.getItem("billingAddress"));
     const cartItems = JSON.parse(localStorage.getItem("cartData")) || [];
 
@@ -56,17 +66,18 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          ...(isGuest ? {} : { Authorization: `Bearer ${token}` }), // Use Authorization header for logged-in users
         },
         body: JSON.stringify({
           paymentMethod: "Online",
           billingAddress: billingData,
-          items: cartItems, // Include cart items in the order request
-          ...(isGuest ? { guestId: token } : {}), // Send guestId for guest users
+          items: cartItems, // 🛒 Include cart items here
+          guestId: isGuest ? token : undefined, // Use guestId only for guest users
+          authToken: !isGuest ? token : undefined, // Use authToken only for logged-in users
         }),
       });
 
       const data = await response.json();
+      console.log("Order Response:", data);
 
       if (response.ok) {
         if (isMounted.current) {
@@ -90,26 +101,27 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
     if (!isMounted.current) return;
     setLoading(true);
 
-    const token = getUserToken(); // Retrieve token or guest ID
-    const isGuest = token?.startsWith("guest_");
+    const token = getUserToken(); // Get either authToken or guestId
+    const isGuest = !localStorage.getItem("authToken"); // Check if it's a guest checkout
 
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/payment/create-order`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          ...(isGuest ? {} : { Authorization: `Bearer ${token}` }),
         },
         body: JSON.stringify({
           amount: totalAmount,
           currency: "INR",
-          ...(isGuest ? { guestId: token } : {}),
+          guestId: isGuest ? token : undefined, // Use guestId only for guest users
+          authToken: !isGuest ? token : undefined, // Use authToken only for logged-in users
         }),
       });
 
       if (!response.ok) throw new Error("Failed to create order");
 
       const orderData = await response.json();
+      console.log("Order Created:", orderData);
 
       if (typeof window !== "undefined" && window.Razorpay) {
         const options = {
@@ -121,19 +133,22 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
           order_id: orderData.id,
           handler: async (paymentResponse) => {
             try {
+              console.log("Payment Response:", paymentResponse);
+
               const verifyResponse = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/payment/verify-payment`, {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",
-                  ...(isGuest ? {} : { Authorization: `Bearer ${token}` }),
                 },
                 body: JSON.stringify({
                   ...paymentResponse,
-                  ...(isGuest ? { guestId: token } : {}),
+                  guestId: isGuest ? token : undefined, // Use guestId only for guest users
+                  authToken: !isGuest ? token : undefined, // Use authToken only for logged-in users
                 }),
               });
 
               const verifyData = await verifyResponse.json();
+              console.log("Payment Verification Response:", verifyData);
 
               if (verifyData.success && isMounted.current) {
                 setAlertMessage("Payment successful! Placing your order...");
@@ -142,6 +157,7 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
                 setAlertMessage("Payment verification failed.");
               }
             } catch (error) {
+              console.error("Error verifying payment:", error);
               if (isMounted.current) setAlertMessage("Something went wrong. Please try again.");
             }
           },
@@ -154,6 +170,7 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
         if (isMounted.current) setAlertMessage("Razorpay SDK not loaded. Please check your script.");
       }
     } catch (error) {
+      console.error("Payment Error:", error);
       if (isMounted.current) setAlertMessage("Something went wrong. Please try again.");
     } finally {
       if (isMounted.current) setLoading(false);
