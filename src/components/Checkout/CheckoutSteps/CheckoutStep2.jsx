@@ -31,10 +31,7 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
       isMounted.current = false;
     };
   }, [router.query]);
-  useEffect(() => {
-    const cartItems = JSON.parse(localStorage.getItem("cartData")) || [];
-    console.log(cartItems,'loolo')
-  },[])
+
   const getUserToken = () => {
     const userData = JSON.parse(localStorage.getItem("user"));
     const token = userData?.token;
@@ -48,32 +45,32 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
   const placeOrder = async () => {
     if (!isMounted.current) return;
     setLoading(true);
-  
+
     const token = getUserToken();
     const isGuest = isGuestCheckout(token);
-  
+
     // 🔥 Get billing address and cart items from localStorage
     const billingData = JSON.parse(localStorage.getItem("billingAddress"));
     const cartItems = JSON.parse(localStorage.getItem("cartData")) || [];
-  console.log(cartItems,'loolo')
+  
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/checkout`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          ...(isGuest ? {} : { Authorization: `Bearer ${token}` }),
+          ...(isGuest ? {} : { Authorization: `Bearer ${token}` }), // Send token if logged in
         },
         body: JSON.stringify({
           paymentMethod: "Online",
           billingAddress: billingData,
           items: cartItems, // 🛒 Include cart items here
-          ...(isGuest ? { guestId: token } : {}),
+          ...(isGuest ? { guestId: token } : {}), // Send guestId if it's a guest checkout
         }),
       });
-  
+
       const data = await response.json();
       console.log("Order Response:", data);
-  
+
       if (response.ok) {
         if (isMounted.current) {
           setAlertMessage("Order placed successfully!");
@@ -91,7 +88,7 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
       if (isMounted.current) setLoading(false);
     }
   };
-  
+
   const handlePayment = async () => {
     if (!isMounted.current) return;
     setLoading(true);
@@ -104,12 +101,12 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          ...(isGuest ? {} : { Authorization: `Bearer ${token}` }),
+          ...(isGuest ? {} : { Authorization: `Bearer ${token}` }), // Send token if logged in
         },
         body: JSON.stringify({
           amount: totalAmount,
           currency: "INR",
-          ...(isGuest ? { guestId: token } : {}),
+          ...(isGuest ? { guestId: token } : {}), // Send guestId if it's a guest checkout
         }),
       });
 
@@ -120,7 +117,7 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
 
       if (typeof window !== "undefined" && window.Razorpay) {
         const options = {
-          key: "rzp_live_Zx37ebQvBSKo25", // Use your real Razorpay Key
+          key: "rzp_test_fqpkJvzLDTe1y3", // Use your real Razorpay Key
           amount: orderData.amount,
           currency: orderData.currency,
           name: "Pittara",
@@ -134,11 +131,11 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
                 method: "POST",
                 headers: {
                   "Content-Type": "application/json",
-                  ...(isGuest ? {} : { Authorization: `Bearer ${token}` }),
+                  ...(isGuest ? {} : { Authorization: `Bearer ${token}` }), // Send token if logged in
                 },
                 body: JSON.stringify({
                   ...paymentResponse,
-                  ...(isGuest ? { guestId: token } : {}),
+                  ...(isGuest ? { guestId: token } : {}), // Send guestId if it's a guest checkout
                 }),
               });
 

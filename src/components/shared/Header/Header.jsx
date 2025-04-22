@@ -136,8 +136,141 @@ export const Header = () => {
     }
   }, []);
 
+  const fetchCart = async () => {
+    const token = getUserToken();
 
+    try {
+      let response;
 
+      if (token) {
+        // Authenticated user
+        response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/cart`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      } else {
+        // Guest user
+        const guestId = localStorage.getItem("guestId");
+
+        if (!guestId) {
+          setCartCount(0);
+          return;
+        }
+
+        response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/cart?guestId=${guestId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+      }
+
+      if (response.status === 401 || response.status === 403) {
+        handleLogout();
+        return;
+      }
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      let count = 0;
+
+      if (Array.isArray(data)) {
+        count = data.length;
+      } else if (data?.items && Array.isArray(data.items)) {
+        count = data.items.length;
+      }
+
+      setCartCount(count);
+    } catch (error) {
+      console.error("Error fetching cart data:", error);
+      setCartCount(0);
+    }
+  };
+
+  const fetchWhishlist = async () => {
+    const token = getUserToken();
+
+    try {
+      let response;
+
+      if (token) {
+        response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/wishlist`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      } else {
+        // Guest user
+        const guestId = localStorage.getItem("guestId");
+
+        if (!guestId) {
+          setWhishlistCount(0);
+          return;
+        }
+
+        response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/wishlist?guestId=${guestId}`,
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
+      }
+
+      if (response.status === 401 || response.status === 403) {
+        handleLogout();
+        return;
+      }
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! Status: ${response.status}`);
+      }
+
+      const data = await response.json();
+      let counts = 0;
+      if (Array.isArray(data)) {
+        counts = data.length;
+      } else if (data?.products && Array.isArray(data.products)) {
+        counts = data.products.length;
+      }
+
+      setWhishlistCount(counts); // Update state immediately
+    } catch (error) {
+      console.error("Error fetching wishlist data:", error);
+      setWhishlistCount(0);
+    }
+  };
+
+  useEffect(() => {
+    fetchCart();
+    const interval = setInterval(fetchCart, 100);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    fetchWhishlist();
+    const interval = setInterval(fetchWhishlist, 100);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <>
@@ -204,7 +337,7 @@ export const Header = () => {
                 )}
               </li>
 
-              {/* <li>
+              <li>
                 <Link href="/wishlist">
                   <a className="user-icons wh">
                     <i className="icon-heart"></i>
@@ -222,7 +355,7 @@ export const Header = () => {
                     <p>Cart</p>
                   </a>
                 </Link>
-              </li> */}
+              </li>
 
               {user && (
                 <a className="user-icons">
