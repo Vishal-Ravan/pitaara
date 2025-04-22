@@ -39,13 +39,16 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
   const placeOrder = async () => {
     if (!isMounted.current) return;
     setLoading(true);
-
-    const token = getUserToken();
-    const isGuest = token?.startsWith("guest_");
-
+  
+    const token = getUserToken(); // Get token or guest ID
+    const isGuest = !token || token.startsWith("guest_"); // Check if guest
+  
     const billingData = JSON.parse(localStorage.getItem("billingAddress"));
     const cartItems = JSON.parse(localStorage.getItem("cartData")) || [];
-
+  
+    // Static guest ID
+    const staticGuestId = "1c3d8278-ea26-4549-9f83-5b90089937f5"; // Change this as per your requirement
+  
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/checkout`, {
         method: "POST",
@@ -57,13 +60,14 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
           paymentMethod: "Online",
           billingAddress: billingData,
           items: cartItems, // 🛒 Include cart items here
-          ...(isGuest ? { guestId: "1c3d8278-ea26-4549-9f83-5b90089937f5" } : {}),
+          // If guest, send static guestId
+          ...(isGuest ? { guestId: staticGuestId } : {}),
         }),
       });
-
+  
       const data = await response.json();
       console.log("Order Response:", data);
-
+  
       if (response.ok) {
         if (isMounted.current) {
           setAlertMessage("Order placed successfully!");
@@ -81,6 +85,7 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
       if (isMounted.current) setLoading(false);
     }
   };
+  
 
   const handlePayment = async () => {
     if (!isMounted.current) return;
