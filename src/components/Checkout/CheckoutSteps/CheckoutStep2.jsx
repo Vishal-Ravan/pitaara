@@ -3,13 +3,11 @@ import { useRouter } from "next/router";
 
 // Generate or retrieve guest ID
 const getGuestId = () => {
-  let guestId = localStorage.getItem("guestId");
-  if (!guestId) {
-    guestId = `guest_${Math.random().toString(36).substring(2, 15)}`;
-    localStorage.setItem("guestId", guestId);
-  }
-  return guestId;
+  const staticGuestId = "guest_static_12345";
+  localStorage.setItem("guestId", staticGuestId); // Always overwrite or ensure it's set
+  return staticGuestId;
 };
+
 
 // Check if the token is a guest ID
 const isGuestCheckout = (token) => token?.startsWith("guest_");
