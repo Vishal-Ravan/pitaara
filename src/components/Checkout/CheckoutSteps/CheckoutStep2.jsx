@@ -59,6 +59,9 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
 
     // Get billing address and cart items from localStorage
     const billingData = JSON.parse(localStorage.getItem("billingAddress"));
+    const shippingData = JSON.parse(localStorage.getItem("shippingAddress"));
+    console.log(billingData,'looo')
+    console.log(shippingData,'loooss')
     const cartItems = JSON.parse(localStorage.getItem("cartData")) || [];
 
     try {
@@ -70,6 +73,7 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
         body: JSON.stringify({
           paymentMethod: "Online",
           billingAddress: billingData,
+          shippingAddress: shippingData,
           items: cartItems, // 🛒 Include cart items here
           guestId: isGuest ? token : undefined, // Use guestId only for guest users
           authToken: !isGuest ? token : undefined, // Use authToken only for logged-in users
