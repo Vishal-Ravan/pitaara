@@ -138,7 +138,7 @@ export const ProductsCarousel = ({ productsdata = [] }) => {
       <Slider {...settings}>
         {productsdata.map((product) => (
           <SingleProduct
-            key={product.id}
+            key={product._id}
             product={product}
             addedInCart={
               Array.isArray(cart) &&
