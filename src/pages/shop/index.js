@@ -14,7 +14,7 @@ const breadcrumbsData = [
 ];
 const ShopPage = () => {
   return (
-    <PublicLayout breadcrumb={breadcrumbsData} breadcrumbTitle='Shop'>
+    <PublicLayout  breadcrumbTitle='Shop'>
       <Shop />
       {/* <Subscribe /> */}
     </PublicLayout>

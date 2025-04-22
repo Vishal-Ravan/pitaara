@@ -14,7 +14,6 @@ const breadcrumbsData = [
 const ExchangePage = () => {
   return (
     <PublicLayout
-      breadcrumb={breadcrumbsData}
       breadcrumbTitle="Terms and Condition"
     >
       <TermsAndCondition />

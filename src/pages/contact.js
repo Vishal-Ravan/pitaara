@@ -17,7 +17,7 @@ const breadcrumbsData = [
 ];
 const ContactPage = () => {
   return (
-    <PublicLayout breadcrumb={breadcrumbsData} breadcrumbTitle='Contact'>
+    <PublicLayout  breadcrumbTitle='Contact'>
       <ContactDetailBlock />
       <ContactInfo />
       <BrandLogo />

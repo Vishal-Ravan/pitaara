@@ -234,12 +234,18 @@ export const ProductDetails = () => {
             <div className="product-info">
               <h3>{product.name}</h3>
               <span
-                className={`product-stock ${
-                  product.stock > 0 ? "in-stock" : "out-of-stock"
-                }`}
-              >
-                {product.stock > 0 ? "In Stock" : "Out of Stock"}
-              </span>
+  className={`product-stock ${
+    product.stock > 0 ? "in-stock" : "out-of-stock"
+  }`}
+>
+  {product.stock === 1
+    ? "1 product left"
+    : product.stock === 0
+    ? "Out of Stock"
+    : "In Stock"}
+</span>
+
+
               {/* <span className="product-num">Quantity: {product.quantity}</span> */}
               <span className="product-num">
                 Dimension : {product.dimensions}

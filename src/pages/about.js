@@ -18,7 +18,7 @@ const breadcrumbsData = [
 ];
 const AboutPage = () => {
   return (
-    <PublicLayout breadcrumb={breadcrumbsData} breadcrumbTitle='About'>
+    <PublicLayout  breadcrumbTitle='About'>
       {/* <AboutDetailBlock /> */}
       {/* <AboutPromo /> */}
       <AboutDiscount />

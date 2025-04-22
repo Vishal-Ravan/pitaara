@@ -11,6 +11,7 @@ export const Header = () => {
   const { user, setUser } = useContext(AuthContext);
   const [promo, setPromo] = useState(true);
   const [fixedNav, setFixedNav] = useState(false);
+  const [searchInput, setSearchInput] = useState("");
   const [openMenu, setOpenMenu] = useState(false);
   const [height, width] = useWindowSize();
   const [cartCount, setCartCount] = useState(0);
@@ -22,7 +23,10 @@ export const Header = () => {
     setAlertMessage(message);
     setTimeout(() => setAlertMessage(null), 3000);
   };
-
+  const handleSearch = (e) => {
+    e.preventDefault();
+    router.push(`/shop?search=${searchInput}`);
+  };
   const handleCategoryClick = (category) => {
     router.push({
       pathname: "/shop",
@@ -202,7 +206,6 @@ export const Header = () => {
       let response;
 
       if (token) {
-        // Authenticated user
         response = await fetch(
           `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/wishlist`,
           {
@@ -298,27 +301,22 @@ export const Header = () => {
               </a>
             </Link>
           </div>
-
           <div className="header-search">
-            <input
-              type="text"
-              placeholder="Search..."
-              className="search-input"
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  searchProduct(e.target.value); // updated
-                }
-              }}
-            />
-            <i
-              className="icon-search"
-              onClick={() => {
-                const value = document.querySelector(".search-input").value;
-                searchProduct(value); // updated
-              }}
-              style={{ cursor: "pointer" }}
-            ></i>
+            <form onSubmit={handleSearch}>
+              <input
+                type="text"
+                value={searchInput}
+                onChange={(e) => setSearchInput(e.target.value)}
+                placeholder="Search products..."
+                className="search-input"
+              />
+              <button type="submit" className="">  <i
+                className="icon-search"
+              ></i></button>
+            
+            </form>
           </div>
+     
           <div style={{ right: openMenu ? 0 : -360 }} className="header-box">
             <ul className="header-options">
               <li>
@@ -389,22 +387,34 @@ export const Header = () => {
       </header>
 
       <div className="header-box-second">
-      <h6 onClick={() => handleCategoryClick("rings")} style={{ cursor: "pointer" }}>
-        Rings
-      </h6>
-      <h6 onClick={() => handleCategoryClick("bracelets")} style={{ cursor: "pointer" }}>
-        Bracelets
-      </h6>
-      <h6 onClick={() => handleCategoryClick("earrings")} style={{ cursor: "pointer" }}>
-        Earrings
-      </h6>
-      <h6 onClick={() => handleCategoryClick("necklaces")} style={{ cursor: "pointer" }}>
-        Necklace
-      </h6>
-      {/* <h6 onClick={() => handleCategoryClick("anklet")} style={{ cursor: "pointer" }}>
+        <h6
+          onClick={() => handleCategoryClick("rings")}
+          style={{ cursor: "pointer" }}
+        >
+          Rings
+        </h6>
+        <h6
+          onClick={() => handleCategoryClick("bracelets")}
+          style={{ cursor: "pointer" }}
+        >
+          Bracelets
+        </h6>
+        <h6
+          onClick={() => handleCategoryClick("earrings")}
+          style={{ cursor: "pointer" }}
+        >
+          Earrings
+        </h6>
+        <h6
+          onClick={() => handleCategoryClick("necklaces")}
+          style={{ cursor: "pointer" }}
+        >
+          Necklace
+        </h6>
+        {/* <h6 onClick={() => handleCategoryClick("anklet")} style={{ cursor: "pointer" }}>
         Anklet
       </h6> */}
-    </div>
+      </div>
     </>
   );
 };

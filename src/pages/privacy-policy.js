@@ -14,7 +14,6 @@ const breadcrumbsData = [
 const privacyPage = () => {
   return (
     <PublicLayout
-      breadcrumb={breadcrumbsData}
       breadcrumbTitle="Privacy Policy"
     >
         <PrivacyPolicy/>

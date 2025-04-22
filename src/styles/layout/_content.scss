@@ -5623,6 +5623,10 @@ input[type='search']::-webkit-search-results-decoration {
     display: block;
    
   }
+  .header-box-second{
+    height: 30px;
+    align-items: center;
+  }
   ul.category-list.desktop-only{
     display: none;
   }
@@ -5631,7 +5635,6 @@ input[type='search']::-webkit-search-results-decoration {
 }
 .mob-fil {
   display: grid;
-  grid-template-columns: 1fr 1fr;
   gap: 15px;
   margin-bottom: 20px;
 }
@@ -7197,4 +7200,27 @@ span.error {
 }
 .shop-aside__item.price{
   display: block;
+}
+
+
+.pagination {
+  display: flex;
+  justify-content: center;
+  margin: 30px 0px;
+  gap: 10px;
+}
+
+.pagination button {
+  padding: 8px 14px;
+  border: none;
+  background-color: #ddd;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.pagination button.active,
+.pagination button:hover {
+  background-color: #42203f;
+  color: #fff;
 }

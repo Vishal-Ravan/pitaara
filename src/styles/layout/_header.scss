@@ -410,7 +410,14 @@ header {
   width: 40%;
   margin: 0 auto;
 }
-
+.header-search form {
+  width: 100%;
+  display: flex;  
+}
+.header-search form button{
+  border: none;
+  background-color: transparent;
+}
 .search-input {
   border: none;
   outline: none;

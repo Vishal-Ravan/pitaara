@@ -19,7 +19,7 @@ const breadcrumbsData = [
 ];
 const ProductPage = () => {
   return (
-    <PublicLayout breadcrumb={breadcrumbsData} breadcrumbTitle='Shop'>
+    <PublicLayout  breadcrumbTitle='Shop'>
       <ProductDetails />
       {/* <MostViewed /> */}
     </PublicLayout>

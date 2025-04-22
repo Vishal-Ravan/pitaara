@@ -14,7 +14,7 @@ const breadcrumbsData = [
 ];
 const LoginPage = () => {
   return (
-    <PublicLayout breadcrumb={breadcrumbsData} breadcrumbTitle='Log In'>
+    <PublicLayout  breadcrumbTitle='Log In'>
       <Login />
     </PublicLayout>
   );

@@ -14,7 +14,7 @@ const breadcrumbsData = [
 ];
 const WishlistPage = () => {
   return (
-    <PublicLayout breadcrumb={breadcrumbsData} breadcrumbTitle='Wishlist'>
+    <PublicLayout  breadcrumbTitle='Wishlist'>
       <Wishlist />
       {/* <MostViewed /> */}
       <br/>
