@@ -36,7 +36,7 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
   }, []);
 
   const clearCart = () => {
-    localStorage.removeItem("cart");
+    localStorage.removeItem("cartData");
   };
 
   // Function to get user token (Auth token or Guest ID)
