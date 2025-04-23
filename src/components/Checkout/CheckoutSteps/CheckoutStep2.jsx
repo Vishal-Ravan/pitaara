@@ -50,51 +50,59 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
     }
   };
 
-  const placeOrder = async () => {
-    if (!isMounted.current) return;
-    setLoading(true);
-  
-    const token = getUserToken(); // Get either authToken or guestId
-    const isGuest = !localStorage.getItem("authToken"); // Check if it's a guest checkout
-  
-    const cartItems = JSON.parse(localStorage.getItem("cartData")) || [];
-  
-    try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/checkout`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          paymentMethod: "Online",
-          items: cartItems, // 🛒 Include cart items here
-          guestId: isGuest ? token : undefined, // Use guestId only for guest users
-          authToken: !isGuest ? token : undefined, // Use authToken only for logged-in users
-        }),
-      });
-  
-      const data = await response.json();
-      console.log("Order Response:", data);
-  
-      if (response.ok) {
-        if (isMounted.current) {
-          setAlertMessage("Order placed successfully!");
-          if (isGuest) {
-            clearCart(); // Only clear cart for guests
-          }
-          localStorage.setItem("orderDetails", JSON.stringify(data));
-          router.push("/orderconfirm");
-          setTimeout(() => isMounted.current && setAlertMessage(""), 3000);
-        }
-      } else {
-        if (isMounted.current) setAlertMessage(data.message || "Checkout failed");
-      }
-    } catch (error) {
-      if (isMounted.current) setAlertMessage("Something went wrong. Please try again.");
-    } finally {
-      if (isMounted.current) setLoading(false);
-    }
+const placeOrder = async () => {
+  if (!isMounted.current) return;
+  setLoading(true);
+
+  const token = getUserToken(); // Get either authToken or guestId
+  const isGuest = !localStorage.getItem("authToken"); // Check if it's a guest checkout
+
+  const cartItems = JSON.parse(localStorage.getItem("cartData")) || [];
+
+  const headers = {
+    "Content-Type": "application/json",
   };
+
+  // If user is logged in, add token to Authorization header
+  if (!isGuest) {
+    headers["Authorization"] = `Bearer ${token}`;
+  }
+
+  try {
+    const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/checkout`, {
+      method: "POST",
+      headers,
+      body: JSON.stringify({
+        paymentMethod: "Online",
+        items: cartItems,
+        guestId: isGuest ? token : undefined, // Only for guests
+        // Do NOT include authToken in body
+      }),
+    });
+
+    const data = await response.json();
+    console.log("Order Response:", data);
+
+    if (response.ok) {
+      if (isMounted.current) {
+        setAlertMessage("Order placed successfully!");
+        if (isGuest) {
+          clearCart(); // Only clear cart for guests
+        }
+        localStorage.setItem("orderDetails", JSON.stringify(data));
+        router.push("/orderconfirm");
+        setTimeout(() => isMounted.current && setAlertMessage(""), 3000);
+      }
+    } else {
+      if (isMounted.current) setAlertMessage(data.message || "Checkout failed");
+    }
+  } catch (error) {
+    if (isMounted.current) setAlertMessage("Something went wrong. Please try again.");
+  } finally {
+    if (isMounted.current) setLoading(false);
+  }
+};
+
   
 
   const handlePayment = async () => {
