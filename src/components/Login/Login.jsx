@@ -38,9 +38,12 @@ export const Login = () => {
       }
 
       // Store user data in localStorage
-      const userData = { email,name:data.name, token: data.token };
-      localStorage.setItem('user', JSON.stringify(userData));
+      const userData = { email:email,name:data.name, token: data.token };
       setUser(userData);
+      userData.id =data.id;
+      console.log(userData,'userdatat');
+      localStorage.setItem('user', JSON.stringify(userData));
+
       // console.log(userData,'kkkk')
 
       showAlert('Login successful!');

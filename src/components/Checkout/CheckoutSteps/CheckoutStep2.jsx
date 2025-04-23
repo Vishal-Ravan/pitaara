@@ -42,26 +42,24 @@ export const CheckoutStep2 = ({ onNext, onPrev }) => {
   // Function to get user token (Auth token or Guest ID)
   const getUserToken = () => {
     // Check if user is logged in (assuming token is stored in localStorage)
-    const userData = JSON.parse(localStorage.getItem("user"));
-    // return userData?.token || null;
-    // const authToken = localStorage.getItem("authToken");
-    if (userData) {
-      return userData?.token || null; // Logged-in user, use authToken
+    const authToken = JSON.parse(localStorage.getItem("user"));
+    if (authToken) {
+      return authToken; // Logged-in user, use authToken
     } else {
       return getGuestId(); // Guest checkout, use guest ID
     }
   };
 useEffect(()=>{
-  const token = getUserToken(); 
-    console.log(token,'ds')
+  const token = getUserToken(); // Get either authToken or guestId
+console.log(token.id,'ko')
+
 },[])
   const placeOrder = async () => {
     if (!isMounted.current) return;
     setLoading(true);
   
-    const token = getUserToken(); 
-    console.log(token,'ds')// Get either authToken or guestId
-    const isGuest = !localStorage.getItem("authToken"); // Check if it's a guest checkout
+    const token = getUserToken(); // Get either authToken or guestId
+    const isGuest = !localStorage.getItem("user"); // Check if it's a guest checkout
   
     const cartItems = JSON.parse(localStorage.getItem("cartData")) || [];
   
@@ -76,6 +74,7 @@ useEffect(()=>{
           items: cartItems, // 🛒 Include cart items here
           guestId: isGuest ? token : undefined, // Use guestId only for guest users
           authToken: !isGuest ? token : undefined, // Use authToken only for logged-in users
+          id:token.id
         }),
       });
   
