@@ -353,7 +353,7 @@ h6,
   }
 
   &-item {
-    margin: 0 15px;
+    margin: 0 5px;
     margin-bottom: 20px;
     // width: calc(25% - 30px);
     position: relative;
@@ -1505,8 +1505,8 @@ h6,
 // contacts-info
 
 .contacts-info {
-  padding-top: 240px;
-  padding-bottom: 74px;
+  padding-top: 90px;
+  padding-bottom: 24px;
 
   &__content {
     display: flex;
@@ -1608,7 +1608,7 @@ h6,
   }
 
   form {
-    margin-top: 44px;
+    margin-top: 15px;
 
     .box-field {
       margin-bottom: 10px;
@@ -5686,7 +5686,7 @@ input[type='search']::-webkit-search-results-decoration {
   }
 
   .main-text {
-    font-size: 58px;
+    font-size: 32px;
   }
 
   .main-block p {
@@ -6066,7 +6066,7 @@ input[type='search']::-webkit-search-results-decoration {
     max-width: 320px;
     justify-content: center;
     text-align: center;
-    max-height: 143px;
+    max-height: 243px;
     display: flex;
     flex-direction: column;
 
@@ -6138,8 +6138,8 @@ input[type='search']::-webkit-search-results-decoration {
   }
 
   .contacts-info {
-    padding-top: 60px;
-    padding-bottom: 60px;
+    padding-top: 10px;
+    padding-bottom: 0px;
   }
 
   .contacts-info__content {

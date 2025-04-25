@@ -20,7 +20,7 @@ const ContactPage = () => {
     <PublicLayout  breadcrumbTitle='Contact'>
       <ContactDetailBlock />
       <ContactInfo />
-      <BrandLogo />
+      {/* <BrandLogo /> */}
       <ContactForm />
       <Map />
     </PublicLayout>
