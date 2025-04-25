@@ -244,7 +244,7 @@ export const Cart = () => {
 
           <div className="cart-bottom__total">
             <div className="cart-bottom__total-goods">
-              Goods on <span>₹{total.toFixed(2)}</span>
+              Price <span>₹{total.toFixed(2)}</span>
             </div>
 
             {discount > 0 && (

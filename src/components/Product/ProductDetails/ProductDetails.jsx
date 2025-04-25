@@ -183,7 +183,7 @@ export const ProductDetails = () => {
             {alertMessage}
           </div>
         )}
-        <div className="wrapper" style={{ marginBottom: "70px" }}>
+        <div className="wrapper" style={{ marginBottom: "0px" }}>
           <div className="product-content">
             {/* Product Main Slider */}
             <div className="product-slider">

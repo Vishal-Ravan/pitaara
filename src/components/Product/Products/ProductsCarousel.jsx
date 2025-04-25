@@ -109,9 +109,9 @@ export const ProductsCarousel = ({ productsdata = [] }) => {
     nextArrow: <SlickArrowNext />,
     lazyLoad: "progressive",
     responsive: [
-      { breakpoint: 1200, settings: { slidesToShow: 4 } },
+      { breakpoint: 1200, settings: { slidesToShow: 3 } },
       { breakpoint: 1023, settings: { slidesToShow: 2 } },
-      { breakpoint: 650, settings: { slidesToShow: 1 } },
+      { breakpoint: 650, settings: { slidesToShow: 2 } },
     ],
   };
 

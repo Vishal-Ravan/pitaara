@@ -92,7 +92,7 @@ footer {
       width: 25%;
       &-title {
         display: block;
-        font-size: 24px;
+        font-size: 18px;
         line-height: 100%;
         text-transform: capitalize;
         color: #ffffff;
@@ -106,7 +106,7 @@ footer {
             margin-bottom: 0;
           }
           a {
-            color: #bbbbbb;
+            color: #ffffff;
             font-size: 16px;
             line-height: 170%;
             position: relative;
@@ -137,7 +137,7 @@ footer {
         ul {
           li {
             display: flex;
-            color: #bbbbbb;
+            color: #ffffff;
             line-height: 170%;
             margin-bottom: 19px;
             i {
@@ -156,7 +156,7 @@ footer {
               a {
                 display: block;
                 color: #ffffff;
-                font-size: 20px;
+                font-size: 16px;
                 margin-bottom: 8px;
                 line-height: normal;
                 &:hover {
@@ -174,7 +174,7 @@ footer {
     padding-bottom: 4px;
     font-size: 14px;
     line-height: 170%;
-    color: #999999;
+    color: #ffffff;
     text-align: center;
   }
 }
