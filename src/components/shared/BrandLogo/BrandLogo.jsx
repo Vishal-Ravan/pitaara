@@ -67,9 +67,9 @@ export const BrandLogo = () => {
     <div className="category-slider">
       <Slider {...settings}>
         {categories.map((item) => (
-          <div key={item.id} className="category-slide">
-            <a href={item.url}>
-              <div className="image-container">
+          <div key={item.id} className="category-slide" >
+            <a href={item.url} >
+              <div className="image-container"style={{ padding: '0 5px' }}>
                 <img src={item.imgSrc} alt={item.name} className="brand-logo"/>
               </div>
               <p className="category-name">{item.name}</p>

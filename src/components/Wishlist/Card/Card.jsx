@@ -139,7 +139,7 @@ export const Card = ({ wish }) => {
           <Link href={`/product/${id}`}>
             <a className="title5">{name}</a>
           </Link>
-          <span className="cart-table__info-num">SKU: {productNumber}</span>
+          {/* <span className="cart-table__info-num">SKU: {productNumber}</span> */}
         </div>
       </div>
       <div className="cart-table__col">

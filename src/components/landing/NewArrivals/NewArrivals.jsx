@@ -29,7 +29,7 @@ export const NewArrivals = () => {
   return (
     <>
       {/* <!-- BEGIN NEW ARRIVALS SECTION --> */}
-      <section className='arrivals pt-5 pb-5'>
+      <section className='arrivals  pb-5'>
         <SectionTitle
           subTitle='Cosmetics'
           title='New arrivals'

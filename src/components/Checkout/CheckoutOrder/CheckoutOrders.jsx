@@ -35,7 +35,7 @@ export const CheckoutOrders = () => {
       </div>
       <div className='cart-bottom__total'>
         <div className='cart-bottom__total-goods'>
-          Goods on
+          Total Price (including tax):
           <span>₹{cartTotal.toFixed(2)}</span>
         </div>
         {/* <div className='cart-bottom__total-promo'>
@@ -50,7 +50,7 @@ export const CheckoutOrders = () => {
           <span>₹30</span>
         </div> */}
         <div className='cart-bottom__total-num'>
-          total:
+          To Pay:
           <span>₹{cartTotal.toFixed(2)}</span>
         </div>
       </div>

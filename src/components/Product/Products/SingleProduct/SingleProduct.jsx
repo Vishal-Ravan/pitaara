@@ -20,14 +20,26 @@ export const SingleProduct = ({
         <div className="products-item__img">
         <Link href={`/product/${_id}`} >
 
-          {images && images.length > 0 ? (
-            <img
-              src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${images[0]}`}
-              alt="Product"
-            />
-          ) : (
-            <div className="placeholder">No Image Available</div>
-          )}
+        <div className="product-img-container">
+              {images && images.length > 0 ? (
+                <>
+                  <img
+                    src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${images[0]}`}
+                    alt="Product"
+                    className="main-image"
+                  />
+                  {images.length > 1 && (
+                    <img
+                      src={`${process.env.NEXT_PUBLIC_API_BASE_URL}${images[1]}`}
+                      alt="Product"
+                      className="hover-image"
+                    />
+                  )}
+                </>
+              ) : (
+                <div className="placeholder">No Image Available</div>
+              )}
+            </div>
           </Link>
           <div className="products-item__data" title="Add to wishlist">
         
@@ -50,7 +62,7 @@ export const SingleProduct = ({
           </Link>
           <Link href={`/product/${_id}`}>
             <a>
-              <span className="products-item__name">{name}</span>
+              <span className="products-item__name">  {name?.length > 15 ? name.slice(0, 15) + "..." : name}</span>
             </a>
           </Link>
 
