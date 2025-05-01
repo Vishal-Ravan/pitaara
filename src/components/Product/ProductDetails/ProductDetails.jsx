@@ -246,9 +246,7 @@ export const ProductDetails = () => {
               </span>
 
               {/* <span className="product-num">Quantity: {product.quantity}</span> */}
-              <span className="product-num">
-                Dimension : {product.dimensions}
-              </span>
+             
               <span className="product-price"> ₹{product.price} </span>
 
               <p>{product.description}</p>
@@ -260,7 +258,13 @@ export const ProductDetails = () => {
                     <span>{product.color}</span>
                   </h5>
                 </div>
-
+                {product.dimensions && <div className="product-info__color">
+                  <span>Dimension:</span>
+                  <h5>
+                    <span>{product.dimensions}</span>
+                  </h5>
+                </div>}
+                
                 <div className="product-info__color">
                   <span>Material:</span>
                   <h5>

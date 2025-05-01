@@ -19,7 +19,6 @@ const WishlistPage = () => {
       {/* <MostViewed /> */}
       <br/>
       <br/>
-      <br/>
     </PublicLayout>
   );
 };

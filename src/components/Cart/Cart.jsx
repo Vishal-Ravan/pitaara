@@ -1,7 +1,5 @@
 import { Card } from "./Card/Card";
-import socialData from "data/social";
-import { useEffect, useState } from "react";
-import Link from "next/link";
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 
 export const Cart = () => {
@@ -13,9 +11,27 @@ export const Cart = () => {
   const [gst, setGst] = useState(0);
   const [token, setToken] = useState(null);
   const [guestId, setGuestId] = useState(null);
-  const socialLinks = [...socialData];
   const router = useRouter();
+  const ref = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
 
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.unobserve(entry.target); // Remove if you only want the animation once
+        }
+      },
+      { threshold: 0.2 } // Trigger when 10% of the component is visible
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
   // Get token and guestId only on client side
   useEffect(() => {
     if (typeof window !== "undefined") {
@@ -120,24 +136,27 @@ export const Cart = () => {
 
     // Log promo usage
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/api/promocode-log`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userId: token ? JSON.parse(localStorage.getItem("user"))._id : null,
-          guestId: token ? null : guestId,
-          promoCode: code,
-          cartItems: cartData.map((item) => ({
-            productId: item.productId._id,
-            name: item.productId.name,
-            quantity: item.quantity,
-            price: item.productId.price,
-          })),
-          timestamp: new Date(),
-        }),
-      });
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_BASE_URL}/api/promocode-log`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            userId: token ? JSON.parse(localStorage.getItem("user"))._id : null,
+            guestId: token ? null : guestId,
+            promoCode: code,
+            cartItems: cartData.map((item) => ({
+              productId: item.productId._id,
+              name: item.productId.name,
+              quantity: item.quantity,
+              price: item.productId.price,
+            })),
+            timestamp: new Date(),
+          }),
+        }
+      );
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -152,7 +171,7 @@ export const Cart = () => {
   // Checkout
   const handleCheckout = () => {
     localStorage.setItem("cartData", JSON.stringify(cartData));
-  
+
     router.push({
       pathname: "/checkout",
       query: {
@@ -162,9 +181,12 @@ export const Cart = () => {
       },
     });
   };
-  
 
   return (
+    <div
+    ref={ref}
+    className={`scroll-right-to-left ${isVisible ? 'visible' : ''}`}
+  >
     <div className="cart">
       <div className="wrapper">
         <div className="cart-table">
@@ -179,29 +201,34 @@ export const Cart = () => {
 
             {cartData.map((cartItem) => (
               <>
-              <Card
-                key={cartItem._id}
-                onRemove={handleRemoveItem}
-                cart={{
-                  id: cartItem.productId._id,
-                  name: cartItem.productId.name,
-                  image: cartItem.productId.images?.[0] || "/default-image.jpg",
-                  isStocked: cartItem.productId.isStocked || false,
-                  productNumber: cartItem.productId.productNumber || "N/A",
-                  oldPrice: cartItem.productId.oldPrice || null,
-                  price: cartItem.productId.price,
-                  stock: cartItem.productId.stock ,
-                  quantity: cartItem.quantity,
-                }}
-                onChangeQuantity={handleQuantityChange}
-              />
-           </> ))}
+                <Card
+                  key={cartItem._id}
+                  onRemove={handleRemoveItem}
+                  cart={{
+                    id: cartItem.productId._id,
+                    name: cartItem.productId.name,
+                    image:
+                      cartItem.productId.images?.[0] || "/default-image.jpg",
+                    isStocked: cartItem.productId.isStocked || false,
+                    productNumber: cartItem.productId.productNumber || "N/A",
+                    oldPrice: cartItem.productId.oldPrice || null,
+                    price: cartItem.productId.price,
+                    stock: cartItem.productId.stock,
+                    quantity: cartItem.quantity,
+                  }}
+                  onChangeQuantity={handleQuantityChange}
+                />
+              </>
+            ))}
           </div>
         </div>
 
         <div className="cart-bottom">
           <div className="cart-bottom__promo">
-            <form className="cart-bottom__promo-form" onSubmit={handlePromoSubmit}>
+            <form
+              className="cart-bottom__promo-form"
+              onSubmit={handlePromoSubmit}
+            >
               <div className="box-field__row">
                 <div className="box-field">
                   <input
@@ -212,13 +239,19 @@ export const Cart = () => {
                     onChange={(e) => setPromoCode(e.target.value)}
                   />
                 </div>
-                <button type="submit" className="btn btn-grey">apply code</button>
+                <button type="submit" className="btn btn-grey">
+                  apply code
+                </button>
               </div>
               {promoMessage && (
                 <div
                   style={{
                     marginTop: "10px",
-                    color: promoMessage.includes("Invalid") || promoMessage.includes("log in") ? "red" : "green",
+                    color:
+                      promoMessage.includes("Invalid") ||
+                      promoMessage.includes("log in")
+                        ? "red"
+                        : "green",
                   }}
                 >
                   {promoMessage}
@@ -227,7 +260,9 @@ export const Cart = () => {
             </form>
 
             <h6>How to get a promo code?</h6>
-            <p>Follow our news and social media for the latest codes and offers.</p>
+            <p>
+              Follow our news and social media for the latest codes and offers.
+            </p>
             {/* <div className="contacts-info__social">
               <span>Find us here:</span>
               <ul>
@@ -276,6 +311,7 @@ export const Cart = () => {
           </div>
         </div>
       </div>
+    </div>
     </div>
   );
 };

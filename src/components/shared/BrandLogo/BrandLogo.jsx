@@ -5,7 +5,32 @@ import {
   SlickArrowNext,
   SlickArrowPrev,
 } from "components/utils/SlickArrows/SlickArrows";
+import { useEffect, useRef, useState } from "react";
 export const BrandLogo = () => {
+
+
+  const ref = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.unobserve(entry.target); // Remove if you only want the animation once
+        }
+      },
+      { threshold: 0.2 } // Trigger when 10% of the component is visible
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
+
   const categories = [
     {
       id: 1,
@@ -64,7 +89,11 @@ export const BrandLogo = () => {
   };
 
   return (
-    <div className="category-slider">
+    <div
+    ref={ref}
+    className={`scroll-fade-in ${isVisible ? 'visible' : ''}`}
+  >
+    <div className="category-slider" >
       <Slider {...settings}>
         {categories.map((item) => (
           <div key={item.id} className="category-slide" >
@@ -77,6 +106,7 @@ export const BrandLogo = () => {
           </div>
         ))}
       </Slider>
+    </div>
     </div>
   );
 };

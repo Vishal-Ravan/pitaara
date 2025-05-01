@@ -1,4 +1,4 @@
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import { useRouter } from "next/router";
 import { Products } from "components/Product/Products/Products";
 import ReactDropdown from "react-dropdown";
@@ -9,7 +9,8 @@ const sortOptions = [
 ];
 
 export const Shop = () => {
-  const router = useRouter();
+  const router = useRouter();  const ref = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
   const [productsItem, setProductsItem] = useState([]);
   const [filteredProducts, setFilteredProducts] = useState([]);
   const [sortOrder, setSortOrder] = useState("highToLow");
@@ -84,8 +85,30 @@ export const Shop = () => {
     }, undefined, { shallow: true });
   };
 
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.unobserve(entry.target); // Remove if you only want the animation once
+        }
+      },
+      { threshold: 0.2 } // Trigger when 10% of the component is visible
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
   return (
-    <div>
+    <div
+    ref={ref}
+    className={`scroll-right-to-left ${isVisible ? 'visible' : ''}`}
+  >
       <div className="shop">
         <div className="wrapper">
           <div className="shop-content">

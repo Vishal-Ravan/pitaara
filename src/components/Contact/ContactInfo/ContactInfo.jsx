@@ -9,17 +9,9 @@ export const ContactInfo = () => {
         <div className='wrapper'>
           <div className='contacts-info__content'>
             <div className='contacts-info__text'>
-              <h4>We take care of you</h4>
+              <h4>Let's Connect</h4>
               <p>
-                Email us if you have any questions, we will be sure to contact
-                you and find a solution. Also, our managers will help you choose
-                the product that suits you best, at the best price. From year to
-                year, the BeShop network develops and improves, taking into
-                account all consumer needs and market trends. But for us, the
-                concern remains that when coming to the BeShop store, customers
-                do not have questions about the convenience and comfort of
-                shopping, product quality and the level of professionalism of
-                sales consultants.
+              We’d love to hear from you! Whether you have a question about the products, need help with your order, or want to share your thoughts, our team is here to assist. Contact us through the mentioned contact number & email ID or social media channels, and we’ll get back to you as soon as possible. At Pittara, we’re committed to making your jewellery experience smooth, sparkling, and special—just like you.
               </p>
             </div>
             <div className='contacts-info__social'>

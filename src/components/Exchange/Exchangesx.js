@@ -10,7 +10,7 @@ export const Exchange = () => {
             <p>
               We want you to fall in love with every piece you order! However,
               if you wish to return or exchange a product, we’ve made the
-              process simple and quick— <b><a href="https://api.whatsapp.com/send?phone=919220557803&text=Hello!%F0%9F%A4%A9%20I%20want%20to%20place%20an%20order%20%26%20know%20about%20any%20exclusive%20deals%20or%20discounts%F0%9F%98%8D" title="+919220557803" target="_blank">via WhatsApp only.</a></b>
+              process simple and quick— <b><a href="https://api.whatsapp.com/send?phone=919220557803&text=Hello!%F0%9F%A4%A9%20I%20want%20to%20place%20an%20order%20%26%20know%20about%20any%20exclusive%20deals%20or%20discounts%F0%9F%98%8D" title="+919220557803" target="_blank">via WhatsApp only</a></b> (+91 9220557803) .
             </p>
 
             <ul>

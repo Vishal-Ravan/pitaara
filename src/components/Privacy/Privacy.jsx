@@ -146,9 +146,9 @@ export const PrivacyPolicy = () => {
               accounting, or regulatory obligations.
             </p>
             <p>
-            You may request deletion of your account or data by contacting info@pittara.co.in. 
-              <a href="mailto:support@pittara.co.in" target="_blank">
-                <b>support@pittara.co.in.</b>
+            You may request deletion of your account or data by contacting {' '} 
+              <a href="mailto:info@pittara.co.in" target="_blank">
+                <b>info@pittara.co.in.</b>
               </a>
             </p>
             <h6>7. Your Rights</h6>
@@ -162,7 +162,7 @@ export const PrivacyPolicy = () => {
               </li>
 
               <p>
-              To exercise these rights, email us at 
+              To exercise these rights, email us at  {" "}
                 <a href="mailto:info@pittara.co.in" target="_blank">
                   <b>info@pittara.co.in.</b>
                 </a>

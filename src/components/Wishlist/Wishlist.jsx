@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Card } from "./Card/Card";
 import Link from "next/link";
 
@@ -20,6 +20,26 @@ export const Wishlist = () => {
     }
     return guestId;
   };
+  const ref = useRef(null);
+  const [isVisible, setIsVisible] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          setIsVisible(true);
+          observer.unobserve(entry.target); // Remove if you only want the animation once
+        }
+      },
+      { threshold: 0.2 } // Trigger when 10% of the component is visible
+    );
+
+    if (ref.current) {
+      observer.observe(ref.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const fetchWishlist = async () => {
@@ -59,40 +79,45 @@ export const Wishlist = () => {
   }, []);
 
   return (
-    <div className="wishlist">
-      <div className="wrapper">
-        <div className="cart-table">
-          <div className="cart-table__box">
-            <div className="cart-table__row cart-table__row-head">
-              <div className="cart-table__col">Product</div>
-              <div className="cart-table__col">Price</div>
-              <div className="cart-table__col">Action</div>
-              <div className="cart-table__col">Add to Cart</div>
-            </div>
+    <div
+      ref={ref}
+      className={`scroll-right-to-left ${isVisible ? "visible" : ""}`}
+    >
+      <div className="wishlist">
+        <div className="wrapper">
+          <div className="cart-table">
+            <div className="cart-table__box">
+              <div className="cart-table__row cart-table__row-head">
+                <div className="cart-table__col">Product</div>
+                <div className="cart-table__col">Price</div>
+                <div className="cart-table__col">Action</div>
+                <div className="cart-table__col">Add to Cart</div>
+              </div>
 
-            {wishlistData.length > 0 ? (
-              wishlistData.map((product) => (
-                <Card
-                  key={product._id}
-                  wish={{
-                    id: product._id,
-                    name: product.name,
-                    image: product.images || "/default-image.jpg",
-                    isStocked: product.stock || false,
-                    productNumber: product.productNumber || "N/A",
-                    price: product.price,
-                  }}
-                />
-              ))
-            ) : (
-              <p>No items in wishlist</p>
-            )}
+              {wishlistData.length > 0 ? (
+                wishlistData.map((product) => (
+                  <Card
+                    key={product._id}
+                    wish={{
+                      id: product._id,
+                      name: product.name,
+                      image: product.images || "/default-image.jpg",
+                      isStocked: product.stock || false,
+                      productNumber: product.productNumber || "N/A",
+                      price: product.price,
+                    }}
+                  />
+                ))
+              ) : (
+                <p>No items in wishlist</p>
+              )}
+            </div>
           </div>
-        </div>
-        <div className="wishlist-buttons">
-          <Link href="/shop">
-            <a className="btn">Go Shopping</a>
-          </Link>
+          <div className="wishlist-buttons">
+            <Link href="/cart">
+              <a className="btn">Go Shopping</a>
+            </Link>
+          </div>
         </div>
       </div>
     </div>
