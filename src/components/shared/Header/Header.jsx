@@ -9,7 +9,8 @@ import { useRouter } from "next/router";
 
 export const Header = () => {
   const { user, setUser } = useContext(AuthContext);
-  const [promo, setPromo] = useState(true);
+  const [promo, setPromo] = useState(true);const [showSearch, setShowSearch] = useState(false);
+
   const [fixedNav, setFixedNav] = useState(false);
   const [searchInput, setSearchInput] = useState("");
   const [openMenu, setOpenMenu] = useState(false);
@@ -317,7 +318,7 @@ export const Header = () => {
             </form>
           </div>
      
-          <div style={{ right: openMenu ? 0 : -360 }} className="header-box">
+          <div  >
             <ul className="header-options">
               <li>
                 {user ? (
@@ -375,14 +376,7 @@ export const Header = () => {
             </ul>
           </div>
 
-          <div
-            onClick={() => setOpenMenu(!openMenu)}
-            className={`btn-menu js-btn-menu ${openMenu ? "active" : ""}`}
-          >
-            {[1, 2, 3].map((i) => (
-              <span key={i}>&nbsp;</span>
-            ))}
-          </div>
+          
         </div>
       </header>
 
