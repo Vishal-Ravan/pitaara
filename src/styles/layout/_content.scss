@@ -2853,7 +2853,7 @@ blockquote,
 
       img {
         width: 100%;
-        height: 456px;
+        height: 560px;
         object-fit: cover;
       }
     }
@@ -2874,7 +2874,6 @@ blockquote,
         &:after {
           position: absolute;
           width: 100%;
-          height: 100%;
           top: 0;
           left: 0;
           content: "";
