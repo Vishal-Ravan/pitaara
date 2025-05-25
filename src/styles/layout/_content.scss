@@ -2884,8 +2884,8 @@ blockquote,
 
         img {
           width: 100%;
-          height: 80%;
-          object-fit: cover;
+          height: 100%;
+          // object-fit: cover;
         }
 
         &:hover {
@@ -7079,7 +7079,7 @@ input[type="search"]::-webkit-search-results-decoration {
   }
 
   .product-slider__main img {
-    height: 260px;
+    height: 390px;
   }
   .detail-block.detail-block_margin.contact {
     padding-top: 130px;
@@ -7317,7 +7317,7 @@ span.error {
   transform: scale(1.05); /* Slight zoom effect */
 }
 .products-item__img img {
-  height: 330px !important;
+  height: 200px !important;
 }
 
 /* styles.css */
