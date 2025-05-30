@@ -38,6 +38,9 @@ export const OrderConfirm = () => {
   const invoiceDate = new Date().toLocaleDateString();
   let grandTotal = 0;
 
+ const isDelhi = (orderDetails.shippingAddress?.state || "").trim().toLowerCase() === "Haryana";
+
+
   return (
     <div style={styles.container}>
       <div ref={invoiceRef} style={styles.invoiceBox}>
@@ -62,7 +65,6 @@ export const OrderConfirm = () => {
           Status: <span style={{ fontWeight: "normal" }}>{orderDetails.orders?.message || "Order placed successfully"}</span>
         </p>
         <p><strong>Order ID:</strong> {orderDetails.orderId}</p>
-        {/* <p><strong>Total Amount:</strong> {orderDetails.totalAmount}</p> */}
         <p><strong>Payment Method:</strong> {orderDetails.paymentMethod}</p>
 
         {/* Addresses */}
@@ -119,13 +121,26 @@ export const OrderConfirm = () => {
                 <td colSpan="5" style={{ ...styles.td, textAlign: "right", fontWeight: "bold" }}>Subtotal</td>
                 <td style={styles.td}>₹{grandTotal.toFixed(2)}</td>
               </tr>
+              {isDelhi ? (
+                <>
+                  <tr>
+                    <td colSpan="5" style={{ ...styles.td, textAlign: "right", fontWeight: "bold" }}>SGST (1.5%)</td>
+                    <td style={styles.td}>₹{(grandTotal * 0.015).toFixed(2)}</td>
+                  </tr>
+                  <tr>
+                    <td colSpan="5" style={{ ...styles.td, textAlign: "right", fontWeight: "bold" }}>CGST (1.5%)</td>
+                    <td style={styles.td}>₹{(grandTotal * 0.015).toFixed(2)}</td>
+                  </tr>
+                </>
+              ) : (
+                <tr>
+                  <td colSpan="5" style={{ ...styles.td, textAlign: "right", fontWeight: "bold" }}>IGST (3%)</td>
+                  <td style={styles.td}>₹{(grandTotal * 0.03).toFixed(2)}</td>
+                </tr>
+              )}
               <tr>
-                <td colSpan="5" style={{ ...styles.td, textAlign: "right", fontWeight: "bold" }}>GST (3%)</td>
-                <td style={styles.td}>₹{(grandTotal * 0.03).toFixed(2)}</td>
-              </tr>
-              <tr>
-                <td colSpan="5" style={{ ...styles.td, textAlign: "right", fontWeight: "bold" }}>Total (Incl. GST)</td>
-                <td style={{ ...styles.td, fontWeight: "bold" }}>₹{(grandTotal * 1.03).toFixed(2)}</td>
+                <td colSpan="5" style={{ ...styles.td, textAlign: "right", fontWeight: "bold" }}>Total (Incl.Tax)</td>
+                <td style={{ ...styles.td, fontWeight: "bold" }}>₹{isDelhi ? (grandTotal * 1.03).toFixed(2) : (grandTotal * 1.03).toFixed(2)}</td>
               </tr>
             </tbody>
           </table>
@@ -188,7 +203,6 @@ const styles = {
   rightHeader: {
     flex: 1,
     minWidth: "200px",
-    // textAlign: "right",
   },
   logo: {
     width: "200px",
@@ -229,13 +243,13 @@ const styles = {
   th: {
     border: "1px solid #ccc",
     padding: "10px",
-    fontSize:"12px",
+    fontSize: "12px",
     textAlign: "left",
   },
   td: {
     border: "1px solid #ccc",
     padding: "10px",
-    fontSize:"12px"
+    fontSize: "12px",
   },
   footer: {
     display: "flex",

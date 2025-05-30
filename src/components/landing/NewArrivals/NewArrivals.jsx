@@ -32,12 +32,9 @@ export const NewArrivals = () => {
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.unobserve(entry.target); // Remove if you only want the animation once
-        }
+        setIsVisible(entry.isIntersecting);
       },
-      { threshold: 0.2 } // Trigger when 10% of the component is visible
+      { threshold: 0.2 }
     );
 
     if (ref.current) {

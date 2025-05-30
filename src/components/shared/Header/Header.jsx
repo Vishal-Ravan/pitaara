@@ -19,6 +19,14 @@ export const Header = () => {
   const [whishlistCount, setWhishlistCount] = useState(0);
   const router = useRouter();
   const [alertMessage, setAlertMessage] = useState(null);
+const [isMobile, setIsMobile] = useState(false);
+
+useEffect(() => {
+  const checkMobile = () => setIsMobile(window.innerWidth <= 768);
+  checkMobile();
+  window.addEventListener("resize", checkMobile);
+  return () => window.removeEventListener("resize", checkMobile);
+}, []);
 
   const showAlert = (message) => {
     setAlertMessage(message);
@@ -302,21 +310,58 @@ export const Header = () => {
               </a>
             </Link>
           </div>
-          <div className="header-search">
-            <form onSubmit={handleSearch}>
-              <input
-                type="text"
-                value={searchInput}
-                onChange={(e) => setSearchInput(e.target.value)}
-                placeholder="Search products..."
-                className="search-input"
-              />
-              <button type="submit" className="">  <i
-                className="icon-search"
-              ></i></button>
-            
-            </form>
-          </div>
+        <div className="header-search">
+  {isMobile ? (
+    !showSearch ? (
+      <button
+        type="button"
+        onClick={() => setShowSearch(true)}
+        className="search-icon-button"
+      >
+        <i className="icon-search"></i>
+      </button>
+    ) : (
+      <form onSubmit={handleSearch} className="search-form">
+        <input
+          type="text"
+          value={searchInput}
+          onChange={(e) => setSearchInput(e.target.value)}
+          placeholder="Search products..."
+          className="search-input"
+          autoFocus
+        />
+        <button type="submit">
+          <i className="icon-search"></i>
+        </button>
+        <button
+          type="button"
+          onClick={() => {
+            setShowSearch(false);
+            setSearchInput("");
+          }}
+          className="search-close-button"
+        >
+          ✕
+        </button>
+      </form>
+    )
+  ) : (
+    // Desktop view: always show input
+    <form onSubmit={handleSearch} className="search-form">
+      <input
+        type="text"
+        value={searchInput}
+        onChange={(e) => setSearchInput(e.target.value)}
+        placeholder="Search products..."
+        className="search-input"
+      />
+      <button type="submit">
+        <i className="icon-search"></i>
+      </button>
+    </form>
+  )}
+</div>
+
      
           <div  >
             <ul className="header-options">
@@ -324,7 +369,7 @@ export const Header = () => {
                 {user ? (
                   <Link href="/profile">
                     <a className="user-icons">
-                      <i className="icon-user">{user.name}</i>
+                      <i className="icon-user" title={user.name}>{user.name.slice(0,6)}</i>
                       {/* <p>Account</p> */}
                     </a>
                   </Link>

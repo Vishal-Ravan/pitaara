@@ -3,7 +3,7 @@ import Link from "next/link";
 
 export const Banner = () => {
   const settings = {
-    dots: true,
+    dots: false,
     infinite: true,
     autoplay: true,
     autoplaySpeed: 3000,
@@ -21,13 +21,13 @@ export const Banner = () => {
           style={{
             backgroundImage: "url(/assets/img/5.png)",
             backgroundSize: "cover",
+            backgroundRepeat:"no-repeat",
             backgroundPosition: "center",
-            minHeight: "640px",
-            height: "640px",
+            height:"100%",
             marginTop: "100px",
             width: "100%",
           }}
-        ></div>
+        ><div className="banner-dv"></div></div>
       </div>{" "}
       <div className="">
         <div
@@ -35,13 +35,13 @@ export const Banner = () => {
           style={{
             backgroundImage: "url(/assets/img/6.png)",
             backgroundSize: "cover",
+            backgroundRepeat:"no-repeat",
             backgroundPosition: "center",
-            minHeight: "640px",
-            height: "640px",
+            height:"100%",
             marginTop: "100px",
             width: "100%",
           }}
-        ></div>
+        ><div className="banner-dv"></div></div>
       </div>
       <div className="">
         <div
@@ -49,13 +49,13 @@ export const Banner = () => {
           style={{
             backgroundImage: "url(/assets/img/7.png)",
             backgroundSize: "cover",
+            backgroundRepeat:"no-repeat",
             backgroundPosition: "center",
-            minHeight: "640px",
-            height: "640px",
+            height:"100%",
             marginTop: "100px",
             width: "100%",
           }}
-        ></div>
+        ><div className="banner-dv"></div></div>
       </div>
       <div className="">
         <div
@@ -63,13 +63,13 @@ export const Banner = () => {
           style={{
             backgroundImage: "url(/assets/img/8.png)",
             backgroundSize: "cover",
+            backgroundRepeat:"no-repeat",
             backgroundPosition: "center",
-            minHeight: "640px",
-            height: "640px",
+            height:"100%",
             marginTop: "100px",
             width: "100%",
           }}
-        ></div>
+        ><div className="banner-dv"></div></div>
       </div>
       {/* Slide 4 */}
     </Slider>

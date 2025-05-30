@@ -24,18 +24,16 @@ export const Trending = () => {
 
     fetchTrendingProducts();
   }, []);
+
   const ref = useRef(null);
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.unobserve(entry.target); // Remove if you only want the animation once
-        }
+        setIsVisible(entry.isIntersecting);
       },
-      { threshold: 0.2 } // Trigger when 10% of the component is visible
+      { threshold: 0.2 }
     );
 
     if (ref.current) {
@@ -49,10 +47,10 @@ export const Trending = () => {
     <>
       {/* <!-- BEGIN TRENDING --> */}
       <section className="trending pt-5">
-      <div
-      ref={ref}
-      className={`scroll-right-to-left ${isVisible ? 'visible' : ''}`}
-    >
+        <div
+          ref={ref}
+          className={`scroll-right-to-left ${isVisible ? 'visible' : ''}`}
+        >
           <div className="trending-content">
             <SectionTitle
               subTitle="Shop The Style"
