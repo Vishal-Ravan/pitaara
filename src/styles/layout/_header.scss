@@ -469,14 +469,14 @@ header {
   gap: 5px;
   justify-content: center;
   border-radius: 5px;
-  width: 100%;
+  // width: 100%;
   top: 100%;
   left: 0%;
   margin: 0 auto;
 }
 
 .header-search form {
-  width: 70%;
+  width: 100%;
   background-color: #ffffff;
   padding: 5px;
   box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
@@ -537,7 +537,7 @@ header {
 }
 
 .category-slider {
-  width: 90%;
+  width: 100%;
   padding-top: 40px;
   padding-bottom: 0px;
   margin: auto;
@@ -548,8 +548,8 @@ header {
 }
 
 .image-container {
-  width: 250px !important;
-  height: 250px !important;
+  width: 350px !important;
+  height: 350px !important;
 }
 
 .category-slide {
@@ -913,6 +913,7 @@ a.user-icons.wh span {
   background: none;
   border: none;
   font-size: 16px;
+  color: #42203f;
   cursor: pointer;
 }
 

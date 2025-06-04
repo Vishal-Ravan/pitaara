@@ -9,6 +9,7 @@ import { TopCategories } from 'components/landing/TopCategories/TopCategories';
 import { Trending } from 'components/landing/Trending/Trending';
 import { Subscribe } from 'components/shared/Subscribe/Subscribe';
 import { Layout } from 'layout/Layout';
+import { Testimonials } from 'components/shared/Tesimonials/Tesimonials';
 
 export default function Home() {
   return (
@@ -23,6 +24,8 @@ export default function Home() {
       {/* <TopCategories /> */}
       {/* <Info /> */}
       <NewArrivals />
+      <Testimonials />
+
       {/* <LatestNews /> */}
       {/* <Subscribe /> */}
     </Layout>

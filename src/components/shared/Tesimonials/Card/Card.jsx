@@ -4,10 +4,10 @@ export const Card = ({ testimonial }) => {
     <>
       {/* <!-- BEING TESTIMONIALS SLIDE CARD --> */}
       <div className='testimonials-slide'>
-        <p>{body}</p>
+        {/* <p>{body}</p> */}
         <div className='testimonials-author'>
           <img src={image} className='js-img' alt='' />
-          <h5>{name}</h5>
+          {/* <h5>{name}</h5> */}
         </div>
       </div>
       {/* <!-- TESTIMONIALS SLIDE CARD EOF --> */}
