@@ -7159,8 +7159,15 @@ input[type="search"]::-webkit-search-results-decoration {
     background-size: contain !important;
   }
   .image-container {
-    width: 190px !important;
-    height: 190px !important;
+    width: 105px !important;
+    height: 105px !important;
+  }
+  .category-slide{
+    padding: 0px;
+  }
+ 
+  .category-name{
+    font-size: 15px;
   }
 }
 
@@ -7175,13 +7182,18 @@ input[type="search"]::-webkit-search-results-decoration {
   .product .product-slider__nav .slick-initialized .slick-slide {
     width: 95px !important;
 }
+ .slick-slider{
+    width: 100% !important;
+    padding-left: 15px;
+    margin: 0 auto !important;
+  }
 .testimonials-author img {
     max-height: 500px;
-    height: 400px;
+    height: 270px;
     max-width: 500px;
-    width: 98%;
+    width: 100%;
     border: 1px solid #ddd;
-    object-fit: cover !important;
+    object-fit: contain !important;
     margin: 0 auto;
     padding: 10px;
     margin-bottom: 11px;
