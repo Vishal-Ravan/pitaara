@@ -7182,7 +7182,7 @@ input[type="search"]::-webkit-search-results-decoration {
   .product .product-slider__nav .slick-initialized .slick-slide {
     width: 95px !important;
 }
- .slick-slider{
+ .category-slider .slick-slider{
     width: 100% !important;
     padding-left: 15px;
     margin: 0 auto !important;
@@ -7197,6 +7197,9 @@ input[type="search"]::-webkit-search-results-decoration {
     margin: 0 auto;
     padding: 10px;
     margin-bottom: 11px;
+}
+.category-slider{
+  padding-top: 2px !important;
 }
 .products-item__img img {
   height: 200px !important;

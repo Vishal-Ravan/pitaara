@@ -47,7 +47,7 @@ export const BrandLogo = () => {
       { breakpoint: 1640, settings: { slidesToShow: 3.1 } },
       { breakpoint: 1200, settings: { slidesToShow: 2 } },
       { breakpoint: 992, settings: { slidesToShow: 2 } },
-      { breakpoint: 768, settings: { slidesToShow: 2 } },
+      { breakpoint: 768, settings: { slidesToShow: 3 } },
       { breakpoint: 480, settings: { slidesToShow: 4 } },
     ],
   };
