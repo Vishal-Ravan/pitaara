@@ -396,7 +396,7 @@ useEffect(() => {
               <li>
                 <Link href="/cart">
                   <a className="user-icons">
-                    <img src="/assets/img/add-to-cart.png" alt="" width={25} />
+                    <img src="/assets/img/add-to-cart.png" alt="" width={18} />
                     <span>{cartCount}</span>
                     <p>Cart</p>
                   </a>

@@ -7255,7 +7255,12 @@ input[type="search"]::-webkit-search-results-decoration {
 }
 
 // vishal **************
-
+@media screen and (max-width: 370px) {
+  .category-slide .image-container{
+    width: 90px !important;
+    height: 90px !important;
+  }
+}
 .shop-all {
   display: flex;
   justify-content: center;
