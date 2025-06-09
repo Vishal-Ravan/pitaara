@@ -33,7 +33,7 @@ export const AboutDiscount = () => {
         </div>
         <div className={styles.imageBlock}>
           <img
-            src="https://cdn.shopify.com/s/files/1/0145/1684/6692/files/our-story-1.jpg?4316131069318019975"
+            src="/assets/img/a.png"
             alt="Founders"
             className={styles.image}
           />
@@ -43,7 +43,7 @@ export const AboutDiscount = () => {
       <section className={styles.another}>
         <div className={styles.imageBlock}>
           <img
-            src="https://cdn.shopify.com/s/files/1/0145/1684/6692/files/our-story-1.jpg?4316131069318019975"
+            src="/assets/img/b.png"
             alt="Founders"
             className={styles.image}
           />
@@ -51,9 +51,9 @@ export const AboutDiscount = () => {
         <div className={styles.expectSection}>
           <h3>What to Expect When You Shop?</h3>
           <ul>
-            <li>✔️ Insta-worthy packaging</li>
-            <li>✔️ Pieces that don’t flake on you</li>
-            <li>✔️ A jewellery stash that slaps harder than your playlist</li>
+            <li> Insta-worthy packaging</li>
+            <li> Pieces that don’t flake on you</li>
+            <li> A jewellery stash that slaps harder than your playlist</li>
           </ul>
         </div>
       </section>
@@ -64,7 +64,6 @@ export const AboutDiscount = () => {
           <h3>OUR VALUES</h3>
           <div className={styles.valueGrid}>
             <div className={styles.valueBox}>
-              <span>01</span>
               <div>
                 <h5>Stay Sassy, Stay Classy</h5>
                 <p>
@@ -75,7 +74,6 @@ export const AboutDiscount = () => {
               </div>
             </div>
             <div className={styles.valueBox}>
-              <span>02</span>
               <div>
                 <h5>Glow Up, Every Day</h5>
                 <p>
@@ -86,7 +84,6 @@ export const AboutDiscount = () => {
               </div>
             </div>
             <div className={styles.valueBox}>
-              <span>03</span>
               <div>
                 <h5>Shine for Your Tribe</h5>
                 <p>
@@ -100,7 +97,7 @@ export const AboutDiscount = () => {
         </div>
         <div className={styles.imageBlock}>
           <img
-            src="https://cdn.shopify.com/s/files/1/0145/1684/6692/files/our-story-1.jpg?4316131069318019975"
+            src="/assets/img/c.png"
             alt="Founders"
             className={styles.image}
           />
@@ -110,7 +107,7 @@ export const AboutDiscount = () => {
  <section className={styles.another}>
         <div className={styles.imageBlock}>
           <img
-            src="https://cdn.shopify.com/s/files/1/0145/1684/6692/files/our-story-1.jpg?4316131069318019975"
+            src="/assets/img/d.png"
             alt="Founders"
             className={styles.image}
           />
@@ -148,7 +145,7 @@ export const AboutDiscount = () => {
         </div>
         <div className={styles.imageBlock}>
           <img
-            src="https://cdn.shopify.com/s/files/1/0145/1684/6692/files/our-story-1.jpg?4316131069318019975"
+            src="/assets/img/e.png"
             alt="Founders"
             className={styles.image}
           />
